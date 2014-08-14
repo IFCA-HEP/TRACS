@@ -24,11 +24,13 @@ set(CMAKE_CXX_FLAGS "${DOLFIN_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
 include_directories(${DOLFIN_INCLUDE_DIRS})
 include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 
+set(SRC SMSDSubDomains.cpp)
+
 # Executable
-add_executable(WeightFEM main.cpp)
+add_executable(WeightFEM main.cpp ${SRC})
 
 # Target libraries
-target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES})
+target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES})
 
 # vim:ft=cmake
 

@@ -27,103 +27,91 @@
 
 #include <dolfin.h>
 #include "Poisson.h"
+#include <SMSDSubDomains.h>
+
+#include <TH2D.h>
+#include <TFile.h>
+#include <TCanvas.h>
 
 using namespace dolfin;
 
 int main()
 {
-  // Source term
-  class Source : public Expression
-  {
-  public:
 
-    void eval(Array<double>& values, const Array<double>& x) const
-    {
-      const double dx = x[0] - 0.5;
-      const double dy = x[1] - 0.5;
-      values[0] = x[0]*sin(5.0*DOLFIN_PI*x[1]) + 1.0*exp(-(dx*dx + dy*dy)/0.02);
-    }
+  double pitch = 80.;
+  double width = 30.;
+  double depth = 200.;
+  int nns = 3;
 
-  };
+  double x_min = 0.;
+  double x_max = pitch * (2*nns+1);
+  double y_min = 0.;
+  double y_max = depth;
 
-  // Sub domain for Dirichlet boundary condition
-  class DirichletBoundary : public SubDomain
-  {
-    bool inside(const Array<double>& x, bool on_boundary) const
-    {
-      return (x[1] < DOLFIN_EPS || x[1] > (1.0 - DOLFIN_EPS)) && on_boundary;
-    }
-  };
 
-  // Sub domain for Periodic boundary condition
-  class PeriodicBoundary : public SubDomain
-  {
-    // Left boundary is "target domain" G
-    bool inside(const Array<double>& x, bool on_boundary) const
-    {
-      return (std::abs(x[0]) < DOLFIN_EPS);
-    }
-
-    // Map right boundary (H) to left boundary (G)
-    void map(const Array<double>& x, Array<double>& y) const
-    {
-      y[0] = x[0] - 1.0;
-      y[1] = x[1];
-    }
-  };
-
-  // Create mesh
-  UnitSquareMesh mesh(32, 32);
+  // Create rectangle mesh
+  RectangleMesh mesh(x_min,y_min,x_max,depth, 150, 150);
 
   // Create periodic boundary condition
-  PeriodicBoundary periodic_boundary;
-
-  /*
-  // Create vertex mast-slave map
-  const std::map<std::size_t, std::pair<std::size_t, std::size_t> > periodic_vertex_pairs
-    = PeriodicBoundaryComputation::compute_periodic_pairs(mesh, periodic_boundary, 0);
-
-  // Creat MehsFunction marking periodic boundary conditions for plotting
-  MeshFunction<std::size_t> master_slave_entities(mesh, 0, 0);
-  periodic_boundary.mark(master_slave_entities, 1);
-  std::map<std::size_t, std::pair<std::size_t, std::size_t> >::const_iterator it;
-  for (it = periodic_vertex_pairs.begin(); it != periodic_vertex_pairs.end(); ++it)
-    master_slave_entities[it->first] = 2;
-  File file("markers.pvd");
-  file << master_slave_entities;
-
-  // Attach periodic vertex pairs to mesh
-  mesh.periodic_index_map[0] = periodic_vertex_pairs;
-  */
+  PeriodicLateralBoundary periodic_boundary(x_min, x_max, depth);
 
   // Create functions
-  Source f;
+  Constant f(0);
 
   // Define PDE
   Poisson::FunctionSpace V(mesh, periodic_boundary);
-  //Poisson::FunctionSpace V(mesh);
   Poisson::BilinearForm a(V, V);
   Poisson::LinearForm L(V);
   L.f = f;
 
-  // Create Dirichlet boundary condition
-  Constant u0(0.0);
-  DirichletBoundary dirichlet_boundary;
-  DirichletBC bc0(V, u0, dirichlet_boundary);
+  // Create central strip BC
+  Constant central_strip_V(1.0);
+  CentralStripBoundary central_strip(pitch, width, nns);
+  DirichletBC central_strip_BC(V, central_strip_V, central_strip);
+
+  // Create neighbour strips BC
+  Constant neighbour_strip_V(0.0);
+  NeighbourStripBoundary neighbour_strip(pitch, width, nns);
+  DirichletBC neighbour_strip_BC(V, neighbour_strip_V, neighbour_strip);
+
+  // Create backplane BC
+  Constant backplane_V(0.0);
+  BackPlaneBoundary backplane(x_min, x_max, depth);
+  DirichletBC backplane_BC(V, backplane_V, backplane);
 
   // Collect boundary conditions
   std::vector<const DirichletBC*> bcs;
-  bcs.push_back(&bc0);
+  bcs.push_back(&central_strip_BC);
+  bcs.push_back(&neighbour_strip_BC);
+  bcs.push_back(&backplane_BC);
 
   // Compute solution
   Function u(V);
   solve(a == L, u, bcs);
 
-  cout << "Solution vector norm: " << u.vector()->norm("l2") << endl;
+  int n_bins_x = (int) pitch*(2*nns+1);
+  int n_bins_y = (int) depth;
+
+
+  TH2D *hist = new TH2D("h2","h2", n_bins_x , x_min, x_max, n_bins_y, y_min, y_max);
+
+  for (int i=1; i<=n_bins_x; i++) {
+    for (int j=1; j<=n_bins_y; j++) {
+      double x_value = i - 0.5;
+      double y_value = j - 0.5;
+      hist->Fill(n_bins_x-x_value,n_bins_y-y_value, u(x_value, y_value));
+    }
+  }
+
+  TFile file("hist.root", "recreate");
+  hist->Write();
+  file.Close();
+
+
 
   // Save solution in VTK format
-  File file_u("periodic.pvd");
-  file_u << u;
+  //File file_u("periodic.pvd");
+  //file_u << u;
 
   // Plot solution
   plot(u);
