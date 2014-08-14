@@ -27,6 +27,7 @@
 
 #include <dolfin.h>
 #include "Poisson.h"
+#include "Gradient.h"
 #include <SMSDSubDomains.h>
 
 #include <TH2D.h>
@@ -50,7 +51,7 @@ int main()
 
 
   // Create rectangle mesh
-  RectangleMesh mesh(x_min,y_min,x_max,depth, 150, 150);
+  RectangleMesh mesh(x_min,y_min,x_max,depth, 50, 50);
 
   // Create periodic boundary condition
   PeriodicLateralBoundary periodic_boundary(x_min, x_max, depth);
@@ -107,14 +108,21 @@ int main()
   hist->Write();
   file.Close();
 
+  // Obtain gradient
+  Gradient::FunctionSpace V_g(mesh);
+  Gradient::BilinearForm a_g(V_g, V_g);
+  Gradient::LinearForm L_g(V_g);
+  L_g.u = u;
 
+  Function grad_u(V_g);
+  solve(a_g == L_g, grad_u);
 
   // Save solution in VTK format
   //File file_u("periodic.pvd");
   //file_u << u;
 
   // Plot solution
-  plot(u);
+  plot(grad_u);
   interactive();
 
   return 0;

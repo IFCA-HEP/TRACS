@@ -25,7 +25,7 @@
 
 element = FiniteElement("Lagrange", triangle, 1)
 
-u = TrialFunction(element)
+u = Function(element)
 v = TestFunction(element)
 f = Coefficient(element)
 
