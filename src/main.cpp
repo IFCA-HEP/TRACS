@@ -51,7 +51,7 @@ int main()
 
 
   // Create rectangle mesh
-  RectangleMesh mesh(x_min,y_min,x_max,depth, 50, 50);
+  RectangleMesh mesh(x_min,y_min,x_max,depth, 1500, 1500);
 
   // Create periodic boundary condition
   PeriodicLateralBoundary periodic_boundary(x_min, x_max, depth);
@@ -122,7 +122,7 @@ int main()
   //file_u << u;
 
   // Plot solution
-  plot(grad_u);
+  plot(grad_u[1]);
   interactive();
 
   return 0;
