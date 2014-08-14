@@ -1,0 +1,9 @@
+
+# Function spaces
+element = VectorElement("Lagrange", triangle, 1)
+
+w = TrialFunction(element)
+v = TestFunction(element)
+
+a_gradient = inner(w, v)*dx
+L_gradient = inner(grad(u), v)*dx
