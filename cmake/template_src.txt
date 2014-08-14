@@ -1,0 +1,16 @@
+
+# Specify .cpp files
+set(SRC hello.cpp)
+
+# Specify the executable
+add_executable({{project_name}}-bin main.cpp ${SRC})
+target_link_libraries({{project_name}}-bin ${LIBRARIES})
+set_target_properties({{project_name}}-bin PROPERTIES OUTPUT_NAME {{project_name}})
+
+# Build a library
+add_library({{project_name}} ${SRC})
+target_link_libraries({{project_name}} ${LIBRARIES})
+
+# vim:ft=cmake
+
+
