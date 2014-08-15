@@ -51,7 +51,7 @@ int main()
 
 
   // Create rectangle mesh
-  RectangleMesh mesh(x_min,y_min,x_max,depth, 1500, 1500);
+  RectangleMesh mesh(x_min,y_min,x_max,depth, 150, 150);
 
   // Create periodic boundary condition
   PeriodicLateralBoundary periodic_boundary(x_min, x_max, depth);
@@ -122,7 +122,8 @@ int main()
   //file_u << u;
 
   // Plot solution
-  plot(grad_u[1]);
+  plot(u,"Weighting Potential","auto");
+  plot(grad_u[1],"Weighting Field","auto");
   interactive();
 
   return 0;

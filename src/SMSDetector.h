@@ -1,4 +1,8 @@
 #include <dolfin.h>
+
+#include "Poisson.h"
+#include "Gradient.h"
+
 #include <SMSDSubDomains.h>
 
 using namespace dolfin;
@@ -28,20 +32,48 @@ class SMSDetector {
     double _v_backplane;
 
     // potentials
-    Function *_w_u;  // Function to store the weighting potential
-    Function *_d_u;  // Function to store the drifting field
+    Function *_w_u;  // function to store the weighting potential
+    Function *_d_u;  // function to store the drifting potential
 
+    // fields
+    Function *_w_f_grad; // function to store the gradient weighting field
+    Function *_d_f_grad; // function to store the gradient weighting field
 
+    // meshes (one for each could be used)
+    RectangleMesh *_mesh; // mesh for both weighing and drifing potential
 
+    // mesh subdomains
+    PeriodicLateralBoundary *_periodic_boundary;
+    CentralStripBoundary *_central_strip;
+    NeighbourStripBoundary *_neighbour_strips;
+    BackPlaneBoundary *_backplane;
 
+    // Poisson PDE Function Space
+    Poisson::FunctionSpace *_V_p;
+    Poisson::BilinearForm *_a_p;
+    Poisson::LinearForm *_L_p;
+
+    // Gradient PDE Function Space
+    Gradient::FunctionSpace *_V_g;
+    Gradient::BilinearForm *_a_g;
+    Gradient::LinearForm *_L_g;
 
 
 
 
 
   public:
-    SMSDetector();
+    // default constructor and destructor
+    SMSDetector(double pitch, double width, double depth,
+                double nns, char bulk_type, char implant_type);
     ~SMSDetector();
-
+    // set methods
+    void set_mesh();
+    void set_mesh_subdomains();
+    void set_pde_variables();
+    void solve_w_u();
+    void solve_d_u();
+    // get methods
+    Function * get_w_u():
 
 };

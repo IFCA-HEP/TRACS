@@ -1,4 +1,3 @@
-#include <dolfin.h>
 #include <SMSDSubDomains.h>
 
 using namespace dolfin;
@@ -67,7 +66,7 @@ BackPlaneBoundary::BackPlaneBoundary(double x_min, double x_max, double depth)
 bool BackPlaneBoundary::inside(const Array<double>& x, bool on_boundary) const
 {
   bool is_inside = false;
-  if ((x[1] > (_depth - 1.0) ) && on_boundary) // y = depth condition
+  if ((x[1] > (_depth - DOLFIN_EPS*_depth) ) && on_boundary) // y = depth condition
   {
     if ((x[0] > _x_min - DOLFIN_EPS) && (x[0] < _x_max + DOLFIN_EPS )) // within boundaries
     {
