@@ -36,8 +36,8 @@ int main()
   double depth = 200.;
   int nns = 3;
 
-  int n_cells_x = 150;
-  int n_cells_y = 150;
+  int n_cells_x = 300;
+  int n_cells_y = 300;
 
   char bulk_type = 'p';
   char implant_type = 'n';
@@ -45,7 +45,7 @@ int main()
   SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y);
 
   detector.solve_w_u();
-  Function * w_u =detector.get_w_u();
+  Function * w_u = detector.get_w_u();
 
   // Plot solution
   plot(*w_u,"Weighting Potential","auto");
