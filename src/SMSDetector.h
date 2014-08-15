@@ -12,7 +12,7 @@ class SMSDetector {
     // detector characteristics
     double _pitch; // in microns
     double _width; // in microns
-    double _depth: // in microns
+    double _depth; // in microns
     int _nns;
     char _bulk_type;
     char _implant_type;
@@ -25,7 +25,7 @@ class SMSDetector {
 
     // Meshing parameters
     int _n_cells_x;
-    int _n_cells_y:
+    int _n_cells_y;
 
     // bias
     double _v_strips;
@@ -65,7 +65,7 @@ class SMSDetector {
   public:
     // default constructor and destructor
     SMSDetector(double pitch, double width, double depth,
-                double nns, char bulk_type, char implant_type);
+                int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y);
     ~SMSDetector();
     // set methods
     void set_mesh();
@@ -74,6 +74,6 @@ class SMSDetector {
     void solve_w_u();
     void solve_d_u();
     // get methods
-    Function * get_w_u():
+    Function * get_w_u();
 
 };
