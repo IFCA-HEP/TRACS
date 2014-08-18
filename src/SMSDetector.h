@@ -7,7 +7,8 @@
 
 using namespace dolfin;
 
-class SMSDetector {
+class SMSDetector
+{
   private:
     // detector characteristics
     double _pitch; // in microns
@@ -58,8 +59,8 @@ class SMSDetector {
     Function _d_u;  // function to store the drifting potential
 
     // fields
-    Function _w_f_grad; // function to store the gradient weighting field
-    Function _d_f_grad; // function to store the gradient weighting field
+    Function _w_f_grad; // function to store the weighting field (vectorial)
+    Function _d_f_grad; // function to store the drifting field (vectorial)
 
   public:
     // default constructor and destructor

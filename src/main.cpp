@@ -1,13 +1,21 @@
 #include <SMSDetector.h>
+#include <utilities.h>
+
+#include <TFile.h>
 
 int main()
 {
 
 
   double pitch = 80.;
-  double width = 80.;
+  double width = 30.;
   double depth = 200.;
-  int nns = 0;
+  int nns = 3;
+
+  double x_min = 0.;
+  double x_max = pitch * (2*nns+1);
+  double y_min = 0.;
+  double y_max = depth;
 
   int n_cells_x = 150;
   int n_cells_y = 150;
@@ -22,6 +30,12 @@ int main()
 
   // Plot solution
   plot(*w_u,"Weighting Potential","auto");
+
+  TH2D w_u_hist = utilities::export_to_histogram(*w_u, "hist", "hist", n_cells_x ,x_min,x_max, n_cells_y,y_min,y_max);
+
+  TFile file("hist.root", "recreate");
+  w_u_hist.Write();
+  file.Close();
 
   double v_bias = 150.0;
   double v_depletion = 61.0;
