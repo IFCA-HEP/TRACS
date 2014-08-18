@@ -37,7 +37,7 @@ void SMSDetector::set_voltages(double v_bias, double v_depletion)
 {
   _v_strips = (_implant_type == 'n') ? v_bias : 0.0;
   _v_backplane = (_implant_type == 'p') ? v_bias : 0.0;
-  _f_poisson = ((_bulk_type== 'p') ? +1.0 : -1.0)*(2.0*v_depletion)/(_depth*_depth);
+  _f_poisson = ((_bulk_type== 'p') ? +1.0 : -1.0)*(-2.0*v_depletion)/(_depth*_depth);
 }
 
 void SMSDetector::solve_w_u()
@@ -98,8 +98,29 @@ Function * SMSDetector::get_d_u()
   return &_d_u;
 }
 
+void SMSDetector::solve_w_f_grad()
+{
+
+  _L_g.u = _w_u;
+  solve(_a_g == _L_g, _w_f_grad);
+}
+
+Function * SMSDetector::get_w_f_grad()
+{
+  return &_w_f_grad;
+}
 
 
+void SMSDetector::solve_d_f_grad()
+{
+  _L_g.u = _d_u;
+  solve(_a_g == _L_g, _d_f_grad);
+}
+
+Function * SMSDetector::get_d_f_grad()
+{
+  return &_d_f_grad;
+}
 
 
 SMSDetector::~SMSDetector()

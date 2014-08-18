@@ -72,8 +72,13 @@ class SMSDetector {
     // solve potentials
     void solve_w_u();
     void solve_d_u();
+    void solve_w_f_grad();
+    void solve_d_f_grad();
+
     // get methods
     Function * get_w_u();
     Function * get_d_u();
+    Function * get_w_f_grad();
+    Function * get_d_f_grad();
 
 };
