@@ -36,11 +36,11 @@ int main()
   double depth = 200.;
   int nns = 3;
 
-  int n_cells_x = 300;
-  int n_cells_y = 300;
+  int n_cells_x = 150;
+  int n_cells_y = 150;
 
-  char bulk_type = 'p';
-  char implant_type = 'n';
+  char bulk_type = 'n';
+  char implant_type = 'p';
 
   SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y);
 
@@ -49,7 +49,17 @@ int main()
 
   // Plot solution
   plot(*w_u,"Weighting Potential","auto");
+
+  double v_bias = 150.0;
+  double v_depletion = 61.0;
+  detector.set_voltages(v_bias, v_depletion);
+
+  detector.solve_d_u();
+  Function * d_u = detector.get_d_u();
+  // Plot solution
+  plot(*d_u,"Drift Potential","auto");
   interactive();
+
 
   return 0;
 }

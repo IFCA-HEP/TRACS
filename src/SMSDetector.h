@@ -31,6 +31,9 @@ class SMSDetector {
     double _v_strips;
     double _v_backplane;
 
+    // poisson term for solving electric field
+    double _f_poisson;
+
     // meshes (one for each could be used)
     RectangleMesh _mesh; // mesh for both weighing and drifing potential
 
@@ -64,11 +67,13 @@ class SMSDetector {
                 int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y);
     ~SMSDetector();
     // set methods
+    void set_voltages(double v_bias, double v_depletion);
 
     // solve potentials
     void solve_w_u();
     void solve_d_u();
     // get methods
     Function * get_w_u();
+    Function * get_d_u();
 
 };
