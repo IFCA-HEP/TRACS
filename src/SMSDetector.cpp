@@ -103,6 +103,8 @@ void SMSDetector::solve_w_f_grad()
 
   _L_g.u = _w_u;
   solve(_a_g == _L_g, _w_f_grad);
+  // Change sign E = - grad(u)
+  _w_f_grad = _w_f_grad * (-1.0);
 }
 
 Function * SMSDetector::get_w_f_grad()
@@ -115,6 +117,9 @@ void SMSDetector::solve_d_f_grad()
 {
   _L_g.u = _d_u;
   solve(_a_g == _L_g, _d_f_grad);
+  // Change sign E = - grad(u)
+  _d_f_grad = _d_f_grad * (-1.0);
+
 }
 
 Function * SMSDetector::get_d_f_grad()

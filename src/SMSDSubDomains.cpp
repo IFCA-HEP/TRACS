@@ -18,7 +18,7 @@ bool CentralStripBoundary::inside(const Array<double>& x, bool on_boundary) cons
     double x_translated = x[0] - _pitch*_nns; // reference system change
     double l_lim = (_pitch - _width) / 2.0;
     double r_lim = l_lim + _width;
-    if ((x_translated > l_lim) && (x_translated < r_lim)) // check if strip
+    if ((x_translated > l_lim*(1-DOLFIN_EPS)) && (x_translated < r_lim*(1+DOLFIN_EPS))) // check if strip
     {
       is_inside = true;
     }
@@ -46,7 +46,7 @@ bool NeighbourStripBoundary::inside(const Array<double>& x, bool on_boundary) co
         double x_translated = x[0] - _pitch*count; // reference system change
         double l_lim = (_pitch - _width) / 2.0;
         double r_lim = l_lim + _width;
-        if ((x_translated > l_lim) && (x_translated < r_lim)) // check if strip
+        if ((x_translated > l_lim*(1-DOLFIN_EPS)) && (x_translated < r_lim*(1+DOLFIN_EPS))) // check if strip
         {
           is_inside = true;
         }
