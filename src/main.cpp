@@ -37,6 +37,10 @@ int main()
   w_u_hist.Write();
   file.Close();
 
+  // Save solution in VTK format
+  File file_u("periodic.pvd");
+  file_u << *w_u;
+
   double v_bias = 150.0;
   double v_depletion = 61.0;
   detector.set_voltages(v_bias, v_depletion);
