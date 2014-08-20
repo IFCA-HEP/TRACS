@@ -1,4 +1,4 @@
-
+#include <CarrierMobility.h>
 
 JacoboniMobility::JacoboniMobility( char carrier_type, double T = 300)
 {
@@ -19,5 +19,10 @@ JacoboniMobility::JacoboniMobility( char carrier_type, double T = 300)
 
 double JacoboniMobility::obtain_mobility(double e_field_mod)
 {
-  return _mu0/std::pow(1.0+std::pow(_mu0*e_field_mod/_vsat,_beta), 1.0/_beta)
+  return 100000000.*_mu0/std::pow(1.0+std::pow(_mu0*e_field_mod/_vsat,_beta), 1.0/_beta); //mum/s
+}
+
+JacoboniMobility::~JacoboniMobility()
+{
+
 }

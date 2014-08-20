@@ -9,7 +9,7 @@ class JacoboniMobility
     double _beta;
 
   public:
-    JacoboniMobility(char carrier_type);
+    JacoboniMobility(char carrier_type, double T);
     ~JacoboniMobility();
     double obtain_mobility(double e_field_mod);
 };

@@ -24,7 +24,7 @@ set(CMAKE_CXX_FLAGS "${DOLFIN_CXX_FLAGS} ${CMAKE_CXX_FLAGS}")
 include_directories(${DOLFIN_INCLUDE_DIRS})
 include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 
-set(SRC SMSDSubDomains.cpp SMSDetector.cpp)
+set(SRC SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp)
 
 # Executable
 add_executable(WeightFEM main.cpp ${SRC})

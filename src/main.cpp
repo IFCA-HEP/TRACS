@@ -1,11 +1,18 @@
 #include <SMSDetector.h>
+
 #include <utilities.h>
 
+#include <Carrier.h>
+
 #include <TFile.h>
+
+#include <fstream>
+#include <iterator>
 
 int main()
 {
 
+  parameters["allow_extrapolation"] = true;
 
   double pitch = 80.;
   double width = 30.;
@@ -29,7 +36,7 @@ int main()
   Function * w_u = detector.get_w_u();
 
   // Plot solution
-  plot(*w_u,"Weighting Potential","auto");
+  //plot(*w_u,"Weighting Potential","auto");
 
   TH2D w_u_hist = utilities::export_to_histogram(*w_u, "hist", "hist", n_cells_x ,x_min,x_max, n_cells_y,y_min,y_max);
 
@@ -48,21 +55,32 @@ int main()
   detector.solve_d_u();
   Function * d_u = detector.get_d_u();
   // Plot solution
-  plot(*d_u,"Drift Potential","auto");
+  //plot(*d_u,"Drift Potential","auto");
 
   detector.solve_w_f_grad();
   Function * w_f_grad = detector.get_w_f_grad();
   // Plot solution
-  plot((*w_f_grad)[1],"Weighting Field (Y)","auto");
+  //plot((*w_f_grad)[1],"Weighting Field (Y)","auto");
 
   detector.solve_d_f_grad();
   Function * d_f_grad = detector.get_d_f_grad();
   // Plot solution
-  plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+  //plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
 
+  // Create carrier and observe movement
+  SMSDetector * dec_pointer = &detector;
 
+  Carrier electron = Carrier( 'h', 1. , 300., 0.3 , dec_pointer, 0.0);
 
-  interactive();
+  std::vector<double> result(10000);
+  result = electron.simulate_drift( 1e-12 , 10e-9);
+
+  std::ofstream output_file("./example.txt");
+  output_file << "Results vector[]={";
+  std::copy(result.begin(), result.end(), std::ostream_iterator<double>(output_file , ", "));
+  output_file << "}" <<  std::endl;
+
+  //interactive();
 
 
   return 0;

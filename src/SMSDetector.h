@@ -1,3 +1,4 @@
+
 #include <dolfin.h>
 
 #include "Poisson.h"
@@ -6,6 +7,9 @@
 #include <SMSDSubDomains.h>
 
 using namespace dolfin;
+
+#ifndef SMSDetectorClass
+#define SMSDetectorClass
 
 class SMSDetector
 {
@@ -82,4 +86,9 @@ class SMSDetector
     Function * get_w_f_grad();
     Function * get_d_f_grad();
 
+    // some other methods
+    bool is_out(std::vector<double> x);
+
 };
+
+#endif

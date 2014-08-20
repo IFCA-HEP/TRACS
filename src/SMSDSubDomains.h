@@ -1,6 +1,11 @@
+
+
 #include <dolfin.h>
 
 using namespace dolfin;
+
+#ifndef SMSDSubDomainsClass
+#define SMSDSubDomainsClass
 
 class CentralStripBoundary: public SubDomain {
   private:
@@ -43,3 +48,5 @@ class PeriodicLateralBoundary: public SubDomain {
     bool inside(const Array<double>& x, bool on_boundary) const;
     void map(const Array<double>& x, Array<double>& y) const;
 };
+
+#endif

@@ -2,6 +2,7 @@
 
 #include <CarrierMobility.h>
 
+using namespace dolfin;
 
 class DriftTransport
 {
