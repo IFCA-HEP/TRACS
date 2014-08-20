@@ -70,10 +70,19 @@ int main()
   // Create carrier and observe movement
   SMSDetector * dec_pointer = &detector;
 
-  Carrier electron = Carrier( 'h', 1. , 300., 0.3 , dec_pointer, 0.0);
+
 
   std::vector<double> result(10000);
-  result = electron.simulate_drift( 1e-12 , 10e-9);
+  std::vector<double> temp(10000);
+
+  int times = 100000;
+
+  for (int i = 0 ; i < times; i++)
+  {
+    Carrier electron = Carrier( 'h', 1. , 300., 0.3 , dec_pointer, 0.0);
+    temp = electron.simulate_drift( 1e-12 , 10e-9);
+    std::cout << "Number of electron: " << i << std::endl;
+  }
 
   std::ofstream output_file("./example.txt");
   output_file << "Results vector[]={";
