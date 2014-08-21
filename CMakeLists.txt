@@ -5,6 +5,9 @@ project(WeightFEM)
 set(PROJECT_VERSION 0.0.0.1)
 set(PROJECT_BRIEF "\"No description\"")
 
+find_package(Qt4 REQUIRED)
+INCLUDE(${QT_USE_FILE})
+ADD_DEFINITIONS(${QT_DEFINITIONS})
 
 # Enable/disable testing
 option(TESTS_ENABLED "Enable automatic tests" OFF)
