@@ -87,7 +87,7 @@ class SMSDetector
     Function * get_d_f_grad();
 
     // some other methods
-    bool is_out(std::vector<double> x);
+    bool is_out(const std::array< double,2> &x);
 
 };
 

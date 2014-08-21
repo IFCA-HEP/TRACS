@@ -127,7 +127,7 @@ Function * SMSDetector::get_d_f_grad()
   return &_d_f_grad;
 }
 
-bool SMSDetector::is_out(std::vector<double> x)
+bool SMSDetector::is_out(const std::array< double,2> &x)
 {
   bool out = true;
   if ( (x[0] > _x_min) && (x[0] < _x_max) && (x[1] > _y_min) && (x[1] < _y_max))

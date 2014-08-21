@@ -4,7 +4,6 @@
 Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , SMSDetector * detector, double gen_time = 0.0 ) :
   _carrier_type(carrier_type),
   _q(q),
-  _x(2),
   _gen_time(gen_time),
   _detector(detector),
   _drift(_carrier_type, _detector->get_d_f_grad()),
@@ -14,13 +13,20 @@ Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , S
   _x[1] = y_init;
 }
 
-std::vector<double> Carrier::simulate_drift(double dt, double max_time)
+std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
 {
+  // get number of steps from time
   int max_steps = (int) std::floor(max_time / dt);
 
-  std::vector<double>  i_n(max_steps); // vector to save intensity
+  std::valarray<double>  i_n(max_steps); // valarray to save intensity
 
-  runge_kutta4<std::vector<double>> stepper;
+  runge_kutta4<std::array< double,2>> stepper;
+
+  // wrapper for the arrays using dolphin array class
+  Array<double> wrap_x(2, _x.data());
+  Array<double> wrap_e_field(2, _e_field.data());
+  Array<double> wrap_w_field(2, _w_field.data());
+
 
   double t=0.0;
 
@@ -39,15 +45,56 @@ std::vector<double> Carrier::simulate_drift(double dt, double max_time)
     }
     else
     {
-      std::vector< double > e_field(2);
-      e_field[0] = ((*_detector->get_d_f_grad())[0])(_x[0],_x[1]);
-      e_field[1] = ((*_detector->get_d_f_grad())[1])(_x[0],_x[1]);
-      std::vector< double > w_field(2);
-      w_field[0] = ((*_detector->get_w_f_grad())[0])(_x[0],_x[1]);
-      w_field[1] = ((*_detector->get_w_f_grad())[1])(_x[0],_x[1]);
-      double e_field_mod = sqrt(e_field[0]*e_field[0] + e_field[1]*e_field[1]);
+      _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
+      _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
+      _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
+      i_n[i] = _q * _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
+      stepper.do_step(_drift, _x, t, dt);
+    }
+    t+=dt;
+  }
+  return i_n;
+}
 
-      i_n[i] = _q * _mu.obtain_mobility(e_field_mod) * (e_field[0]*w_field[0] + e_field[1]*w_field[1]);
+std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double x_init, double y_init )
+{
+  _x[0] = x_init;
+  _x[1] = y_init;
+
+  // get number of steps from time
+  int max_steps = (int) std::floor(max_time / dt);
+
+  std::valarray<double>  i_n(max_steps); // valarray to save intensity
+
+  runge_kutta4<std::array< double,2>> stepper;
+
+  // wrapper for the arrays using dolphin array class
+  Array<double> wrap_x(2, _x.data());
+  Array<double> wrap_e_field(2, _e_field.data());
+  Array<double> wrap_w_field(2, _w_field.data());
+
+
+  double t=0.0;
+
+  for ( int i = 0 ; i < max_steps; i++)
+  {
+
+    if (t < _gen_time)
+    {
+      i_n[i] = 0;
+    }
+    else if (_detector->is_out(_x))
+    {
+      i_n[i] = 0;
+      std::cout << "Carrier Drift Time: " << t << " s" << std::endl;
+      break;
+    }
+    else
+    {
+      _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
+      _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
+      _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
+      i_n[i] = _q * _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
       stepper.do_step(_drift, _x, t, dt);
     }
     t+=dt;

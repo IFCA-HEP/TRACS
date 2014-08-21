@@ -72,22 +72,17 @@ int main()
 
 
 
-  std::vector<double> result(10000);
-  std::vector<double> temp(10000);
+  std::valarray<double> result(100000);
+  int times = 10;
 
-  int times = 100000;
+  Carrier electron('h', 1. , 300., 0.3 , dec_pointer, 0.0);
 
   for (int i = 0 ; i < times; i++)
   {
-    Carrier electron = Carrier( 'h', 1. , 300., 0.3 , dec_pointer, 0.0);
-    temp = electron.simulate_drift( 1e-12 , 10e-9);
+    result += electron.simulate_drift( 1e-11 , 10e-9, 300., 0.3 );
     std::cout << "Number of electron: " << i << std::endl;
   }
 
-  std::ofstream output_file("./example.txt");
-  output_file << "Results vector[]={";
-  std::copy(result.begin(), result.end(), std::ostream_iterator<double>(output_file , ", "));
-  output_file << "}" <<  std::endl;
 
   //interactive();
 

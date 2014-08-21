@@ -1,4 +1,4 @@
-#include <vector>
+#include  <valarray>
 
 #include <CarrierTransport.h>
 #include <SMSDetector.h>
@@ -14,7 +14,10 @@ class Carrier
     char _carrier_type;
     double _q; // charge
     double _gen_time; // instant of generation of the carrier
-    std::vector<double> _x; // position state vector
+    std::array< double,2> _x; // carrier position array
+    std::array< double,2> _e_field; // electric field at the carrier position
+    std::array< double,2> _w_field; // weighting field at the carrier positions
+    double _e_field_mod;
 
     SMSDetector * _detector;
     DriftTransport _drift;
@@ -24,5 +27,6 @@ class Carrier
     Carrier( char carrier_type, double q, double x_init, double y_init, SMSDetector * detector, double gen_time);
     ~Carrier();
 
-    std::vector<double> simulate_drift( double dt, double max_time);
+    std::valarray<double> simulate_drift( double dt, double max_time);
+    std::valarray<double> simulate_drift(double dt, double max_time, double x_init, double y_init );
 };
