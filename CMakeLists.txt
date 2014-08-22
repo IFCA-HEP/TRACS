@@ -9,6 +9,9 @@ find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
+find_package(VTK REQUIRED)
+include(${VTK_USE_FILE})
+
 # Enable/disable testing
 option(TESTS_ENABLED "Enable automatic tests" OFF)
 # Enable/disable test coverage
