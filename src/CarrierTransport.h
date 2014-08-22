@@ -9,6 +9,7 @@ class DriftTransport
   private:
     JacoboniMobility _mu;
     Function * _d_f_grad;
+    int _sign;
 
 
   public:

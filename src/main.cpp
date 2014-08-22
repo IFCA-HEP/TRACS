@@ -55,7 +55,7 @@ int main()
   detector.solve_d_u();
   Function * d_u = detector.get_d_u();
   // Plot solution
-  //plot(*d_u,"Drift Potential","auto");
+  plot(*d_u,"Drift Potential","auto");
 
   detector.solve_w_f_grad();
   Function * w_f_grad = detector.get_w_f_grad();
@@ -72,19 +72,47 @@ int main()
 
 
 
-  std::valarray<double> result(100000);
-  int times = 10;
+  double dt = 1.e-11;
+  double max_time = 10.e-9;
+  // get number of steps from time
+  const int max_steps = (int) std::floor(max_time / dt);
 
-  Carrier electron('h', 1. , 300., 0.3 , dec_pointer, 0.0);
+
+  std::valarray<double> curr_holes((size_t) max_steps);
+  std::valarray<double> curr_elec((size_t) max_steps);
+  int times = 100;
+
+  curr_holes = 0;
+  curr_elec = 0;
+
+  Carrier hole('h', 1. , 300., 190. , dec_pointer, 0.0);
+  Carrier electron('e', 1. , 300., 190. , dec_pointer, 0.0);
 
   for (int i = 0 ; i < times; i++)
   {
-    result += electron.simulate_drift( 1e-11 , 10e-9, 300., 0.3 );
-    std::cout << "Number of electron: " << i << std::endl;
+    curr_holes += hole.simulate_drift( dt , max_time, 300., 190.);
+    curr_elec += electron.simulate_drift( dt , max_time, 300., 190.);
+    std::cout << "Number of carrier: " << 2*i << std::endl;
   }
 
+  std::ofstream output_file("./example.txt");
+  output_file << "curr_holes[]={";
+  for ( const double &value : curr_holes )
+  {
+      output_file << value << ", ";
+  }
+  output_file << "}" <<  std::endl;
 
-  //interactive();
+  output_file << "curr_elec[]={";
+  for ( const double &value : curr_elec )
+  {
+    output_file << value << ", ";
+  }
+  output_file << "}" <<  std::endl;
+
+  output_file.close();
+
+  interactive();
 
 
   return 0;

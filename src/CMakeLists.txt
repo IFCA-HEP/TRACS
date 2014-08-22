@@ -32,6 +32,21 @@ add_executable(WeightFEM main.cpp ${SRC})
 # Target libraries
 target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES})
 
+
+set(GUI_HEADERS mainWindow.h)
+set(GUI_SRC mainWindow.cpp)
+set(GUI_UIS mainWindow.ui)
+
+qt4_wrap_cpp(GUI_MOC ${GUI_HEADERS})
+qt4_wrap_ui(GUI_UIS_HEADERS ${GUI_UIS})
+
+
+# Executable
+add_executable(WeightFEM-GUI main_gui.cpp ${GUI_SRC} ${GUI_MOC} ${GUI_UIS_HEADERS} )
+target_link_libraries(WeightFEM-GUI ${QT_LIBRARIES})
+
+
+
 # vim:ft=cmake
 
 

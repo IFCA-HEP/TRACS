@@ -5,7 +5,7 @@ project(WeightFEM)
 set(PROJECT_VERSION 0.0.0.1)
 set(PROJECT_BRIEF "\"No description\"")
 
-find_package(Qt4 REQUIRED)
+find_package(Qt4 COMPONENTS QtCore QtGui QtNetwork REQUIRED)
 INCLUDE(${QT_USE_FILE})
 ADD_DEFINITIONS(${QT_DEFINITIONS})
 
