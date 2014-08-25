@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>875</width>
+    <height>593</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="Potentials">
+      <widget class="QWidget" name="potentials_tab">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -28,14 +28,11 @@
         <string>Potentials</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="0">
-         <widget class="QVTKWidget" name="vtk_field_plot"/>
-        </item>
         <item row="2" column="0">
-         <widget class="QWidget" name="qcp_field_plot" native="true"/>
+         <widget class="QCustomPlot" name="potentials_qcustomplot_cut" native="true"/>
         </item>
         <item row="0" column="1">
-         <widget class="QGroupBox" name="det_prop">
+         <widget class="QGroupBox" name="detector_properties_layout">
           <property name="font">
            <font>
             <pointsize>9</pointsize>
@@ -48,54 +45,79 @@
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="5" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+            <widget class="QDoubleSpinBox" name="depletion_voltage_double_box">
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>60.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="width_label">
              <property name="text">
               <string>Width</string>
              </property>
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+            <widget class="QDoubleSpinBox" name="depth_double_box">
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>200.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QLabel" name="label_6">
+            <widget class="QLabel" name="depletion_voltage_label">
              <property name="text">
               <string>Depletion Voltage</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+            <widget class="QDoubleSpinBox" name="width_double_box">
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>30.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="depth_label">
              <property name="text">
               <string>Depth</string>
              </property>
             </widget>
            </item>
            <item row="3" column="0">
-            <widget class="QLabel" name="label_4">
+            <widget class="QLabel" name="bulk_type_label">
              <property name="text">
               <string>Bulk Type</string>
              </property>
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="pitch_label">
              <property name="text">
               <string>Pitch</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+            <widget class="QDoubleSpinBox" name="pitch_double_box">
+             <property name="value">
+              <double>80.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="bulk_type_combo_box">
              <item>
               <property name="text">
                <string>p</string>
@@ -109,14 +131,14 @@
             </widget>
            </item>
            <item row="4" column="0">
-            <widget class="QLabel" name="label_5">
+            <widget class="QLabel" name="implant_type_label">
              <property name="text">
               <string>Implant Type</string>
              </property>
             </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QComboBox" name="comboBox_2">
+            <widget class="QComboBox" name="implant_type_combo_box">
              <item>
               <property name="text">
                <string>n</string>
@@ -133,7 +155,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="other_conf_layout">
           <property name="font">
            <font>
             <pointsize>9</pointsize>
@@ -149,7 +171,7 @@
             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
            </property>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="bias_voltage_label">
              <property name="font">
               <font>
                <weight>75</weight>
@@ -162,10 +184,17 @@
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_5"/>
+            <widget class="QDoubleSpinBox" name="bias_voltage_double_box">
+             <property name="maximum">
+              <double>1000.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>150.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="label_8">
+            <widget class="QLabel" name="n_cellsx_label">
              <property name="font">
               <font>
                <weight>75</weight>
@@ -178,10 +207,17 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QSpinBox" name="spinBox"/>
+            <widget class="QSpinBox" name="n_cellsx_int_box">
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="value">
+              <number>150</number>
+             </property>
+            </widget>
            </item>
            <item row="3" column="0">
-            <widget class="QLabel" name="label_9">
+            <widget class="QLabel" name="n_cellsy_label">
              <property name="font">
               <font>
                <weight>75</weight>
@@ -194,52 +230,69 @@
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QSpinBox" name="spinBox_2"/>
+            <widget class="QSpinBox" name="n_cellsy_int_box">
+             <property name="maximum">
+              <number>10000</number>
+             </property>
+             <property name="value">
+              <number>150</number>
+             </property>
+            </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QProgressBar" name="progressBar">
+            <widget class="QProgressBar" name="progress_bar">
              <property name="value">
-              <number>24</number>
+              <number>0</number>
              </property>
             </widget>
            </item>
            <item row="5" column="1">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="solve_fem_button">
              <property name="text">
-              <string>Update</string>
+              <string>Solve FEM Problem</string>
              </property>
             </widget>
            </item>
            <item row="6" column="0">
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="show_weighting_pot_button">
              <property name="text">
               <string>Show Weighting Potential</string>
              </property>
             </widget>
            </item>
            <item row="6" column="1">
-            <widget class="QPushButton" name="pushButton_3">
+            <widget class="QPushButton" name="show_electric_pot_button">
              <property name="text">
               <string>Show Electric Potential</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="label_10">
+            <widget class="QLabel" name="nn_strips_label">
              <property name="text">
               <string>Number of Neighbour Strips</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QSpinBox" name="spinBox_3"/>
+            <widget class="QSpinBox" name="nn_strips_int_box">
+             <property name="maximum">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>3</number>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QCustomPlot" name="potentials_qcustomplot_map" native="true"/>
+        </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="currents">
+      <widget class="QWidget" name="currents_tab">
        <attribute name="title">
         <string>Currents</string>
        </attribute>
@@ -253,7 +306,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>875</width>
      <height>23</height>
     </rect>
    </property>
@@ -262,26 +315,27 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QVTKWidget</class>
+   <class>QCustomPlot</class>
    <extends>QWidget</extends>
-   <header>QVTKWidget.h</header>
+   <header>qcustomplot.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>tabs</tabstop>
-  <tabstop>pushButton_3</tabstop>
-  <tabstop>spinBox</tabstop>
-  <tabstop>doubleSpinBox_5</tabstop>
-  <tabstop>spinBox_2</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>comboBox_2</tabstop>
-  <tabstop>spinBox_3</tabstop>
-  <tabstop>pushButton_2</tabstop>
-  <tabstop>doubleSpinBox</tabstop>
-  <tabstop>doubleSpinBox_2</tabstop>
-  <tabstop>doubleSpinBox_3</tabstop>
-  <tabstop>comboBox</tabstop>
-  <tabstop>doubleSpinBox_4</tabstop>
+  <tabstop>show_electric_pot_button</tabstop>
+  <tabstop>n_cellsx_int_box</tabstop>
+  <tabstop>bias_voltage_double_box</tabstop>
+  <tabstop>n_cellsy_int_box</tabstop>
+  <tabstop>solve_fem_button</tabstop>
+  <tabstop>implant_type_combo_box</tabstop>
+  <tabstop>nn_strips_int_box</tabstop>
+  <tabstop>show_weighting_pot_button</tabstop>
+  <tabstop>pitch_double_box</tabstop>
+  <tabstop>width_double_box</tabstop>
+  <tabstop>depth_double_box</tabstop>
+  <tabstop>bulk_type_combo_box</tabstop>
+  <tabstop>depletion_voltage_double_box</tabstop>
  </tabstops>
  <resources/>
  <connections/>
