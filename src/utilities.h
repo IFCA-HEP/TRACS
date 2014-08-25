@@ -1,3 +1,7 @@
+#ifndef UTILITIES_H
+#define UTILITIES_H
+
+
 #include <dolfin.h>
 
 #include <TH2D.h>
@@ -26,3 +30,5 @@ namespace utilities
     return hist;
   }
 }
+
+#endif // UTILITIES_H

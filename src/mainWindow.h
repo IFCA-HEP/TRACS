@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QPushButton>
 
+#include "qcustomplot.h"
+
 #include <SMSDetector.h>
 #include <Carrier.h>
 

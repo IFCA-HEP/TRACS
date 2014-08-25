@@ -1,3 +1,5 @@
+#ifndef SMSDETECTOR_H
+#define SMSDETECTOR_H
 
 #include <dolfin.h>
 
@@ -7,9 +9,6 @@
 #include <SMSDSubDomains.h>
 
 using namespace dolfin;
-
-#ifndef SMSDetectorClass
-#define SMSDetectorClass
 
 class SMSDetector
 {
@@ -85,10 +84,14 @@ class SMSDetector
     Function * get_d_u();
     Function * get_w_f_grad();
     Function * get_d_f_grad();
+    double get_x_min();
+    double get_x_max();
+    double get_y_min();
+    double get_y_max();
 
     // some other methods
     bool is_out(const std::array< double,2> &x);
 
 };
 
-#endif
+#endif // SMSDETECTOR_H

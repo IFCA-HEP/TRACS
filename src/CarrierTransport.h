@@ -1,3 +1,7 @@
+#ifndef CARRIERTRANSPORT_H
+#define CARRIERTRANSPORT_H
+
+
 #include <dolfin.h>
 
 #include <CarrierMobility.h>
@@ -18,3 +22,5 @@ class DriftTransport
     void operator() ( const std::array< double,2> &x , std::array< double,2> &dxdt , const double /* t */ );
 
 };
+
+#endif // CARRIERTRANSPORT_H

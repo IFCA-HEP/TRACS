@@ -1,3 +1,6 @@
+#ifndef CARRIERMOBILITY_H
+#define CARRIERMOBILITY_H
+
 #include <cmath>
 
 class JacoboniMobility
@@ -13,3 +16,5 @@ class JacoboniMobility
     ~JacoboniMobility();
     double obtain_mobility(double e_field_mod);
 };
+
+#endif // CARRIERMOBILITY_H

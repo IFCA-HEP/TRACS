@@ -29,7 +29,14 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="2" column="0">
-         <widget class="QCustomPlot" name="potentials_qcustomplot_cut" native="true"/>
+         <widget class="QCustomPlot" name="potentials_qcustomplot_cut" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="detector_properties_layout">
@@ -156,6 +163,12 @@
         </item>
         <item row="2" column="1">
          <widget class="QGroupBox" name="other_conf_layout">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="font">
            <font>
             <pointsize>9</pointsize>
@@ -190,6 +203,23 @@
              </property>
              <property name="value">
               <double>150.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="nn_strips_label">
+             <property name="text">
+              <string>Neighbour Strips</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="nn_strips_int_box">
+             <property name="maximum">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>3</number>
              </property>
             </widget>
            </item>
@@ -241,6 +271,12 @@
            </item>
            <item row="5" column="0">
             <widget class="QProgressBar" name="progress_bar">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="value">
               <number>0</number>
              </property>
@@ -267,28 +303,18 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="nn_strips_label">
-             <property name="text">
-              <string>Number of Neighbour Strips</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="nn_strips_int_box">
-             <property name="maximum">
-              <number>10</number>
-             </property>
-             <property name="value">
-              <number>3</number>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QCustomPlot" name="potentials_qcustomplot_map" native="true"/>
+         <widget class="QCustomPlot" name="potentials_qcustomplot_map" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>300</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -323,14 +349,12 @@
  </customwidgets>
  <tabstops>
   <tabstop>tabs</tabstop>
-  <tabstop>show_electric_pot_button</tabstop>
   <tabstop>n_cellsx_int_box</tabstop>
   <tabstop>bias_voltage_double_box</tabstop>
   <tabstop>n_cellsy_int_box</tabstop>
   <tabstop>solve_fem_button</tabstop>
   <tabstop>implant_type_combo_box</tabstop>
   <tabstop>nn_strips_int_box</tabstop>
-  <tabstop>show_weighting_pot_button</tabstop>
   <tabstop>pitch_double_box</tabstop>
   <tabstop>width_double_box</tabstop>
   <tabstop>depth_double_box</tabstop>

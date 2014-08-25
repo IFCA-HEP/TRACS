@@ -1,3 +1,6 @@
+#ifndef CARRIER_H
+#define CARRIER_H
+
 #include  <valarray>
 
 #include <CarrierTransport.h>
@@ -30,3 +33,5 @@ class Carrier
     std::valarray<double> simulate_drift( double dt, double max_time);
     std::valarray<double> simulate_drift(double dt, double max_time, double x_init, double y_init );
 };
+
+#endif // CARRIER_H

@@ -1,7 +1,5 @@
 #include <SMSDetector.h>
 
-using namespace dolfin;
-
 SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100 ) :
     _pitch(pitch),
     _width(width),
@@ -127,6 +125,8 @@ Function * SMSDetector::get_d_f_grad()
   return &_d_f_grad;
 }
 
+
+
 bool SMSDetector::is_out(const std::array< double,2> &x)
 {
   bool out = true;
@@ -135,6 +135,25 @@ bool SMSDetector::is_out(const std::array< double,2> &x)
     out = false;
   }
   return out;
+}
+
+double  SMSDetector::get_x_min()
+{
+  return _x_min;
+}
+
+double  SMSDetector::get_x_max()
+{
+  return _x_max;
+}
+
+double  SMSDetector::get_y_min()
+{
+  return _y_min;
+}
+double  SMSDetector::get_y_max()
+{
+  return _y_max;
 }
 
 
