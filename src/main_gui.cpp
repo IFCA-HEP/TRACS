@@ -4,6 +4,8 @@
 
 int main(int argc, char* argv[])
 {
+  parameters["allow_extrapolation"] = true;
+
   QApplication app(argc, argv);
   MainWindow mainWindow;
 

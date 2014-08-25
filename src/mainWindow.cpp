@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
   connect(ui->show_weighting_pot_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential()));
   connect(ui->show_electric_pot_button, SIGNAL(clicked()), this, SLOT(show_electric_potential()));
+  connect(ui->single_carrier_button, SIGNAL(clicked()),this, SLOT(drift_single_carrier()));
 
 }
 
@@ -24,6 +25,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::solve_fem()
 {
+  double v_bias = 150.0;
+  double v_depletion = 61.0;
+  detector.set_voltages(v_bias, v_depletion);
 
   detector.solve_w_u();
   detector.solve_d_u();
@@ -93,5 +97,47 @@ void MainWindow::show_electric_potential()
   // Plot electric potential in an external window
   plot(reference_to_no_delete_pointer(*d_u),"Electric Potential","auto");
   interactive();
+}
+
+void MainWindow::drift_single_carrier()
+{
+
+
+  // Create carrier and observe movement
+  SMSDetector * dec_pointer = &detector;
+
+  double dt = 1.e-11;
+  double max_time = 10.e-9;
+  // get number of steps from time
+  const int max_steps = (int) std::floor(max_time / dt);
+
+  std::valarray<double> curr_elec((size_t) max_steps);
+
+  curr_elec = 0;
+
+  Carrier electron('h', 1. , 300., 190. , dec_pointer, 0.0);
+
+  curr_elec += electron.simulate_drift( dt , max_time, 300., 100.);
+  QVector<double> x(max_steps), y(max_steps);
+
+  std::ofstream output_file("./example.txt");
+
+  for (int i=0; i< max_steps; i++)
+  {
+     x[i] = i*dt;
+     y[i] = curr_elec[i];
+     output_file << x[i] << ", ";
+     output_file << curr_elec[i] << ", ";
+     output_file << y[i] << ", ";
+  }
+
+  output_file.close();
+
+  ui->carrier_curr_qcp->addGraph();
+  ui->carrier_curr_qcp->graph(0)->setData(x,y);
+  ui->carrier_curr_qcp->xAxis->setRange(0, max_time);
+  ui->carrier_curr_qcp->yAxis->setRange(curr_elec.min(), curr_elec.max());
+  ui->carrier_curr_qcp->replot();
+
 }
 

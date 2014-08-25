@@ -9,6 +9,9 @@
 #include <SMSDetector.h>
 #include <Carrier.h>
 
+#include <fstream>
+#include <iterator>
+
 namespace Ui {
 class MainWindow;
 }
@@ -25,6 +28,7 @@ private slots:
     void solve_fem();
     void show_weighting_potential();
     void show_electric_potential();
+    void drift_single_carrier();
 
 private:
     Ui::MainWindow *ui;
