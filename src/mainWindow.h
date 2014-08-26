@@ -26,13 +26,17 @@ public:
 
 private slots:
     void solve_fem();
-    void show_weighting_potential();
-    void show_electric_potential();
+    void show_weighting_potential_2d();
+    void show_weighting_potential_3d();
+    void show_electric_potential_2d();
+    void show_electric_potential_3d();
     void drift_single_carrier();
 
 private:
     Ui::MainWindow *ui;
-    SMSDetector detector;
+    SMSDetector * detector;
+    void init_weighting_potential_plot();
+    void init_electric_potential_plot();
 
 
 };

@@ -5,16 +5,20 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    detector(80., 30., 200., 3, 'p', 'n', 150, 150)
+    detector( new SMSDetector(80., 30., 200., 3, 'p', 'n', 150, 150))
 {
   ui->setupUi(this);
 
+  init_weighting_potential_plot();
+  init_electric_potential_plot();
 
 
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
-  connect(ui->show_weighting_pot_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential()));
-  connect(ui->show_electric_pot_button, SIGNAL(clicked()), this, SLOT(show_electric_potential()));
-  connect(ui->single_carrier_button, SIGNAL(clicked()),this, SLOT(drift_single_carrier()));
+  connect(ui->show_weighting_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_2d()));
+  connect(ui->show_weighting_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_3d()));
+  connect(ui->show_electric_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_2d()));
+  connect(ui->show_electric_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_3d()));
+  connect(ui->s_carrier_button, SIGNAL(clicked()),this, SLOT(drift_single_carrier()));
 
 }
 
@@ -25,75 +29,113 @@ MainWindow::~MainWindow()
 
 void MainWindow::solve_fem()
 {
-  double v_bias = 150.0;
-  double v_depletion = 61.0;
-  detector.set_voltages(v_bias, v_depletion);
+  ui->fem_progress_bar->setValue(5);
+  // get detector and solver variables
+  double pitch = ui->pitch_double_box->value();
+  double width = ui->width_double_box->value();
+  double depth = ui->depth_double_box->value();
+  int nns = ui->nn_strips_int_box->value();
+  char bulk_type = ui->bulk_type_combo_box->currentText().toStdString().c_str()[0];
+  char implant_type = ui->implant_type_combo_box->currentText().toStdString().c_str()[0];
+  int n_cellsx = ui->n_cellsx_int_box->value();
+  int n_cellsy = ui->n_cellsy_int_box->value();
 
-  detector.solve_w_u();
-  detector.solve_d_u();
-  detector.solve_w_f_grad();
-  detector.solve_d_f_grad();
+  ui->fem_progress_bar->setValue(10);
+  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy);
+
+  double v_bias = ui->bias_voltage_double_box->value();
+  double v_depletion = ui->depletion_voltage_double_box->value();
+  detector->set_voltages(v_bias, v_depletion);
+
+  // solve potentials and field using FEM methods
+  ui->fem_progress_bar->setValue(20);
+  detector->solve_w_u();
+  ui->fem_progress_bar->setValue(40);
+  detector->solve_d_u();
+  ui->fem_progress_bar->setValue(60);
+  detector->solve_w_f_grad();
+  ui->fem_progress_bar->setValue(80);
+  detector->solve_d_f_grad();
+  ui->fem_progress_bar->setValue(95);
+
+  // plot solutions in 2d
+  show_weighting_potential_2d();
+  show_electric_potential_2d();
+  ui->fem_progress_bar->setValue(100);
+
 }
 
 
 
-void MainWindow::show_weighting_potential()
+void MainWindow::show_weighting_potential_2d()
 {
-  // Get weighting potential
-  Function * w_u = detector.get_w_u();
+  // get weighting potential from detector instance
+  Function * w_u = detector->get_w_u();
 
-  ui->potentials_qcustomplot_map->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom); // this will also allow rescaling the color scale by dragging/zooming
-  ui->potentials_qcustomplot_map->axisRect()->setupFullAxesBox(true);
-
-  QCPColorMap *color_map_w_u = new QCPColorMap(ui->potentials_qcustomplot_map->xAxis, ui->potentials_qcustomplot_map->yAxis);
-  ui->potentials_qcustomplot_map->addPlottable(color_map_w_u);
-
-  int n_bins_x = 150;
-  int n_bins_y = 150;
-
-  double x_min = detector.get_x_min();
-  double x_max = detector.get_x_max();
-  double y_min = detector.get_y_min();
-  double y_max = detector.get_y_max();
-
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
   double step_x = (x_max -x_min)/n_bins_x;
   double step_y = (y_max -y_min)/n_bins_y;
 
+  // get plot and set new data
+  QCPColorMap *color_map_w_u = qobject_cast<QCPColorMap *>(ui->weighting_pot_qcp->plottable(0));
   color_map_w_u->data()->setSize(n_bins_x,n_bins_y);
   color_map_w_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
-
   for (int x=0; x<n_bins_x; ++x)
     for (int y=0; y<n_bins_y; ++y)
       color_map_w_u->data()->setCell(x, y, (*w_u)(x*step_x, y*step_y));
-
-  // add a color scale:
-  QCPColorScale *colorScale = new QCPColorScale(ui->potentials_qcustomplot_map);
-  ui->potentials_qcustomplot_map->plotLayout()->addElement(0, 1, colorScale); // add it to the right of the main axis rect
-  colorScale->setType(QCPAxis::atRight); // scale shall be vertical bar with tick/axis labels right (actually atRight is already the default)
-  color_map_w_u->setColorScale(colorScale); // associate the color map with the color scale
-  colorScale->axis()->setLabel("Weighting Potential");
-
   color_map_w_u->setGradient(QCPColorGradient::gpPolar);
   color_map_w_u->rescaleDataRange(true);
+  ui->weighting_pot_qcp->rescaleAxes();
+  ui->weighting_pot_qcp->replot();
+}
 
-  // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
-  QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->potentials_qcustomplot_map);
-  ui->potentials_qcustomplot_map->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
-
-
-  ui->potentials_qcustomplot_map->rescaleAxes();
-  ui->potentials_qcustomplot_map->replot();
-
+void MainWindow::show_weighting_potential_3d()
+{
+  // get weighting potential from detector instance
+  Function * w_u = detector->get_w_u();
   // Plot weighting potential in an external window
   plot(reference_to_no_delete_pointer(*w_u),"Weighting Potential","auto");
   interactive();
 }
 
-void MainWindow::show_electric_potential()
+void MainWindow::show_electric_potential_2d()
+{
+  // get electric potential from detector instance
+  Function * d_u = detector->get_d_u();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // get plot and set new data
+  QCPColorMap *color_map_d_u = qobject_cast<QCPColorMap *>(ui->electric_pot_qcp->plottable(0));
+  color_map_d_u->data()->setSize(n_bins_x,n_bins_y);
+  color_map_d_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  for (int x=0; x<n_bins_x; ++x)
+    for (int y=0; y<n_bins_y; ++y)
+      color_map_d_u->data()->setCell(x, y, (*d_u)(x*step_x, y*step_y));
+  color_map_d_u->setGradient(QCPColorGradient::gpPolar);
+  color_map_d_u->rescaleDataRange(true);
+  ui->electric_pot_qcp->rescaleAxes();
+  ui->electric_pot_qcp->replot();
+}
+
+void MainWindow::show_electric_potential_3d()
 {
   // Get electric potential
-  Function * d_u = detector.get_d_u();
+  Function * d_u = detector->get_d_u();
   // Plot electric potential in an external window
   plot(reference_to_no_delete_pointer(*d_u),"Electric Potential","auto");
   interactive();
@@ -102,42 +144,131 @@ void MainWindow::show_electric_potential()
 void MainWindow::drift_single_carrier()
 {
 
-
-  // Create carrier and observe movement
-  SMSDetector * dec_pointer = &detector;
-
-  double dt = 1.e-11;
-  double max_time = 10.e-9;
+  double dt = 1.e-12 * ui->s_carrier_time_step_box->value();
+  double max_time = 1.e-9 * ui->s_carrier_max_time_box->value();
   // get number of steps from time
   const int max_steps = (int) std::floor(max_time / dt);
 
   std::valarray<double> curr_elec((size_t) max_steps);
+  std::valarray<double> curr_hole((size_t) max_steps);
 
   curr_elec = 0;
+  curr_hole = 0;
 
-  Carrier electron('h', 1. , 300., 190. , dec_pointer, 0.0);
+  double x_pos = ui->s_carrier_x_pos_box->value();
+  double y_pos = ui->s_carrier_y_pos_box->value();
 
-  curr_elec += electron.simulate_drift( dt , max_time, 300., 100.);
-  QVector<double> x(max_steps), y(max_steps);
+  Carrier electron('e', 1. , x_pos, y_pos , detector, 0.0);
+  Carrier hole('h', 1., x_pos, y_pos, detector, 0.0);
 
-  std::ofstream output_file("./example.txt");
+  curr_elec += electron.simulate_drift( dt , max_time, x_pos, y_pos);
+  curr_hole += hole.simulate_drift( dt , max_time, x_pos, y_pos);
+  QVector<double> x_elec(max_steps), y_elec(max_steps);
+  QVector<double> x_hole(max_steps), y_hole(max_steps);
 
   for (int i=0; i< max_steps; i++)
   {
-     x[i] = i*dt;
-     y[i] = curr_elec[i];
-     output_file << x[i] << ", ";
-     output_file << curr_elec[i] << ", ";
-     output_file << y[i] << ", ";
+     x_elec[i] = i*dt;
+     x_hole[i] = i*dt;
+     y_elec[i] = curr_elec[i];
+     y_hole[i] = curr_hole[i];
   }
 
-  output_file.close();
-
+  ui->carrier_curr_qcp->legend->setVisible(true);
   ui->carrier_curr_qcp->addGraph();
-  ui->carrier_curr_qcp->graph(0)->setData(x,y);
-  ui->carrier_curr_qcp->xAxis->setRange(0, max_time);
-  ui->carrier_curr_qcp->yAxis->setRange(curr_elec.min(), curr_elec.max());
+  ui->carrier_curr_qcp->graph(0)->setPen(QPen(Qt::blue));
+  ui->carrier_curr_qcp->graph(0)->setData(x_elec,y_elec);
+  ui->carrier_curr_qcp->graph(0)->setName("electron");
+  ui->carrier_curr_qcp->addGraph();
+  ui->carrier_curr_qcp->graph(1)->setPen(QPen(Qt::red));
+  ui->carrier_curr_qcp->graph(1)->setData(x_hole,y_hole);
+  ui->carrier_curr_qcp->graph(1)->setName("hole");
+  ui->carrier_curr_qcp->graph(0)->rescaleAxes();
+  ui->carrier_curr_qcp->graph(1)->rescaleAxes(true);
+  ui->carrier_curr_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
   ui->carrier_curr_qcp->replot();
 
+}
+
+void MainWindow::init_weighting_potential_plot()
+{
+  // allow resizing and dragging
+  ui->weighting_pot_qcp->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+  ui->weighting_pot_qcp->axisRect()->setupFullAxesBox(true);
+
+  // create and add color map object
+  QCPColorMap *color_map_w_u = new QCPColorMap(ui->weighting_pot_qcp->xAxis, ui->weighting_pot_qcp->yAxis);
+  ui->weighting_pot_qcp->addPlottable(color_map_w_u);
+
+  // add a color scale and set to the right of the main axis rect
+  QCPColorScale *colorScale = new QCPColorScale(ui->weighting_pot_qcp);
+  ui->weighting_pot_qcp->plotLayout()->addElement(0, 1, colorScale);
+  colorScale->setType(QCPAxis::atRight);
+  color_map_w_u->setColorScale(colorScale);
+  colorScale->axis()->setLabel("Weighting Potential");
+
+  // get inital variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+
+  // set ranges and color gradients
+  color_map_w_u->data()->setSize(n_bins_x,n_bins_y);
+  color_map_w_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  color_map_w_u->setGradient(QCPColorGradient::gpPolar);
+  color_map_w_u->rescaleDataRange(true);
+
+  // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+  QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->weighting_pot_qcp);
+  ui->weighting_pot_qcp->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+
+  // reescale and replot
+  ui->weighting_pot_qcp->rescaleAxes();
+  ui->weighting_pot_qcp->replot();
+}
+
+void MainWindow::init_electric_potential_plot()
+{
+  // allow resizing and dragging
+  ui->electric_pot_qcp->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+  ui->electric_pot_qcp->axisRect()->setupFullAxesBox(true);
+
+  // create and add color map object
+  QCPColorMap *color_map_d_u = new QCPColorMap(ui->electric_pot_qcp->xAxis, ui->electric_pot_qcp->yAxis);
+  ui->electric_pot_qcp->addPlottable(color_map_d_u);
+
+  // add a color scale and set to the right of the main axis rect
+  QCPColorScale *colorScale = new QCPColorScale(ui->electric_pot_qcp);
+  ui->electric_pot_qcp->plotLayout()->addElement(0, 1, colorScale);
+  colorScale->setType(QCPAxis::atRight);
+  color_map_d_u->setColorScale(colorScale);
+  colorScale->axis()->setLabel("Electric Potential");
+
+  // get inital variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+
+  // set ranges and color gradients
+  color_map_d_u->data()->setSize(n_bins_x,n_bins_y);
+  color_map_d_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  color_map_d_u->setGradient(QCPColorGradient::gpPolar);
+  color_map_d_u->rescaleDataRange(true);
+
+  // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+  QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->electric_pot_qcp);
+  ui->electric_pot_qcp->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+
+  // reescale and replot
+  ui->electric_pot_qcp->rescaleAxes();
+  ui->electric_pot_qcp->replot();
 }
 

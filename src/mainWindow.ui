@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>875</width>
-    <height>593</height>
+    <height>619</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="potentials_tab">
        <property name="enabled">
@@ -29,7 +29,7 @@
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
         <item row="2" column="0">
-         <widget class="QCustomPlot" name="potentials_qcustomplot_cut" native="true">
+         <widget class="QCustomPlot" name="electric_pot_qcp" native="true">
           <property name="minimumSize">
            <size>
             <width>300</width>
@@ -48,7 +48,7 @@
            </font>
           </property>
           <property name="title">
-           <string>Detector Properties</string>
+           <string>DETECTOR PROPERTIES</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="5" column="1">
@@ -177,7 +177,7 @@
            </font>
           </property>
           <property name="title">
-           <string>Other Configuration</string>
+           <string>ADDITIONAL CONFIGURATION</string>
           </property>
           <layout class="QFormLayout" name="formLayout">
            <property name="fieldGrowthPolicy">
@@ -269,8 +269,8 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0">
-            <widget class="QProgressBar" name="progress_bar">
+           <item row="6" column="0">
+            <widget class="QProgressBar" name="fem_progress_bar">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -282,24 +282,60 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="1">
+           <item row="6" column="1">
             <widget class="QPushButton" name="solve_fem_button">
              <property name="text">
               <string>Solve FEM Problem</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QPushButton" name="show_weighting_pot_button">
+           <item row="7" column="1">
+            <layout class="QHBoxLayout" name="show_weighting_pot_buttons">
+             <item>
+              <widget class="QPushButton" name="show_weighting_pot_2d_button">
+               <property name="text">
+                <string>Show 2D</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="show_weighting_pot_3d_button">
+               <property name="text">
+                <string>Show 3D</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="10" column="1">
+            <layout class="QHBoxLayout" name="show_electric_pot_buttons">
+             <item>
+              <widget class="QPushButton" name="show_electric_pot_2d_button">
+               <property name="text">
+                <string>Show 2D</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="show_electric_pot_3d_button">
+               <property name="text">
+                <string>Show 3D</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="10" column="0">
+            <widget class="QLabel" name="show_electric_pot_label">
              <property name="text">
-              <string>Show Weighting Potential</string>
+              <string>Electric Potential</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
-            <widget class="QPushButton" name="show_electric_pot_button">
+           <item row="7" column="0">
+            <widget class="QLabel" name="show_weighting_pot_label">
              <property name="text">
-              <string>Show Electric Potential</string>
+              <string>Weighting Potential</string>
              </property>
             </widget>
            </item>
@@ -307,7 +343,7 @@
          </widget>
         </item>
         <item row="0" column="0">
-         <widget class="QCustomPlot" name="potentials_qcustomplot_map" native="true">
+         <widget class="QCustomPlot" name="weighting_pot_qcp" native="true">
           <property name="minimumSize">
            <size>
             <width>300</width>
@@ -339,48 +375,48 @@
          <widget class="QCustomPlot" name="carrier_map_qcp" native="true"/>
         </item>
         <item row="0" column="1">
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="s_carrier_group_box">
           <property name="title">
-           <string>One Carrier</string>
+           <string>SINGLE CARRIER</string>
           </property>
           <layout class="QFormLayout" name="formLayout_2">
            <item row="1" column="0">
-            <widget class="QLabel" name="label">
+            <widget class="QLabel" name="s_carrier_q_label">
              <property name="text">
-              <string>Charge units</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;q&lt;/span&gt; (e units)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
            <item row="6" column="1">
-            <widget class="QPushButton" name="single_carrier_button">
+            <widget class="QPushButton" name="s_carrier_button">
              <property name="text">
               <string>Generate and Drift</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0">
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="s_carrier_x_pos_label">
              <property name="text">
-              <string>X Position</string>
+              <string>X Position (mum)</string>
              </property>
             </widget>
            </item>
            <item row="3" column="0">
-            <widget class="QLabel" name="label_4">
+            <widget class="QLabel" name="s_carrier_y_pos_label">
              <property name="text">
-              <string>Y Position</string>
+              <string>Y Position (mum)</string>
              </property>
             </widget>
            </item>
            <item row="0" column="0">
-            <widget class="QLabel" name="label_5">
+            <widget class="QLabel" name="s_carrier_type_label">
              <property name="text">
-              <string>Type</string>
+              <string>Carrier type</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="s_carrier_type">
              <item>
               <property name="text">
                <string>electron+hole</string>
@@ -399,17 +435,17 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+            <widget class="QDoubleSpinBox" name="s_carrier_x_pos_box">
              <property name="maximum">
               <double>10000.000000000000000</double>
              </property>
              <property name="value">
-              <double>50.000000000000000</double>
+              <double>300.000000000000000</double>
              </property>
             </widget>
            </item>
            <item row="3" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_3">
+            <widget class="QDoubleSpinBox" name="s_carrier_y_pos_box">
              <property name="maximum">
               <double>1000.000000000000000</double>
              </property>
@@ -419,7 +455,7 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QSpinBox" name="spinBox">
+            <widget class="QSpinBox" name="s_carrier_q_box">
              <property name="maximum">
               <number>100000</number>
              </property>
@@ -429,31 +465,38 @@
             </widget>
            </item>
            <item row="5" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+            <widget class="QDoubleSpinBox" name="s_carrier_max_time_box">
+             <property name="value">
+              <double>10.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="doubleSpinBox_4">
+            <widget class="QDoubleSpinBox" name="s_carrier_time_step_box">
+             <property name="maximum">
+              <double>10000.000000000000000</double>
+             </property>
              <property name="value">
-              <double>1.000000000000000</double>
+              <double>10.000000000000000</double>
              </property>
             </widget>
            </item>
            <item row="4" column="0">
-            <widget class="QLabel" name="label_6">
+            <widget class="QLabel" name="s_carrier_time_step_label">
              <property name="text">
-              <string>Time Step</string>
+              <string>Time Step (ps)</string>
              </property>
             </widget>
            </item>
            <item row="5" column="0">
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="s_carrier_max_time_label">
              <property name="text">
-              <string>Max TIme</string>
+              <string>Max TIme (ns)</string>
              </property>
             </widget>
            </item>
            <item row="6" column="0">
-            <widget class="QLabel" name="label_2">
+            <widget class="QLabel" name="s_carrier_n_steps_label">
              <property name="text">
               <string># Steps</string>
              </property>

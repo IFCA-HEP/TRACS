@@ -13,7 +13,7 @@ SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char
     _y_max(_depth),
     _n_cells_x(n_cells_x),
     _n_cells_y(n_cells_y),
-    _mesh(_x_min,_y_min,_x_max,_depth, _n_cells_x, _n_cells_y),
+    _mesh(_x_min,_y_min,_x_max,_y_max, _n_cells_x, _n_cells_y),
     _periodic_boundary(_x_min, _x_max, _depth),
     _central_strip(_pitch, _width, _nns),
     _neighbour_strips(_pitch, _width, _nns),
@@ -155,6 +155,69 @@ double  SMSDetector::get_y_max()
 {
   return _y_max;
 }
+
+
+void SMSDetector::set_pitch(double pitch)
+{
+  _pitch = pitch;
+}
+
+void SMSDetector::set_width(double width)
+{
+  _width = width;
+}
+
+void SMSDetector::set_depth(double depth)
+{
+  _depth = depth;
+}
+
+void SMSDetector::set_nns(int nns)
+{
+  _nns = nns;
+}
+
+void SMSDetector::set_bulk_type(char bulk_type)
+{
+  _bulk_type = bulk_type;
+}
+
+void SMSDetector::set_implant_type(char implant_type)
+{
+  _implant_type = implant_type;
+}
+
+void SMSDetector::set_n_cells_x(int n_cells_x)
+{
+  _n_cells_x = n_cells_x;
+}
+
+void SMSDetector::set_n_cells_y(int n_cells_y)
+{
+  _n_cells_y  = n_cells_y;
+}
+
+// void SMSDetector::set_derived() {
+//     _x_min = 0.0 ;
+//     _x_max = _pitch * (2*_nns+1);
+//     _y_min = 0;
+//     _y_max = _depth;
+//     _mesh = RectangleMesh(_x_min,_y_min,_x_max,_y_max, _n_cells_x, _n_cells_y);
+//     _periodic_boundary = PeriodicLateralBoundary(_x_min, _x_max, _depth);
+//     _central_strip = CentralStripBoundary(_pitch, _width, _nns);
+//     _neighbour_strips = NeighbourStripBoundary(_pitch, _width, _nns);
+//     _backplane = BackPlaneBoundary(_x_min, _x_max, _depth);
+//     _V_p = Poisson::FunctionSpace(_mesh, _periodic_boundary);
+//     _a_p = Poisson::BilinearForm(_V_p, _V_p);
+//     _L_p = Poisson::LinearForm(_V_p);
+//     _V_g = Gradient::FunctionSpace(_mesh);
+//     _a_g = Gradient::BilinearForm(_V_g, _V_g);
+//     _L_g = Gradient::LinearForm(_V_g);
+//     _w_u = Function(_V_p);
+//     _d_u = Function(_V_p);
+//     _w_f_grad = Function(_V_g);
+//     _d_f_grad = Function(_V_g);
+// }
 
 
 SMSDetector::~SMSDetector()

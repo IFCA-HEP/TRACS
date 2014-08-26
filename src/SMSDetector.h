@@ -72,6 +72,16 @@ class SMSDetector
     ~SMSDetector();
     // set methods
     void set_voltages(double v_bias, double v_depletion);
+    void set_pitch(double pitch);
+    void set_width(double width);
+    void set_depth(double depth);
+    void set_nns(int nns);
+    void set_bulk_type(char bulk_type);
+    void set_implant_type(char implant_type);
+    void set_n_cells_x(int n_cells_x);
+    void set_n_cells_y(int n_cells_y);
+    void set_derived(); // Properly sets all derived quantities
+
 
     // solve potentials
     void solve_w_u();
