@@ -5,15 +5,15 @@ JacoboniMobility::JacoboniMobility( char carrier_type, double T = 300)
   _T = T;
   if (carrier_type == 'e')
   {
-    _mu0 = 1440. * std::pow(_T/300., -2.26);
-    _vsat = 1.054e7  * std::pow(_T/300., -0.602);
-    _beta = 1.075 * std::pow(_T/300., 0.220);
+    _mu0 = 1430. * std::pow(_T/300., -2.5);
+    _vsat = 1.04e7  * std::pow(_T/300., -0.85);
+    _beta = 1.01 * std::pow(_T/300., 0.87);
   }
   else if (carrier_type == 'h')
   {
-    _mu0 = 474. * std::pow(_T/300., -2.619);
-    _vsat = 0.940e7  * std::pow(_T/300., -0.226);
-    _beta = 0.924 * std::pow(_T/300., 0.550);
+    _mu0 = 480. * std::pow(_T/300., -2.82);
+    _vsat = 9.2e6  * std::pow(_T/300., -0.04);
+    _beta = 0.924 * std::pow(_T/300., 1.0 );
   }
 }
 

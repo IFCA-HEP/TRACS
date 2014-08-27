@@ -60,12 +60,12 @@ int main()
   detector.solve_w_f_grad();
   Function * w_f_grad = detector.get_w_f_grad();
   // Plot solution
-  //plot((*w_f_grad)[1],"Weighting Field (Y)","auto");
+  plot((*w_f_grad)[1],"Weighting Field (Y)","auto");
 
   detector.solve_d_f_grad();
   Function * d_f_grad = detector.get_d_f_grad();
   // Plot solution
-  //plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+  plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
 
   // Create carrier and observe movement
   SMSDetector * dec_pointer = &detector;
