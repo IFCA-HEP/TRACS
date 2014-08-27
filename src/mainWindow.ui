@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>875</width>
-    <height>619</height>
+    <height>613</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="potentials_tab">
        <property name="enabled">
@@ -356,7 +356,7 @@
       </widget>
       <widget class="QWidget" name="currents_tab">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -371,11 +371,27 @@
         <string>Currents</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetNoConstraint</enum>
+        </property>
         <item row="0" column="0">
-         <widget class="QCustomPlot" name="carrier_map_qcp" native="true"/>
+         <widget class="QCustomPlot" name="carrier_map_qcp" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
         </item>
         <item row="0" column="1">
          <widget class="QGroupBox" name="s_carrier_group_box">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>SINGLE CARRIER</string>
           </property>
@@ -507,6 +523,12 @@
         </item>
         <item row="1" column="0">
          <widget class="QCustomPlot" name="carrier_curr_qcp" native="true">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>300</width>
@@ -517,6 +539,12 @@
         </item>
         <item row="1" column="1">
          <widget class="QGroupBox" name="groupBox_2">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="title">
            <string>CONSTANT CARRIER DISTRIBUTION THROUGH A LINE</string>
           </property>
@@ -524,10 +552,18 @@
            <item row="1" column="1">
             <layout class="QHBoxLayout" name="l_carrier_end_point">
              <item>
-              <widget class="QDoubleSpinBox" name="l_carrier_endx_box"/>
+              <widget class="QDoubleSpinBox" name="l_carrier_endx_box">
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="l_carrier_endy_box"/>
+              <widget class="QDoubleSpinBox" name="l_carrier_endy_box">
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
@@ -546,7 +582,11 @@
             </widget>
            </item>
            <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="l_carrier_sep_box"/>
+            <widget class="QDoubleSpinBox" name="l_carrier_sep_box">
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label">
@@ -558,34 +598,32 @@
            <item row="0" column="1">
             <layout class="QHBoxLayout" name="l_carrier_start_point">
              <item>
-              <widget class="QDoubleSpinBox" name="l_carrier_startx_box"/>
+              <widget class="QDoubleSpinBox" name="l_carrier_startx_box">
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+              </widget>
              </item>
              <item>
-              <widget class="QDoubleSpinBox" name="l_carrier_starty_box"/>
+              <widget class="QDoubleSpinBox" name="l_carrier_starty_box">
+               <property name="maximum">
+                <double>1000.000000000000000</double>
+               </property>
+              </widget>
              </item>
             </layout>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Carrier Charge (e units)</string>
-             </property>
-            </widget>
-           </item>
            <item row="3" column="1">
-            <widget class="QDoubleSpinBox" name="l_carrier_q_box"/>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string># Step</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
             <widget class="QPushButton" name="l_carrier_button">
              <property name="text">
               <string>Generate and Drift</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_5">
+             <property name="text">
+              <string># Step</string>
              </property>
             </widget>
            </item>
