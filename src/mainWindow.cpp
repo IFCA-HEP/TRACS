@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   init_weighting_potential_plot();
   init_electric_potential_plot();
+  init_simple_currents_plot();
 
 
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
@@ -174,18 +175,14 @@ void MainWindow::drift_single_carrier()
      y_hole[i] = curr_hole[i];
   }
 
-  ui->carrier_curr_qcp->legend->setVisible(true);
-  ui->carrier_curr_qcp->addGraph();
-  ui->carrier_curr_qcp->graph(0)->setPen(QPen(Qt::blue));
+  // set new data
   ui->carrier_curr_qcp->graph(0)->setData(x_elec,y_elec);
-  ui->carrier_curr_qcp->graph(0)->setName("electron");
-  ui->carrier_curr_qcp->addGraph();
-  ui->carrier_curr_qcp->graph(1)->setPen(QPen(Qt::red));
   ui->carrier_curr_qcp->graph(1)->setData(x_hole,y_hole);
-  ui->carrier_curr_qcp->graph(1)->setName("hole");
+
+  // reescale and plot
   ui->carrier_curr_qcp->graph(0)->rescaleAxes();
   ui->carrier_curr_qcp->graph(1)->rescaleAxes(true);
-  ui->carrier_curr_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->carrier_curr_qcp->graph(2)->rescaleAxes(true);
   ui->carrier_curr_qcp->replot();
 
 }
@@ -270,5 +267,24 @@ void MainWindow::init_electric_potential_plot()
   // reescale and replot
   ui->electric_pot_qcp->rescaleAxes();
   ui->electric_pot_qcp->replot();
+}
+
+void MainWindow::init_simple_currents_plot()
+{
+  ui->carrier_curr_qcp->legend->setVisible(true);
+  ui->carrier_curr_qcp->addGraph();
+  ui->carrier_curr_qcp->graph(0)->setPen(QPen(Qt::blue));
+  ui->carrier_curr_qcp->graph(0)->setName("electron");
+  ui->carrier_curr_qcp->addGraph();
+  ui->carrier_curr_qcp->graph(1)->setPen(QPen(Qt::red));
+  ui->carrier_curr_qcp->graph(1)->setName("hole");
+  ui->carrier_curr_qcp->addGraph();
+  ui->carrier_curr_qcp->graph(2)->setPen(QPen(Qt::black));
+  ui->carrier_curr_qcp->graph(2)->setName("sum");
+  ui->carrier_curr_qcp->graph(0)->rescaleAxes();
+  ui->carrier_curr_qcp->graph(1)->rescaleAxes(true);
+  ui->carrier_curr_qcp->graph(2)->rescaleAxes(true);
+  ui->carrier_curr_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->carrier_curr_qcp->replot();
 }
 
