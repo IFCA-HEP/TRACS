@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->show_electric_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_3d()));
   connect(ui->s_carrier_button, SIGNAL(clicked()),this, SLOT(drift_single_carrier()));
   connect(ui->l_carrier_button, SIGNAL(clicked()),this, SLOT(drift_line_carrier()));
+  connect(ui->view_carrier_line_button, SIGNAL(clicked()),this, SLOT(show_carrier_map_line()));
 
 }
 
@@ -304,7 +305,28 @@ void MainWindow::drift_line_carrier()
   ui->carrier_curr_qcp->graph(2)->rescaleAxes(true);
   ui->carrier_curr_qcp->replot();
 
+}
 
+void MainWindow::show_carrier_map_line()
+{
+
+  // create a line item object
+  QCPItemLine * carrier_line = new QCPItemLine(ui->carrier_map_qcp);
+  ui->carrier_map_qcp->addItem(carrier_line);
+
+  // get data from ui
+  double l_start_x = ui->l_carrier_startx_box->value();
+  double l_start_y = ui->l_carrier_starty_box->value();
+  double l_end_x = ui->l_carrier_endx_box->value();
+  double l_end_y = ui->l_carrier_endy_box->value();
+
+  // set coordinates, color and replot
+  carrier_line->start->setType( QCPItemPosition::ptPlotCoords);
+  carrier_line->start->setCoords(l_start_x, l_start_y);
+  carrier_line->end->setType( QCPItemPosition::ptPlotCoords);
+  carrier_line->end->setCoords(l_end_x, l_end_y);
+  carrier_line->setPen(QPen(Qt::red));
+  ui->carrier_map_qcp->replot();
 
 }
 
