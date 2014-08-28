@@ -21,6 +21,7 @@ class Carrier
     std::array< double,2> _e_field; // electric field at the carrier position
     std::array< double,2> _w_field; // weighting field at the carrier positions
     double _e_field_mod;
+    int _sign; // sign to describe if carrier moves in e field direction or opposite
 
     SMSDetector * _detector;
     DriftTransport _drift;
