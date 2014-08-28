@@ -14,9 +14,8 @@
 //   error_control:                  False
 //   form_postfix:                   True
 //   format:                         'dolfin'
-//   log_level:                      10
+//   log_level:                      20
 //   log_prefix:                     ''
-//   no_ferari:                      True
 //   optimize:                       True
 //   output_dir:                     '.'
 //   precision:                      15
