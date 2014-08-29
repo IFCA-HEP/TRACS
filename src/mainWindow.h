@@ -43,6 +43,8 @@ private:
     void init_electric_potential_plot();
     void init_simple_currents_plot();
     void init_carrier_map_qcp();
+    void init_weighting_field_map_qcp();
+    void init_electric_field_map_qcp();
 
 
 };

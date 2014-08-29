@@ -18,7 +18,10 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
+      </property>
+      <property name="usesScrollButtons">
+       <bool>true</bool>
       </property>
       <widget class="QWidget" name="potentials_tab">
        <property name="enabled">
@@ -351,6 +354,49 @@
            </size>
           </property>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="fields_tab">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <attribute name="title">
+        <string>Fields</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="fields_top_layout">
+          <item>
+           <widget class="QCustomPlot" name="weighting_field_map_qcp" native="true"/>
+          </item>
+          <item>
+           <widget class="QCustomPlot" name="electric_field_map_qcp" native="true"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="fields_bottom_layout">
+          <item>
+           <widget class="QGroupBox" name="weighting_field_group">
+            <property name="title">
+             <string>WEIGHTING FIELD</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="cut_field_qcp" native="true">
+            <zorder>electric_field_group</zorder>
+           </widget>
+          </item>
+          <item>
+           <widget class="QGroupBox" name="electric_field_group">
+            <property name="title">
+             <string>ELECTRIC FIELD</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>

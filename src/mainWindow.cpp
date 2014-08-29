@@ -13,6 +13,8 @@ MainWindow::MainWindow(QWidget *parent) :
   init_electric_potential_plot();
   init_simple_currents_plot();
   init_carrier_map_qcp();
+  init_weighting_field_map_qcp();
+  init_electric_field_map_qcp();
 
 
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
@@ -460,3 +462,85 @@ void MainWindow::init_carrier_map_qcp()
   ui->carrier_map_qcp->replot();
 }
 
+void MainWindow::init_weighting_field_map_qcp()
+{
+  // allow resizing and dragging
+  ui->weighting_field_map_qcp->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+  ui->weighting_field_map_qcp->axisRect()->setupFullAxesBox(true);
+
+  // create and add color map object
+  QCPColorMap *color_map_w_u = new QCPColorMap(ui->weighting_field_map_qcp->xAxis, ui->weighting_field_map_qcp->yAxis);
+  ui->weighting_field_map_qcp->addPlottable(color_map_w_u);
+
+  // add a color scale and set to the right of the main axis rect
+  QCPColorScale *colorScale = new QCPColorScale(ui->weighting_field_map_qcp);
+  ui->weighting_field_map_qcp->plotLayout()->addElement(0, 1, colorScale);
+  colorScale->setType(QCPAxis::atRight);
+  color_map_w_u->setColorScale(colorScale);
+  colorScale->axis()->setLabel("Weighting Field");
+
+  // get inital variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+
+  // set ranges and color gradients
+  color_map_w_u->data()->setSize(n_bins_x,n_bins_y);
+  color_map_w_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  color_map_w_u->setGradient(QCPColorGradient::gpPolar);
+  color_map_w_u->rescaleDataRange(true);
+
+  // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+  QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->weighting_field_map_qcp);
+  ui->weighting_field_map_qcp->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+
+  // reescale and replot
+  ui->weighting_field_map_qcp->rescaleAxes();
+  ui->weighting_field_map_qcp->replot();
+}
+
+
+void MainWindow::init_electric_field_map_qcp()
+{
+  // allow resizing and dragging
+  ui->electric_field_map_qcp->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
+  ui->electric_field_map_qcp->axisRect()->setupFullAxesBox(true);
+
+  // create and add color map object
+  QCPColorMap *color_map_w_u = new QCPColorMap(ui->electric_field_map_qcp->xAxis, ui->electric_field_map_qcp->yAxis);
+  ui->electric_field_map_qcp->addPlottable(color_map_w_u);
+
+  // add a color scale and set to the right of the main axis rect
+  QCPColorScale *colorScale = new QCPColorScale(ui->electric_field_map_qcp);
+  ui->electric_field_map_qcp->plotLayout()->addElement(0, 1, colorScale);
+  colorScale->setType(QCPAxis::atRight);
+  color_map_w_u->setColorScale(colorScale);
+  colorScale->axis()->setLabel("Electric Field");
+
+  // get inital variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+
+  // set ranges and color gradients
+  color_map_w_u->data()->setSize(n_bins_x,n_bins_y);
+  color_map_w_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  color_map_w_u->setGradient(QCPColorGradient::gpPolar);
+  color_map_w_u->rescaleDataRange(true);
+
+  // make sure the axis rect and color scale synchronize their bottom and top margins (so they line up):
+  QCPMarginGroup *marginGroup = new QCPMarginGroup(ui->electric_field_map_qcp);
+  ui->electric_field_map_qcp->axisRect()->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+  colorScale->setMarginGroup(QCP::msBottom|QCP::msTop, marginGroup);
+
+  // reescale and replot
+  ui->electric_field_map_qcp->rescaleAxes();
+  ui->electric_field_map_qcp->replot();
+}
