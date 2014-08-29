@@ -378,6 +378,9 @@
            </item>
            <item>
             <layout class="QFormLayout" name="formLayout_4">
+             <property name="formAlignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="show_w_field_mod_label">
                <property name="text">
@@ -454,43 +457,95 @@
               </layout>
              </item>
              <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_7">
+              <widget class="QPushButton" name="w_field_vert_button">
                <property name="text">
-                <string>PushButton</string>
+                <string>Vertical Cut</string>
+               </property>
+               <property name="checkable">
+                <bool>false</bool>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+               <property name="autoDefault">
+                <bool>false</bool>
+               </property>
+               <property name="flat">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
              <item row="3" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
-                <widget class="QComboBox" name="comboBox"/>
+                <widget class="QComboBox" name="w_field_vert_combo">
+                 <item>
+                  <property name="text">
+                   <string>mod</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>x component</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>y component</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="doubleSpinBox"/>
+                <widget class="QDoubleSpinBox" name="w_field_vert_double">
+                 <property name="maximum">
+                  <double>10000.000000000000000</double>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
              <item row="4" column="0">
-              <widget class="QPushButton" name="pushButton_8">
+              <widget class="QPushButton" name="w_field_hor_button">
                <property name="text">
-                <string>PushButton</string>
+                <string>Horizontal Cut</string>
                </property>
               </widget>
              </item>
              <item row="4" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_6">
                <item>
-                <widget class="QComboBox" name="comboBox_2"/>
+                <widget class="QComboBox" name="w_field_hor_combo">
+                 <item>
+                  <property name="text">
+                   <string>mod</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>x component</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>y component</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_2"/>
+                <widget class="QDoubleSpinBox" name="w_field_hor_double">
+                 <property name="maximum">
+                  <double>10000.000000000000000</double>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
             </layout>
            </item>
            <item>
-            <widget class="QWidget" name="widget_2" native="true"/>
+            <widget class="QCustomPlot" name="weighting_field_cut_qcp" native="true"/>
            </item>
           </layout>
          </widget>
@@ -506,6 +561,9 @@
            </item>
            <item>
             <layout class="QFormLayout" name="formLayout_5">
+             <property name="formAlignment">
+              <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+             </property>
              <item row="0" column="0">
               <widget class="QLabel" name="label_7">
                <property name="text">
@@ -582,26 +640,46 @@
               </layout>
              </item>
              <item row="3" column="0">
-              <widget class="QPushButton" name="pushButton_15">
+              <widget class="QPushButton" name="e_field_vert_button">
                <property name="text">
-                <string>PushButton</string>
+                <string>Vertical Cut</string>
                </property>
               </widget>
              </item>
              <item row="3" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_9">
                <item>
-                <widget class="QComboBox" name="comboBox_3"/>
+                <widget class="QComboBox" name="e_field_vert_combo">
+                 <item>
+                  <property name="text">
+                   <string>mod</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>x component</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>y component</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_3"/>
+                <widget class="QDoubleSpinBox" name="e_field_vert_double">
+                 <property name="maximum">
+                  <double>10000.000000000000000</double>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
              <item row="4" column="0">
               <widget class="QPushButton" name="pushButton_16">
                <property name="text">
-                <string>PushButton</string>
+                <string>Horizontal Cut</string>
                </property>
               </widget>
              </item>
@@ -611,14 +689,18 @@
                 <widget class="QComboBox" name="comboBox_4"/>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="doubleSpinBox_4"/>
+                <widget class="QDoubleSpinBox" name="e_field_hor_double">
+                 <property name="maximum">
+                  <double>10000.000000000000000</double>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
             </layout>
            </item>
            <item>
-            <widget class="QWidget" name="widget" native="true"/>
+            <widget class="QCustomPlot" name="electric_field_cut_qcp" native="true"/>
            </item>
           </layout>
          </widget>

@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
   init_carrier_map_qcp();
   init_weighting_field_map_qcp();
   init_electric_field_map_qcp();
+  init_weighting_field_cut_qcp();
+  init_electric_field_cut_qcp();
 
 
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
@@ -39,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->show_e_field_3d_mod_button, SIGNAL(clicked()), this, SLOT(show_e_field_mod_3d()));
   connect(ui->show_e_field_3d_x_button, SIGNAL(clicked()), this, SLOT(show_e_field_x_3d()));
   connect(ui->show_e_field_3d_y_button, SIGNAL(clicked()), this, SLOT(show_e_field_y_3d()));
+  connect(ui->w_field_vert_button, SIGNAL(clicked()), this, SLOT(show_w_field_vert_cut()));
+  connect(ui->e_field_vert_button, SIGNAL(clicked()), this, SLOT(show_e_field_vert_cut()));
 
 }
 
@@ -226,6 +230,11 @@ void MainWindow::show_w_field_mod_map()
   color_map_w_f->rescaleDataRange(true);
   ui->weighting_field_map_qcp->rescaleAxes();
   ui->weighting_field_map_qcp->replot();
+
+  // set vertical and horizontal cuts to the middle
+  ui->w_field_vert_double->setValue(x_min + (x_max -x_min) / 2);
+  ui->w_field_hor_double->setValue(y_min + (y_max -y_min) / 2);
+
 }
 
 void MainWindow::show_e_field_mod_map()
@@ -262,6 +271,10 @@ void MainWindow::show_e_field_mod_map()
   ui->electric_field_map_qcp->rescaleAxes();
   ui->electric_field_map_qcp->replot();
 
+  // set vertical and horizontal cuts to the middle
+  ui->e_field_vert_double->setValue(x_min + (x_max -x_min) / 2);
+  ui->e_field_hor_double->setValue(y_min + (y_max -y_min) / 2);
+
 }
 
 
@@ -296,6 +309,10 @@ void MainWindow::show_w_field_x_map()
   color_map_w_f->rescaleDataRange(true);
   ui->weighting_field_map_qcp->rescaleAxes();
   ui->weighting_field_map_qcp->replot();
+
+  // set vertical and horizontal cuts to the middle
+  ui->w_field_vert_double->setValue(x_min + (x_max -x_min) / 2);
+  ui->w_field_hor_double->setValue(y_min + (y_max -y_min) / 2);
 }
 
 void MainWindow::show_e_field_x_map()
@@ -329,6 +346,10 @@ void MainWindow::show_e_field_x_map()
   color_map_e_f->rescaleDataRange(true);
   ui->electric_field_map_qcp->rescaleAxes();
   ui->electric_field_map_qcp->replot();
+
+  // set vertical and horizontal cuts to the middle
+  ui->e_field_vert_double->setValue(x_min + (x_max -x_min) / 2);
+  ui->e_field_hor_double->setValue(y_min + (y_max -y_min) / 2);
 }
 
 void MainWindow::show_w_field_y_map()
@@ -362,6 +383,10 @@ void MainWindow::show_w_field_y_map()
   color_map_w_f->rescaleDataRange(true);
   ui->weighting_field_map_qcp->rescaleAxes();
   ui->weighting_field_map_qcp->replot();
+
+  // set vertical and horizontal cuts to the middle
+  ui->w_field_vert_double->setValue(x_min + (x_max -x_min) / 2);
+  ui->w_field_hor_double->setValue(y_min + (y_max -y_min) / 2);
 }
 
 void MainWindow::show_e_field_y_map()
@@ -395,6 +420,10 @@ void MainWindow::show_e_field_y_map()
   color_map_e_f->rescaleDataRange(true);
   ui->electric_field_map_qcp->rescaleAxes();
   ui->electric_field_map_qcp->replot();
+
+  // set vertical and horizontal cuts to the middle
+  ui->e_field_vert_double->setValue(x_min + (x_max -x_min) / 2);
+  ui->e_field_hor_double->setValue(y_min + (y_max -y_min) / 2);
 }
 
 void MainWindow::show_w_field_mod_3d()
@@ -429,7 +458,7 @@ void MainWindow::show_e_field_mod_3d()
   // Get weighting field grad
   Function * e_f_grad = detector->get_d_f_grad();
   // Plot weighting field in an external window
-  plot(reference_to_no_delete_pointer(*e_f_grad),"Weighting Field Modulus","auto");
+  plot(reference_to_no_delete_pointer(*e_f_grad),"Electric Field Modulus","auto");
   interactive();
 }
 
@@ -438,7 +467,7 @@ void MainWindow::show_e_field_x_3d()
  // Get weighting field grad
   Function * e_f_grad = detector->get_d_f_grad();
   // Plot weighting field in an external window
-  plot(reference_to_no_delete_pointer((*e_f_grad)[0]),"Weighting Field X Component","auto");
+  plot(reference_to_no_delete_pointer((*e_f_grad)[0]),"Electric Field X Component","auto");
   interactive();
 }
 
@@ -447,8 +476,99 @@ void MainWindow::show_e_field_y_3d()
   // Get weighting field grad
   Function * e_f_grad = detector->get_d_f_grad();
   // Plot weighting field in an external window
-  plot(reference_to_no_delete_pointer((*e_f_grad)[1]),"Weighting Field Y Component","auto");
+  plot(reference_to_no_delete_pointer((*e_f_grad)[1]),"Electric Field Y Component","auto");
   interactive();
+}
+
+void MainWindow::show_w_field_vert_cut()
+{
+  // Get weighting field grad
+  Function * w_f_grad = detector->get_w_f_grad();
+
+  int index = ui->w_field_vert_combo->currentIndex();
+  double x_cut_value = ui->w_field_vert_double->value();
+
+  // get some required variables
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // create and fill vectors to plot
+  QVector<double> y_position(n_bins_y), w_field(n_bins_y);
+  for (int i = 0; i < n_bins_y; i++) {
+    double y_value = y_min + i*step_y;
+    y_position[i] = y_value;
+    double w_f_x = ((*w_f_grad)[0])(x_cut_value, y_value);
+    double w_f_y = ((*w_f_grad)[1])(x_cut_value, y_value);
+    if (index == 0) {
+      w_field[i] = sqrt(w_f_x*w_f_x + w_f_y*w_f_y);
+    } else if ( index == 1) {
+      w_field[i] = w_f_x;
+    } else if ( index == 2 ) {
+      w_field[i] = w_f_y;
+    }
+  }
+
+  // delete previous graph and create new graph
+  ui->weighting_field_cut_qcp->removeGraph(ui->weighting_field_cut_qcp->graph(0));
+  QCPGraph * graph = ui->weighting_field_cut_qcp->addGraph();
+  graph->setData(y_position, w_field);
+
+  // reescale and plot
+  graph->rescaleAxes();
+  ui->weighting_field_cut_qcp->replot();
+}
+
+void MainWindow::show_w_field_hor_cut()
+{
+
+}
+
+void MainWindow::show_e_field_vert_cut()
+{
+  // Get electric field grad
+  Function * e_f_grad = detector->get_d_f_grad();
+
+  int index = ui->e_field_vert_combo->currentIndex();
+  double x_cut_value = ui->e_field_vert_double->value();
+
+  // get some required variables
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // create and fill vectors to plot
+  QVector<double> y_position(n_bins_y), e_field(n_bins_y);
+  for (int i = 0; i < n_bins_y; i++) {
+    double y_value = y_min + i*step_y;
+    y_position[i] = y_value;
+    double e_f_x = ((*e_f_grad)[0])(x_cut_value, y_value);
+    double e_f_y = ((*e_f_grad)[1])(x_cut_value, y_value);
+    if (index == 0) {
+      e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
+    } else if ( index == 1) {
+      e_field[i] = e_f_x;
+    } else if ( index == 2 ) {
+      e_field[i] = e_f_y;
+    }
+  }
+
+  // delete previous graph and create new graph
+  ui->electric_field_cut_qcp->removeGraph(ui->electric_field_cut_qcp->graph(0));
+  QCPGraph * graph = ui->electric_field_cut_qcp->addGraph();
+  graph->setData(y_position, e_field);
+
+  // reescale and plot
+  graph->rescaleAxes();
+  ui->electric_field_cut_qcp->replot();
+
+}
+
+void MainWindow::show_e_field_hor_cut()
+{
+
 }
 
 
@@ -819,3 +939,17 @@ void MainWindow::init_electric_field_map_qcp()
   ui->electric_field_map_qcp->rescaleAxes();
   ui->electric_field_map_qcp->replot();
 }
+
+void MainWindow::init_weighting_field_cut_qcp()
+{
+  ui->weighting_field_cut_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->weighting_field_cut_qcp->replot();
+}
+
+void MainWindow::init_electric_field_cut_qcp()
+{
+  ui->electric_field_cut_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->electric_field_cut_qcp->replot();
+}
+
+

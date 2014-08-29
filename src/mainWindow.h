@@ -46,6 +46,11 @@ private slots:
     void show_e_field_x_3d();
     void show_w_field_y_3d();
     void show_e_field_y_3d();
+    void show_w_field_vert_cut();
+    void show_w_field_hor_cut();
+    void show_e_field_vert_cut();
+    void show_e_field_hor_cut();
+
 
     // currents tab
     void drift_single_carrier();
@@ -64,6 +69,10 @@ private:
 
     void init_weighting_field_map_qcp();
     void init_electric_field_map_qcp();
+    void init_weighting_field_cut_qcp();
+    void init_electric_field_cut_qcp();
+
+
 
 
 };
