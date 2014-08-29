@@ -36,8 +36,16 @@ private slots:
     // fields tab
     void show_w_field_mod_map();
     void show_e_field_mod_map();
-
-
+    void show_w_field_x_map();
+    void show_e_field_x_map();
+    void show_w_field_y_map();
+    void show_e_field_y_map();
+    void show_w_field_mod_3d();
+    void show_e_field_mod_3d();
+    void show_w_field_x_3d();
+    void show_e_field_x_3d();
+    void show_w_field_y_3d();
+    void show_e_field_y_3d();
 
     // currents tab
     void drift_single_carrier();

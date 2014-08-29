@@ -26,6 +26,20 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->l_carrier_button, SIGNAL(clicked()),this, SLOT(drift_line_carrier()));
   connect(ui->view_carrier_line_button, SIGNAL(clicked()),this, SLOT(show_carrier_map_line()));
 
+  // fields tab connectors
+  connect(ui->show_w_field_map_mod_button, SIGNAL(clicked()), this, SLOT(show_w_field_mod_map()));
+  connect(ui->show_w_field_map_x_button, SIGNAL(clicked()), this, SLOT(show_w_field_x_map()));
+  connect(ui->show_w_field_map_y_button, SIGNAL(clicked()), this, SLOT(show_w_field_y_map()));
+  connect(ui->show_e_field_map_mod_button, SIGNAL(clicked()), this, SLOT(show_e_field_mod_map()));
+  connect(ui->show_e_field_map_x_button, SIGNAL(clicked()), this, SLOT(show_e_field_x_map()));
+  connect(ui->show_e_field_map_y_button, SIGNAL(clicked()), this, SLOT(show_e_field_y_map()));
+  connect(ui->show_w_field_3d_mod_button, SIGNAL(clicked()), this, SLOT(show_w_field_mod_3d()));
+  connect(ui->show_w_field_3d_x_button, SIGNAL(clicked()), this, SLOT(show_w_field_x_3d()));
+  connect(ui->show_w_field_3d_y_button, SIGNAL(clicked()), this, SLOT(show_w_field_y_3d()));
+  connect(ui->show_e_field_3d_mod_button, SIGNAL(clicked()), this, SLOT(show_e_field_mod_3d()));
+  connect(ui->show_e_field_3d_x_button, SIGNAL(clicked()), this, SLOT(show_e_field_x_3d()));
+  connect(ui->show_e_field_3d_y_button, SIGNAL(clicked()), this, SLOT(show_e_field_y_3d()));
+
 }
 
 MainWindow::~MainWindow()
@@ -141,6 +155,15 @@ void MainWindow::show_electric_potential_2d()
   ui->electric_pot_qcp->replot();
 }
 
+void MainWindow::show_electric_potential_3d()
+{
+  // Get electric potential
+  Function * d_u = detector->get_d_u();
+  // Plot electric potential in an external window
+  plot(reference_to_no_delete_pointer(*d_u),"Electric Potential","auto");
+  interactive();
+}
+
 void MainWindow::show_carrier_map_qcp()
 {
   // get electric potential from detector instance
@@ -169,15 +192,6 @@ void MainWindow::show_carrier_map_qcp()
   ui->carrier_map_qcp->replot();
 }
 
-
-void MainWindow::show_electric_potential_3d()
-{
-  // Get electric potential
-  Function * d_u = detector->get_d_u();
-  // Plot electric potential in an external window
-  plot(reference_to_no_delete_pointer(*d_u),"Electric Potential","auto");
-  interactive();
-}
 
 void MainWindow::show_w_field_mod_map()
 {
@@ -248,6 +262,193 @@ void MainWindow::show_e_field_mod_map()
   ui->electric_field_map_qcp->rescaleAxes();
   ui->electric_field_map_qcp->replot();
 
+}
+
+
+void MainWindow::show_w_field_x_map()
+{
+  // get weighting field from detector instance
+  Function * w_f_grad = detector->get_w_f_grad();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // get plot and set new data
+  QCPColorMap *color_map_w_f = qobject_cast<QCPColorMap *>(ui->weighting_field_map_qcp->plottable(0));
+  color_map_w_f->data()->setSize(n_bins_x,n_bins_y);
+  color_map_w_f->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  for (int x=0; x<n_bins_x; ++x)
+  {
+    for (int y=0; y<n_bins_y; ++y)
+    {
+      double w_f_x = ((*w_f_grad)[0])(x*step_x, y*step_y);
+      color_map_w_f->data()->setCell(x, y, w_f_x);
+    }
+  }
+  color_map_w_f->setGradient(QCPColorGradient::gpPolar);
+  color_map_w_f->rescaleDataRange(true);
+  ui->weighting_field_map_qcp->rescaleAxes();
+  ui->weighting_field_map_qcp->replot();
+}
+
+void MainWindow::show_e_field_x_map()
+{
+  // get drift electric field from detector instance
+  Function * e_f_grad = detector->get_d_f_grad();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // get plot and set new data
+  QCPColorMap *color_map_e_f = qobject_cast<QCPColorMap *>(ui->electric_field_map_qcp->plottable(0));
+  color_map_e_f->data()->setSize(n_bins_x,n_bins_y);
+  color_map_e_f->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  for (int x=0; x<n_bins_x; ++x)
+  {
+    for (int y=0; y<n_bins_y; ++y)
+    {
+      double e_f_x = ((*e_f_grad)[0])(x*step_x, y*step_y);
+      color_map_e_f->data()->setCell(x, y, e_f_x);
+    }
+  }
+  color_map_e_f->setGradient(QCPColorGradient::gpPolar);
+  color_map_e_f->rescaleDataRange(true);
+  ui->electric_field_map_qcp->rescaleAxes();
+  ui->electric_field_map_qcp->replot();
+}
+
+void MainWindow::show_w_field_y_map()
+{
+  // get weighting field from detector instance
+  Function * w_f_grad = detector->get_w_f_grad();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // get plot and set new data
+  QCPColorMap *color_map_w_f = qobject_cast<QCPColorMap *>(ui->weighting_field_map_qcp->plottable(0));
+  color_map_w_f->data()->setSize(n_bins_x,n_bins_y);
+  color_map_w_f->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  for (int x=0; x<n_bins_x; ++x)
+  {
+    for (int y=0; y<n_bins_y; ++y)
+    {
+      double w_f_y = ((*w_f_grad)[1])(x*step_x, y*step_y);
+      color_map_w_f->data()->setCell(x, y, w_f_y);
+    }
+  }
+  color_map_w_f->setGradient(QCPColorGradient::gpPolar);
+  color_map_w_f->rescaleDataRange(true);
+  ui->weighting_field_map_qcp->rescaleAxes();
+  ui->weighting_field_map_qcp->replot();
+}
+
+void MainWindow::show_e_field_y_map()
+{
+  // get drift electric field from detector instance
+  Function * e_f_grad = detector->get_d_f_grad();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+  double step_y = (y_max -y_min)/n_bins_y;
+
+  // get plot and set new data
+  QCPColorMap *color_map_e_f = qobject_cast<QCPColorMap *>(ui->electric_field_map_qcp->plottable(0));
+  color_map_e_f->data()->setSize(n_bins_x,n_bins_y);
+  color_map_e_f->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  for (int x=0; x<n_bins_x; ++x)
+  {
+    for (int y=0; y<n_bins_y; ++y)
+    {
+      double e_f_y = ((*e_f_grad)[1])(x*step_x, y*step_y);
+      color_map_e_f->data()->setCell(x, y, e_f_y);
+    }
+  }
+  color_map_e_f->setGradient(QCPColorGradient::gpPolar);
+  color_map_e_f->rescaleDataRange(true);
+  ui->electric_field_map_qcp->rescaleAxes();
+  ui->electric_field_map_qcp->replot();
+}
+
+void MainWindow::show_w_field_mod_3d()
+{
+  // Get weighting field grad
+  Function * w_f_grad = detector->get_w_f_grad();
+  // Plot weighting field in an external window
+  plot(reference_to_no_delete_pointer(*w_f_grad),"Weighting Field Modulus","auto");
+  interactive();
+}
+
+void MainWindow::show_w_field_x_3d()
+{
+ // Get weighting field grad
+  Function * w_f_grad = detector->get_w_f_grad();
+  // Plot weighting field in an external window
+  plot(reference_to_no_delete_pointer((*w_f_grad)[0]),"Weighting Field X Component","auto");
+  interactive();
+}
+
+void MainWindow::show_w_field_y_3d()
+{
+  // Get weighting field grad
+  Function * w_f_grad = detector->get_w_f_grad();
+  // Plot weighting field in an external window
+  plot(reference_to_no_delete_pointer((*w_f_grad)[1]),"Weighting Field Y Component","auto");
+  interactive();
+}
+
+void MainWindow::show_e_field_mod_3d()
+{
+  // Get weighting field grad
+  Function * e_f_grad = detector->get_d_f_grad();
+  // Plot weighting field in an external window
+  plot(reference_to_no_delete_pointer(*e_f_grad),"Weighting Field Modulus","auto");
+  interactive();
+}
+
+void MainWindow::show_e_field_x_3d()
+{
+ // Get weighting field grad
+  Function * e_f_grad = detector->get_d_f_grad();
+  // Plot weighting field in an external window
+  plot(reference_to_no_delete_pointer((*e_f_grad)[0]),"Weighting Field X Component","auto");
+  interactive();
+}
+
+void MainWindow::show_e_field_y_3d()
+{
+  // Get weighting field grad
+  Function * e_f_grad = detector->get_d_f_grad();
+  // Plot weighting field in an external window
+  plot(reference_to_no_delete_pointer((*e_f_grad)[1]),"Weighting Field Y Component","auto");
+  interactive();
 }
 
 

@@ -379,25 +379,25 @@
            <item>
             <layout class="QFormLayout" name="formLayout_4">
              <item row="0" column="0">
-              <widget class="QLabel" name="label_4">
+              <widget class="QLabel" name="show_w_field_mod_label">
                <property name="text">
-                <string>TextLabel</string>
+                <string>MOD</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout">
+              <layout class="QHBoxLayout" name="w_field_mod_layout">
                <item>
-                <widget class="QPushButton" name="pushButton">
+                <widget class="QPushButton" name="show_w_field_map_mod_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 2D</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_2">
+                <widget class="QPushButton" name="show_w_field_3d_mod_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 3D</string>
                  </property>
                 </widget>
                </item>
@@ -406,23 +406,23 @@
              <item row="1" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
-                <string>TextLabel</string>
+                <string>X</string>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <layout class="QHBoxLayout" name="w_field_x_layout">
                <item>
-                <widget class="QPushButton" name="pushButton_3">
+                <widget class="QPushButton" name="show_w_field_map_x_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 2D</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_4">
+                <widget class="QPushButton" name="show_w_field_3d_x_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 3D</string>
                  </property>
                 </widget>
                </item>
@@ -431,23 +431,23 @@
              <item row="2" column="0">
               <widget class="QLabel" name="label_6">
                <property name="text">
-                <string>TextLabel</string>
+                <string>Y</string>
                </property>
               </widget>
              </item>
              <item row="2" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <layout class="QHBoxLayout" name="w_field_y_layout">
                <item>
-                <widget class="QPushButton" name="pushButton_5">
+                <widget class="QPushButton" name="show_w_field_map_y_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 2D</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_6">
+                <widget class="QPushButton" name="show_w_field_3d_y_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 3D</string>
                  </property>
                 </widget>
                </item>
@@ -509,23 +509,23 @@
              <item row="0" column="0">
               <widget class="QLabel" name="label_7">
                <property name="text">
-                <string>TextLabel</string>
+                <string>MOD</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_2">
                <item>
-                <widget class="QPushButton" name="pushButton_9">
+                <widget class="QPushButton" name="show_e_field_map_mod_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 2D</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_10">
+                <widget class="QPushButton" name="show_e_field_3d_mod_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 3D</string>
                  </property>
                 </widget>
                </item>
@@ -534,23 +534,23 @@
              <item row="1" column="0">
               <widget class="QLabel" name="label_8">
                <property name="text">
-                <string>TextLabel</string>
+                <string>X</string>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_7">
+              <layout class="QHBoxLayout" name="e_field_layout">
                <item>
-                <widget class="QPushButton" name="pushButton_11">
+                <widget class="QPushButton" name="show_e_field_map_x_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 2D</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_12">
+                <widget class="QPushButton" name="show_e_field_3d_x_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 3D</string>
                  </property>
                 </widget>
                </item>
@@ -559,23 +559,23 @@
              <item row="2" column="0">
               <widget class="QLabel" name="label_9">
                <property name="text">
-                <string>TextLabel</string>
+                <string>Y</string>
                </property>
               </widget>
              </item>
              <item row="2" column="1">
               <layout class="QHBoxLayout" name="horizontalLayout_8">
                <item>
-                <widget class="QPushButton" name="pushButton_13">
+                <widget class="QPushButton" name="show_e_field_map_y_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 2D</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QPushButton" name="pushButton_14">
+                <widget class="QPushButton" name="show_e_field_3d_y_button">
                  <property name="text">
-                  <string>PushButton</string>
+                  <string>Show 3D</string>
                  </property>
                 </widget>
                </item>
