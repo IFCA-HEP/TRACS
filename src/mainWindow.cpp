@@ -9,24 +9,32 @@ MainWindow::MainWindow(QWidget *parent) :
 {
   ui->setupUi(this);
 
+  // setup potential tab initial plot settings
   init_weighting_potential_plot();
   init_electric_potential_plot();
+
+  // setup currents tab initial plot settings
   init_simple_currents_plot();
   init_carrier_map_qcp();
+
+  // setup fields tab initial plot settings
   init_weighting_field_map_qcp();
   init_electric_field_map_qcp();
   init_weighting_field_cut_qcp();
   init_electric_field_cut_qcp();
 
-
+  // potentials tab conector
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
   connect(ui->show_weighting_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_2d()));
   connect(ui->show_weighting_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_3d()));
   connect(ui->show_electric_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_2d()));
   connect(ui->show_electric_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_3d()));
+
+  // currents tab connectors
   connect(ui->s_carrier_button, SIGNAL(clicked()),this, SLOT(drift_single_carrier()));
   connect(ui->l_carrier_button, SIGNAL(clicked()),this, SLOT(drift_line_carrier()));
   connect(ui->view_carrier_line_button, SIGNAL(clicked()),this, SLOT(show_carrier_map_line()));
+  connect(ui->carrier_map_qcp, SIGNAL(mouseDoubleClick(QMouseEvent*)), this, SLOT(carrier_from_click(QMouseEvent*)));
 
   // fields tab connectors
   connect(ui->show_w_field_map_mod_button, SIGNAL(clicked()), this, SLOT(show_w_field_mod_map()));
@@ -496,6 +504,8 @@ void MainWindow::show_w_field_vert_cut()
   double y_max = detector->get_y_max();
   double step_y = (y_max -y_min)/n_bins_y;
 
+  ui->weighting_field_cut_qcp->xAxis->setLabel("Y (mum)");
+
   // create and fill vectors to plot
   QVector<double> y_position(n_bins_y), w_field(n_bins_y);
   for (int i = 0; i < n_bins_y; i++) {
@@ -504,10 +514,13 @@ void MainWindow::show_w_field_vert_cut()
     double w_f_x = ((*w_f_grad)[0])(x_cut_value, y_value);
     double w_f_y = ((*w_f_grad)[1])(x_cut_value, y_value);
     if (index == 0) {
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Modulus (m^-1)");
       w_field[i] = sqrt(w_f_x*w_f_x + w_f_y*w_f_y);
     } else if ( index == 1) {
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
       w_field[i] = w_f_x;
     } else if ( index == 2 ) {
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
       w_field[i] = w_f_y;
     }
   }
@@ -537,6 +550,8 @@ void MainWindow::show_w_field_hor_cut()
   double x_max = detector->get_x_max();
   double step_x = (x_max -x_min)/n_bins_x;
 
+  ui->weighting_field_cut_qcp->xAxis->setLabel("X (mum)");
+
   // create and fill vectors to plot
   QVector<double> x_position(n_bins_x), w_field(n_bins_x);
   for (int i = 0; i < n_bins_x; i++) {
@@ -545,10 +560,13 @@ void MainWindow::show_w_field_hor_cut()
     double w_f_x = ((*w_f_grad)[0])(x_value, y_cut_value);
     double w_f_y = ((*w_f_grad)[1])(x_value, y_cut_value);
     if (index == 0) {
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (m^-1)");
       w_field[i] = sqrt(w_f_x*w_f_x + w_f_y*w_f_y);
     } else if ( index == 1) {
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
       w_field[i] = w_f_x;
     } else if ( index == 2 ) {
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
       w_field[i] = w_f_y;
     }
   }
@@ -578,6 +596,8 @@ void MainWindow::show_e_field_vert_cut()
   double y_max = detector->get_y_max();
   double step_y = (y_max -y_min)/n_bins_y;
 
+  ui->electric_field_cut_qcp->xAxis->setLabel("Y (mum)");
+
   // create and fill vectors to plot
   QVector<double> y_position(n_bins_y), e_field(n_bins_y);
   for (int i = 0; i < n_bins_y; i++) {
@@ -586,10 +606,13 @@ void MainWindow::show_e_field_vert_cut()
     double e_f_x = ((*e_f_grad)[0])(x_cut_value, y_value);
     double e_f_y = ((*e_f_grad)[1])(x_cut_value, y_value);
     if (index == 0) {
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (m^-1)");
       e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
     } else if ( index == 1) {
+      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
       e_field[i] = e_f_x;
     } else if ( index == 2 ) {
+      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
       e_field[i] = e_f_y;
     }
   }
@@ -620,6 +643,8 @@ void MainWindow::show_e_field_hor_cut()
   double x_max = detector->get_x_max();
   double step_x = (x_max -x_min)/n_bins_x;
 
+  ui->electric_field_cut_qcp->xAxis->setLabel("Y (mum)");
+
   // create and fill vectors to plot
   QVector<double> x_position(n_bins_x), e_field(n_bins_x);
   for (int i = 0; i < n_bins_x; i++) {
@@ -628,10 +653,13 @@ void MainWindow::show_e_field_hor_cut()
     double e_f_x = ((*e_f_grad)[0])(x_value, y_cut_value);
     double e_f_y = ((*e_f_grad)[1])(x_value, y_cut_value);
     if (index == 0) {
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (m^-1)");
       e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
     } else if ( index == 1) {
+      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
       e_field[i] = e_f_x;
     } else if ( index == 2 ) {
+      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
       e_field[i] = e_f_y;
     }
   }
@@ -671,8 +699,16 @@ void MainWindow::drift_single_carrier()
   Carrier electron('e', -1.*carrier_q , x_pos, y_pos , detector, 0.0);
   Carrier hole('h', carrier_q, x_pos, y_pos, detector, 0.0);
 
+  int index = ui->s_carrier_type->currentIndex();
+
+  if ( index == 0 || index == 1)
+  {
   curr_elec += electron.simulate_drift( dt , max_time, x_pos, y_pos);
+  }
+  if ( index == 0 || index == 2)
+  {
   curr_hole += hole.simulate_drift( dt , max_time, x_pos, y_pos);
+  }
   curr_total = curr_elec + curr_hole;
 
   QVector<double> x_elec(max_steps), y_elec(max_steps);
@@ -695,8 +731,16 @@ void MainWindow::drift_single_carrier()
   ui->carrier_curr_qcp->graph(2)->setData(x_total, y_total);
 
   // reescale and plot
+  if ( index == 0 || index == 1)
+  {
   ui->carrier_curr_qcp->graph(0)->rescaleAxes();
   ui->carrier_curr_qcp->graph(1)->rescaleAxes(true);
+  }
+  if ( index == 0 || index == 2)
+  {
+  ui->carrier_curr_qcp->graph(1)->rescaleAxes();
+  ui->carrier_curr_qcp->graph(0)->rescaleAxes(true);
+  }
   ui->carrier_curr_qcp->graph(2)->rescaleAxes(true);
   ui->carrier_curr_qcp->replot();
 
@@ -735,6 +779,9 @@ void MainWindow::drift_line_carrier()
 
   int n_carriers = (int) std::floor(l_length / l_carrier_sep);
 
+  // check carrier type
+  int index = ui->s_carrier_type->currentIndex();
+
   // init default carrier position
   double x_pos = 0;
   double y_pos = 0;
@@ -747,8 +794,14 @@ void MainWindow::drift_line_carrier()
     x_pos = l_start_x + l_vecnorm_x*c*l_carrier_sep;
     y_pos = l_start_y + l_vecnorm_y*c*l_carrier_sep;
 
+    if ( index == 0 || index == 1)
+    {
     curr_elec += electron.simulate_drift( dt , max_time, x_pos, y_pos);
+    }
+    if ( index == 0 || index == 2)
+    {
     curr_hole += hole.simulate_drift( dt , max_time, x_pos, y_pos);
+    }
   }
 
   curr_total = curr_elec + curr_hole;
@@ -773,8 +826,16 @@ void MainWindow::drift_line_carrier()
   ui->carrier_curr_qcp->graph(2)->setData(x_total, y_total);
 
   // reescale and plot
+  if ( index == 0 || index == 1)
+  {
   ui->carrier_curr_qcp->graph(0)->rescaleAxes();
   ui->carrier_curr_qcp->graph(1)->rescaleAxes(true);
+  }
+  if ( index == 0 || index == 2)
+  {
+  ui->carrier_curr_qcp->graph(1)->rescaleAxes();
+  ui->carrier_curr_qcp->graph(0)->rescaleAxes(true);
+  }
   ui->carrier_curr_qcp->graph(2)->rescaleAxes(true);
   ui->carrier_curr_qcp->replot();
 
@@ -782,6 +843,9 @@ void MainWindow::drift_line_carrier()
 
 void MainWindow::show_carrier_map_line()
 {
+
+  // get last line and exist if it exists
+  ui->carrier_map_qcp->removeItem(ui->carrier_map_qcp->item(0));
 
   // create a line item object
   QCPItemLine * carrier_line = new QCPItemLine(ui->carrier_map_qcp);
@@ -800,6 +864,19 @@ void MainWindow::show_carrier_map_line()
   carrier_line->end->setCoords(l_end_x, l_end_y);
   carrier_line->setPen(QPen(Qt::red));
   ui->carrier_map_qcp->replot();
+
+}
+
+void MainWindow::carrier_from_click(QMouseEvent * event)
+{
+
+  double x_pos = ui->carrier_map_qcp->xAxis->pixelToCoord(event->pos().x());
+  double y_pos = ui->carrier_map_qcp->yAxis->pixelToCoord(event->pos().y());
+
+  ui->s_carrier_x_pos_box->setValue(x_pos);
+  ui->s_carrier_y_pos_box->setValue(y_pos);
+
+  drift_single_carrier();
 
 }
 
@@ -888,6 +965,8 @@ void MainWindow::init_electric_potential_plot()
 void MainWindow::init_simple_currents_plot()
 {
   ui->carrier_curr_qcp->legend->setVisible(true);
+  ui->carrier_curr_qcp->yAxis->setLabel("Current (A)");
+  ui->carrier_curr_qcp->xAxis->setLabel("Time (s)");
   ui->carrier_curr_qcp->addGraph();
   ui->carrier_curr_qcp->graph(0)->setPen(QPen(Qt::blue));
   ui->carrier_curr_qcp->graph(0)->setName("electron");
@@ -1019,12 +1098,14 @@ void MainWindow::init_electric_field_map_qcp()
 void MainWindow::init_weighting_field_cut_qcp()
 {
   ui->weighting_field_cut_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->weighting_field_cut_qcp->axisRect()->setupFullAxesBox(true);
   ui->weighting_field_cut_qcp->replot();
 }
 
 void MainWindow::init_electric_field_cut_qcp()
 {
   ui->electric_field_cut_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->electric_field_cut_qcp->axisRect()->setupFullAxesBox(true);
   ui->electric_field_cut_qcp->replot();
 }
 

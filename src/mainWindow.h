@@ -57,6 +57,7 @@ private slots:
     void drift_line_carrier();
     void show_carrier_map_qcp();
     void show_carrier_map_line();
+    void carrier_from_click(QMouseEvent *  event);
 
 private:
     Ui::MainWindow *ui;

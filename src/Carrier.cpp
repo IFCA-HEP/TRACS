@@ -93,7 +93,6 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
     else if (_detector->is_out(_x))
     {
       i_n[i] = 0;
-      std::cout << "Carrier Drift Time: " << t << " s" << std::endl;
       break;
     }
     else
