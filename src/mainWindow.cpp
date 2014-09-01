@@ -23,6 +23,11 @@ MainWindow::MainWindow(QWidget *parent) :
   init_weighting_field_cut_qcp();
   init_electric_field_cut_qcp();
 
+  // setup carriers tab initial plot settings
+  init_gen_carrier_curr_qcp();
+  init_gen_carrier_map_qcp();
+
+
   // potentials tab conector
   connect(ui->solve_fem_button, SIGNAL(clicked()), this, SLOT(solve_fem()));
   connect(ui->show_weighting_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_2d()));
@@ -53,6 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->e_field_vert_button, SIGNAL(clicked()), this, SLOT(show_e_field_vert_cut()));
   connect(ui->w_field_hor_button, SIGNAL(clicked()), this, SLOT(show_w_field_hor_cut()));
   connect(ui->e_field_hor_button, SIGNAL(clicked()), this, SLOT(show_e_field_hor_cut()));
+
+  // carriers tab conectors
+  connect(ui->open_carriers_file,  SIGNAL(clicked()), this, SLOT(set_carrier_filename()));
+  connect(ui->load_carriers_button,  SIGNAL(clicked()), this, SLOT(load_carrier_collection()));
+  connect(ui->a_carrier_drift_button,  SIGNAL(clicked()), this, SLOT(drift_carrier_collection()));
 
 }
 
@@ -880,6 +890,67 @@ void MainWindow::carrier_from_click(QMouseEvent * event)
 
 }
 
+void MainWindow::set_carrier_filename()
+{
+  // open file dialog and set text line display
+  QString filename = QFileDialog::getOpenFileName(this, tr("Open Carrier Collection File"), "", tr("Text File (*.txt *.in *.carriers)"));
+  ui->filename_display->setText(filename);
+}
+
+void MainWindow::load_carrier_collection()
+{
+  // get filename
+  QString filename = ui->filename_display->text();
+  carrier_collection = new CarrierCollection(detector);
+
+  carrier_collection->add_carriers_from_file(filename);
+}
+
+void MainWindow::drift_carrier_collection()
+{
+  // get simulation parameters
+  double dt = 1.e-12 * ui->a_carrier_time_step_box->value();
+  double max_time = 1.e-9 * ui->a_carrier_max_time_box->value();
+  // get number of steps from time
+  int max_steps = (int) std::floor(max_time / dt);
+
+  // init arrays
+  std::valarray<double> curr_elec((size_t) max_steps);
+  std::valarray<double> curr_hole((size_t) max_steps);
+  std::valarray<double> curr_total((size_t) max_steps);
+
+  carrier_collection->simulate_drift( dt, max_time, curr_elec, curr_hole);
+
+    curr_total = curr_elec + curr_hole;
+
+  QVector<double> x_elec(max_steps), y_elec(max_steps);
+  QVector<double> x_hole(max_steps), y_hole(max_steps);
+  QVector<double> x_total(max_steps), y_total(max_steps);
+
+  for (int i=0; i< max_steps; i++)
+  {
+     x_elec[i] = i*dt;
+     x_hole[i] = i*dt;
+     x_total[i] = i*dt;
+     y_elec[i] = curr_elec[i];
+     y_hole[i] = curr_hole[i];
+     y_total[i] = curr_total[i];
+  }
+
+  // set new data
+  ui->gen_carrier_curr_qcp->graph(0)->setData(x_elec, y_elec);
+  ui->gen_carrier_curr_qcp->graph(1)->setData(x_hole, y_hole);
+  ui->gen_carrier_curr_qcp->graph(2)->setData(x_total, y_total);
+
+  // reescale and plot
+  ui->gen_carrier_curr_qcp->graph(0)->rescaleAxes();
+  ui->gen_carrier_curr_qcp->graph(1)->rescaleAxes(true);
+  ui->gen_carrier_curr_qcp->graph(2)->rescaleAxes(true);
+  ui->gen_carrier_curr_qcp->replot();
+
+}
+
+
 void MainWindow::init_weighting_potential_plot()
 {
   // allow resizing and dragging
@@ -1110,3 +1181,51 @@ void MainWindow::init_electric_field_cut_qcp()
 }
 
 
+void MainWindow::init_gen_carrier_curr_qcp()
+{
+  ui->gen_carrier_curr_qcp->legend->setVisible(true);
+  ui->gen_carrier_curr_qcp->yAxis->setLabel("Current (A)");
+  ui->gen_carrier_curr_qcp->xAxis->setLabel("Time (s)");
+  ui->gen_carrier_curr_qcp->addGraph();
+  ui->gen_carrier_curr_qcp->graph(0)->setPen(QPen(Qt::blue));
+  ui->gen_carrier_curr_qcp->graph(0)->setName("electron");
+  ui->gen_carrier_curr_qcp->addGraph();
+  ui->gen_carrier_curr_qcp->graph(1)->setPen(QPen(Qt::red));
+  ui->gen_carrier_curr_qcp->graph(1)->setName("hole");
+  ui->gen_carrier_curr_qcp->addGraph();
+  ui->gen_carrier_curr_qcp->graph(2)->setPen(QPen(Qt::black));
+  ui->gen_carrier_curr_qcp->graph(2)->setName("total");
+  ui->gen_carrier_curr_qcp->graph(0)->rescaleAxes();
+  ui->gen_carrier_curr_qcp->graph(1)->rescaleAxes(true);
+  ui->gen_carrier_curr_qcp->graph(2)->rescaleAxes(true);
+  ui->gen_carrier_curr_qcp->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+  ui->gen_carrier_curr_qcp->replot();
+}
+
+void MainWindow::init_gen_carrier_map_qcp()
+{
+  // not allow resizing and dragging
+  ui->gen_carrier_map_qcp->axisRect()->setupFullAxesBox(true);
+
+  // create and add color map object
+  QCPColorMap *color_map_d_u = new QCPColorMap(ui->gen_carrier_map_qcp->xAxis, ui->gen_carrier_map_qcp->yAxis);
+  ui->gen_carrier_map_qcp->addPlottable(color_map_d_u);
+
+  // get inital variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+
+  // set ranges and color gradients
+  color_map_d_u->data()->setSize(n_bins_x,n_bins_y);
+  color_map_d_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
+  color_map_d_u->setGradient(QCPColorGradient::gpGrayscale);
+  color_map_d_u->rescaleDataRange(true);
+
+  // reescale and replot
+  ui->gen_carrier_map_qcp->rescaleAxes();
+  ui->gen_carrier_map_qcp->replot();
+}

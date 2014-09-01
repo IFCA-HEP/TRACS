@@ -31,6 +31,8 @@ class Carrier
     Carrier( char carrier_type, double q, double x_init, double y_init, SMSDetector * detector, double gen_time);
     ~Carrier();
 
+    char get_carrier_type();
+
     std::valarray<double> simulate_drift( double dt, double max_time);
     std::valarray<double> simulate_drift(double dt, double max_time, double x_init, double y_init );
 };

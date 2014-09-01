@@ -34,7 +34,7 @@ target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES
 
 
 set(GUI_HEADERS mainWindow.h qcustomplot.h)
-set(GUI_SRC mainWindow.cpp SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp qcustomplot.cpp)
+set(GUI_SRC mainWindow.cpp SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp qcustomplot.cpp CarrierCollection.cpp)
 set(GUI_UIS mainWindow.ui)
 
 qt4_wrap_cpp(GUI_MOC ${GUI_HEADERS})

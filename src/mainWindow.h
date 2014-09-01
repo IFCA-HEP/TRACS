@@ -3,11 +3,13 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QFileDialog>
 
 #include "qcustomplot.h"
 
-#include <SMSDetector.h>
-#include <Carrier.h>
+#include "SMSDetector.h"
+#include "Carrier.h"
+#include "CarrierCollection.h"
 
 #include <fstream>
 #include <iterator>
@@ -51,7 +53,6 @@ private slots:
     void show_e_field_vert_cut();
     void show_e_field_hor_cut();
 
-
     // currents tab
     void drift_single_carrier();
     void drift_line_carrier();
@@ -59,9 +60,15 @@ private slots:
     void show_carrier_map_line();
     void carrier_from_click(QMouseEvent *  event);
 
+    // carriers tab
+    void set_carrier_filename();
+    void load_carrier_collection();
+    void drift_carrier_collection();
+
 private:
     Ui::MainWindow *ui;
     SMSDetector * detector;
+    CarrierCollection * carrier_collection;
     void init_weighting_potential_plot();
     void init_electric_potential_plot();
 
@@ -72,6 +79,10 @@ private:
     void init_electric_field_map_qcp();
     void init_weighting_field_cut_qcp();
     void init_electric_field_cut_qcp();
+
+    void init_gen_carrier_map_qcp();
+    void init_gen_carrier_curr_qcp();
+
 
 
 
