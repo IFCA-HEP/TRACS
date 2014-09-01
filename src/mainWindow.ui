@@ -372,9 +372,7 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_12">
            <item>
-            <widget class="QCustomPlot" name="weighting_field_map_qcp" native="true">
-             <zorder>formLayoutWidget_2</zorder>
-            </widget>
+            <widget class="QCustomPlot" name="weighting_field_map_qcp" native="true"/>
            </item>
            <item>
             <layout class="QFormLayout" name="formLayout_4">
@@ -572,7 +570,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <layout class="QHBoxLayout" name="e_field_mod_layout">
                <item>
                 <widget class="QPushButton" name="show_e_field_map_mod_button">
                  <property name="text">
@@ -597,7 +595,7 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <layout class="QHBoxLayout" name="e_field_layout">
+              <layout class="QHBoxLayout" name="e_fieldx_layout">
                <item>
                 <widget class="QPushButton" name="show_e_field_map_x_button">
                  <property name="text">
@@ -622,7 +620,7 @@
               </widget>
              </item>
              <item row="2" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_8">
+              <layout class="QHBoxLayout" name="e_fieldy_layout">
                <item>
                 <widget class="QPushButton" name="show_e_field_map_y_button">
                  <property name="text">
@@ -647,7 +645,7 @@
               </widget>
              </item>
              <item row="3" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <layout class="QHBoxLayout" name="e_field_vert_layout">
                <item>
                 <widget class="QComboBox" name="e_field_vert_combo">
                  <item>
@@ -677,16 +675,32 @@
               </layout>
              </item>
              <item row="4" column="0">
-              <widget class="QPushButton" name="pushButton_16">
+              <widget class="QPushButton" name="e_field_hor_button">
                <property name="text">
                 <string>Horizontal Cut</string>
                </property>
               </widget>
              </item>
              <item row="4" column="1">
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
+              <layout class="QHBoxLayout" name="e_field_hor_layout">
                <item>
-                <widget class="QComboBox" name="comboBox_4"/>
+                <widget class="QComboBox" name="e_field_hor_combo">
+                 <item>
+                  <property name="text">
+                   <string>mod</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>x component</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>y component</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item>
                 <widget class="QDoubleSpinBox" name="e_field_hor_double">

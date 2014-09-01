@@ -43,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->show_e_field_3d_y_button, SIGNAL(clicked()), this, SLOT(show_e_field_y_3d()));
   connect(ui->w_field_vert_button, SIGNAL(clicked()), this, SLOT(show_w_field_vert_cut()));
   connect(ui->e_field_vert_button, SIGNAL(clicked()), this, SLOT(show_e_field_vert_cut()));
+  connect(ui->w_field_hor_button, SIGNAL(clicked()), this, SLOT(show_w_field_hor_cut()));
+  connect(ui->e_field_hor_button, SIGNAL(clicked()), this, SLOT(show_e_field_hor_cut()));
 
 }
 
@@ -523,6 +525,43 @@ void MainWindow::show_w_field_vert_cut()
 void MainWindow::show_w_field_hor_cut()
 {
 
+  // Get weighting field grad
+  Function * w_f_grad = detector->get_w_f_grad();
+
+  int index = ui->w_field_hor_combo->currentIndex();
+  double y_cut_value = ui->w_field_hor_double->value();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+
+  // create and fill vectors to plot
+  QVector<double> x_position(n_bins_x), w_field(n_bins_x);
+  for (int i = 0; i < n_bins_x; i++) {
+    double x_value = x_min + i*step_x;
+    x_position[i] = x_value;
+    double w_f_x = ((*w_f_grad)[0])(x_value, y_cut_value);
+    double w_f_y = ((*w_f_grad)[1])(x_value, y_cut_value);
+    if (index == 0) {
+      w_field[i] = sqrt(w_f_x*w_f_x + w_f_y*w_f_y);
+    } else if ( index == 1) {
+      w_field[i] = w_f_x;
+    } else if ( index == 2 ) {
+      w_field[i] = w_f_y;
+    }
+  }
+
+  // delete previous graph and create new graph
+  ui->weighting_field_cut_qcp->removeGraph(ui->weighting_field_cut_qcp->graph(0));
+  QCPGraph * graph = ui->weighting_field_cut_qcp->addGraph();
+  graph->setData(x_position, w_field);
+
+  // reescale and plot
+  graph->rescaleAxes();
+  ui->weighting_field_cut_qcp->replot();
+
 }
 
 void MainWindow::show_e_field_vert_cut()
@@ -568,6 +607,43 @@ void MainWindow::show_e_field_vert_cut()
 
 void MainWindow::show_e_field_hor_cut()
 {
+
+  // Get weighting field grad
+  Function * e_f_grad = detector->get_d_f_grad();
+
+  int index = ui->e_field_hor_combo->currentIndex();
+  double y_cut_value = ui->e_field_hor_double->value();
+
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double step_x = (x_max -x_min)/n_bins_x;
+
+  // create and fill vectors to plot
+  QVector<double> x_position(n_bins_x), e_field(n_bins_x);
+  for (int i = 0; i < n_bins_x; i++) {
+    double x_value = x_min + i*step_x;
+    x_position[i] = x_value;
+    double e_f_x = ((*e_f_grad)[0])(x_value, y_cut_value);
+    double e_f_y = ((*e_f_grad)[1])(x_value, y_cut_value);
+    if (index == 0) {
+      e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
+    } else if ( index == 1) {
+      e_field[i] = e_f_x;
+    } else if ( index == 2 ) {
+      e_field[i] = e_f_y;
+    }
+  }
+
+  // delete previous graph and create new graph
+  ui->electric_field_cut_qcp->removeGraph(ui->electric_field_cut_qcp->graph(0));
+  QCPGraph * graph = ui->electric_field_cut_qcp->addGraph();
+  graph->setData(x_position, e_field);
+
+  // reescale and plot
+  graph->rescaleAxes();
+  ui->electric_field_cut_qcp->replot();
 
 }
 
