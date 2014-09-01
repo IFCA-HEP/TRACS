@@ -3,6 +3,7 @@ WeightFEM
 
 Simulator of transient currents and charge collection in semiconductor detectors based on Shockley–Ramo theorem
 
+![Screenshot of ](/docs/images/weightfem_potentials_screenshot.png?raw=true)
 
 
 # Requisites
