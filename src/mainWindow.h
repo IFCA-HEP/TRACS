@@ -5,11 +5,17 @@
 #include <QPushButton>
 #include <QFileDialog>
 
+#include <TH2D.h>
+
 #include "qcustomplot.h"
 
 #include "SMSDetector.h"
 #include "Carrier.h"
 #include "CarrierCollection.h"
+
+#include "utilities.h"
+
+#include "ui_mainWindow.h"
 
 #include <fstream>
 #include <iterator>
@@ -64,6 +70,7 @@ private slots:
     void set_carrier_filename();
     void load_carrier_collection();
     void drift_carrier_collection();
+    void show_gen_carrier_map_qcp();
 
 private:
     Ui::MainWindow *ui;
@@ -82,10 +89,6 @@ private:
 
     void init_gen_carrier_map_qcp();
     void init_gen_carrier_curr_qcp();
-
-
-
-
 
 };
 

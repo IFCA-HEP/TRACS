@@ -112,6 +112,15 @@ char Carrier::get_carrier_type()
   return _carrier_type;
 }
 
+std::array< double,2> Carrier::get_x()
+{
+  return _x;
+}
+
+double Carrier::get_q()
+{
+  return _q;
+}
 
 
 Carrier::~Carrier()

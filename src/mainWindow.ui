@@ -1030,8 +1030,6 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <zorder>gen_carrier_curr_qcp</zorder>
-            <zorder>gen_carrier_curr_qcp</zorder>
            </widget>
           </item>
           <item>

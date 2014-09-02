@@ -32,6 +32,8 @@ class Carrier
     ~Carrier();
 
     char get_carrier_type();
+    std::array< double,2> get_x();
+    double get_q();
 
     std::valarray<double> simulate_drift( double dt, double max_time);
     std::valarray<double> simulate_drift(double dt, double max_time, double x_init, double y_init );

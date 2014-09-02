@@ -1,5 +1,4 @@
 #include "mainWindow.h"
-#include "ui_mainWindow.h"
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -904,6 +903,8 @@ void MainWindow::load_carrier_collection()
   carrier_collection = new CarrierCollection(detector);
 
   carrier_collection->add_carriers_from_file(filename);
+
+  show_gen_carrier_map_qcp();
 }
 
 void MainWindow::drift_carrier_collection()
@@ -950,6 +951,28 @@ void MainWindow::drift_carrier_collection()
 
 }
 
+void MainWindow::show_gen_carrier_map_qcp()
+{
+  // get some required variables
+  int n_bins_x = ui->n_cellsx_int_box->value();
+  int n_bins_y = ui->n_cellsy_int_box->value();
+  double x_min = detector->get_x_min();
+  double x_max = detector->get_x_max();
+  double y_min = detector->get_y_min();
+  double y_max = detector->get_y_max();
+
+  // get color map
+  QCPColorMap * color_map = qobject_cast<QCPColorMap *>(ui->gen_carrier_map_qcp->plottable(0));
+
+  // fill root hist from distribution
+  TH2D hist =  carrier_collection->get_e_dist_histogram(n_bins_x,n_bins_y);
+  utilities::paint_TH2D_qcp(hist, color_map);
+
+  // reescale and replot
+  ui->gen_carrier_map_qcp->rescaleAxes();
+  ui->gen_carrier_map_qcp->replot();
+
+}
 
 void MainWindow::init_weighting_potential_plot()
 {

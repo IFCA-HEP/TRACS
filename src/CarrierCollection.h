@@ -7,6 +7,9 @@
 
 #include <QString>
 
+#include <TH2D.h>
+#include <TString.h>
+
 #include "Carrier.h"
 
 class CarrierCollection
@@ -21,6 +24,9 @@ class CarrierCollection
 
     void add_carriers_from_file(QString filename);
     void simulate_drift( double dt, double max_time, std::valarray<double> &curr_elec, std::valarray<double> &curr_hole);
+
+    TH2D get_e_dist_histogram(int n_bins_x, int n_bins_y, TString hist_name = "e_dist", TString hist_title ="e_dist");
+
 };
 
 
