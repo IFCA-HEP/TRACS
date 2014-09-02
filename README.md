@@ -12,6 +12,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
   - CMake
   - [Fenics Libraries](http://fenicsproject.org/download/)
   - Qt4
+  - ROOT framework (for exporting histograms and generation of arbitrary charge distributions)
 
 # Installation
 
