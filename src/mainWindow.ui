@@ -74,7 +74,7 @@
            <item row="2" column="1">
             <widget class="QDoubleSpinBox" name="depth_double_box">
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>10000.000000000000000</double>
              </property>
              <property name="value">
               <double>200.000000000000000</double>
@@ -91,7 +91,7 @@
            <item row="1" column="1">
             <widget class="QDoubleSpinBox" name="width_double_box">
              <property name="maximum">
-              <double>1000.000000000000000</double>
+              <double>100000.000000000000000</double>
              </property>
              <property name="value">
               <double>30.000000000000000</double>
@@ -121,6 +121,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QDoubleSpinBox" name="pitch_double_box">
+             <property name="maximum">
+              <double>100000.000000000000000</double>
+             </property>
              <property name="value">
               <double>80.000000000000000</double>
              </property>
@@ -1148,13 +1151,6 @@
               </layout>
              </item>
             </layout>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="title">
-             <string>CARRIER DISTRIBUTION INFORMATION</string>
-            </property>
            </widget>
           </item>
          </layout>
