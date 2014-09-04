@@ -37,6 +37,7 @@ void  utilities::paint_TH2D_qcp(TH2D hist, QCPColorMap * color_map)
       color_map->data()->setCell(x, y, content);
     }
   }
-  color_map->setGradient(QCPColorGradient::gpPolar);
+  QCPColorGradient gpHot = QCPColorGradient::gpHot;
+  color_map->setGradient(gpHot.inverted());
   color_map->rescaleDataRange(true);
 }

@@ -38,11 +38,11 @@ int main()
   // Plot solution
   //plot(*w_u,"Weighting Potential","auto");
 
-  TH2D w_u_hist = utilities::export_to_histogram(*w_u, "hist", "hist", n_cells_x ,x_min,x_max, n_cells_y,y_min,y_max);
+  //TH2D w_u_hist = utilities::export_to_histogram(*w_u, "hist", "hist", n_cells_x ,x_min,x_max, n_cells_y,y_min,y_max);
 
-  TFile file("hist.root", "recreate");
-  w_u_hist.Write();
-  file.Close();
+  //TFile file("hist.root", "recreate");
+  //w_u_hist.Write();
+  //file.Close();
 
   // Save solution in VTK format
   File file_u("periodic.pvd");

@@ -1227,7 +1227,8 @@ void MainWindow::init_gen_carrier_curr_qcp()
 
 void MainWindow::init_gen_carrier_map_qcp()
 {
-  // not allow resizing and dragging
+  // allow resizing and dragging
+  ui->gen_carrier_map_qcp->setInteractions(QCP::iRangeDrag|QCP::iRangeZoom);
   ui->gen_carrier_map_qcp->axisRect()->setupFullAxesBox(true);
 
   // create and add color map object
@@ -1242,10 +1243,18 @@ void MainWindow::init_gen_carrier_map_qcp()
   double y_min = detector->get_y_min();
   double y_max = detector->get_y_max();
 
+  // add a color scale and set to the right of the main axis rect
+  QCPColorScale *colorScale = new QCPColorScale(ui->gen_carrier_map_qcp);
+  ui->gen_carrier_map_qcp->plotLayout()->addElement(0, 1, colorScale);
+  colorScale->setType(QCPAxis::atRight);
+  color_map_d_u->setColorScale(colorScale);
+  colorScale->axis()->setLabel("# pairs generated per bin");
+
   // set ranges and color gradients
   color_map_d_u->data()->setSize(n_bins_x,n_bins_y);
   color_map_d_u->data()->setRange(QCPRange(x_min, x_max), QCPRange(y_min, y_max));
-  color_map_d_u->setGradient(QCPColorGradient::gpGrayscale);
+  QCPColorGradient gpHot = QCPColorGradient::gpHot;
+  color_map_d_u->setGradient( gpHot.inverted() );
   color_map_d_u->rescaleDataRange(true);
 
   // reescale and replot

@@ -27,10 +27,10 @@ include_directories(SYSTEM ${DOLFIN_3RD_PARTY_INCLUDE_DIRS})
 set(SRC SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp)
 
 # Executable
-add_executable(WeightFEM main.cpp ${SRC})
+add_executable(WeightFEM main.cpp ${SRC} )
 
 # Target libraries
-target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES})
+target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} )
 
 
 set(GUI_HEADERS mainWindow.h qcustomplot.h)
