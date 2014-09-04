@@ -1248,7 +1248,7 @@ void MainWindow::init_gen_carrier_map_qcp()
   ui->gen_carrier_map_qcp->plotLayout()->addElement(0, 1, colorScale);
   colorScale->setType(QCPAxis::atRight);
   color_map_d_u->setColorScale(colorScale);
-  colorScale->axis()->setLabel("# pairs generated per bin");
+  colorScale->axis()->setLabel("charge generated per bin");
 
   // set ranges and color gradients
   color_map_d_u->data()->setSize(n_bins_x,n_bins_y);
