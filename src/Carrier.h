@@ -6,7 +6,9 @@
 #include <CarrierTransport.h>
 #include <SMSDetector.h>
 
+#ifndef Q_MOC_RUN  // See: https://bugreports.qt-project.org/browse/QTBUG-22829
 #include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#endif
 
 using namespace boost::numeric::odeint;
 
