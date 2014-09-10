@@ -37,7 +37,40 @@ set(GUI_HEADERS mainWindow.h qcustomplot.h)
 set(GUI_SRC mainWindow.cpp SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp qcustomplot.cpp CarrierCollection.cpp utilities.cpp)
 set(GUI_UIS mainWindow.ui)
 
-qt4_wrap_cpp(GUI_MOC ${GUI_HEADERS})
+
+# Run MOC from Qt over headers
+# OPTIONS are a  workaround to moc+boost problem(QT bug #22829).
+qt4_wrap_cpp(GUI_MOC ${GUI_HEADERS} OPTIONS   -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_BIT_AND_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_BIT_AND_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_BIT_OR_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_BIT_OR_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_BIT_XOR_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_BIT_XOR_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_DIVIDES_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_DIVIDES_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_EQUAL_TO_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_GREATER_EQUAL_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_GREATER_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_LEFT_SHIFT_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_LEFT_SHIFT_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_LESS_EQUAL_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_LESS_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_LOGICAL_AND_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_LOGICAL_OR_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_MINUS_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_MINUS_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_MODULUS_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_MODULUS_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_MULTIPLIES_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_MULTIPLIES_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_NOT_EQUAL_TO_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_PLUS_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_PLUS_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_RIGHT_SHIFT_ASSIGN_HPP_INCLUDED
+                                              -DBOOST_TT_HAS_RIGHT_SHIFT_HPP_INCLUDED
+                                              )
+
 qt4_wrap_ui(GUI_UIS_HEADERS ${GUI_UIS})
 
 
