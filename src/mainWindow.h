@@ -72,10 +72,14 @@ private slots:
     void drift_carrier_collection();
     void show_gen_carrier_map_qcp();
 
+    // other
+    void save_results_raw();
+
 private:
     Ui::MainWindow *ui;
     SMSDetector * detector;
     CarrierCollection * carrier_collection;
+    QVector<QVector<double>> raw_results;
     void init_weighting_potential_plot();
     void init_electric_potential_plot();
 
