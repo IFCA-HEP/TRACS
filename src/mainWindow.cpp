@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->l_carrier_button, SIGNAL(clicked()),this, SLOT(drift_line_carrier()));
   connect(ui->view_carrier_line_button, SIGNAL(clicked()),this, SLOT(show_carrier_map_line()));
   connect(ui->carrier_map_qcp, SIGNAL(mouseDoubleClick(QMouseEvent*)), this, SLOT(carrier_from_click(QMouseEvent*)));
+  connect(ui->save_results_currents,  SIGNAL(clicked()), this, SLOT(save_results_raw()));
 
   // fields tab connectors
   connect(ui->show_w_field_map_mod_button, SIGNAL(clicked()), this, SLOT(show_w_field_mod_map()));
@@ -62,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->open_carriers_file,  SIGNAL(clicked()), this, SLOT(set_carrier_filename()));
   connect(ui->load_carriers_button,  SIGNAL(clicked()), this, SLOT(load_carrier_collection()));
   connect(ui->a_carrier_drift_button,  SIGNAL(clicked()), this, SLOT(drift_carrier_collection()));
+  connect(ui->save_results_carriers,  SIGNAL(clicked()), this, SLOT(save_results_raw()));
 
 }
 
@@ -739,6 +741,13 @@ void MainWindow::drift_single_carrier()
   ui->carrier_curr_qcp->graph(1)->setData(x_hole,y_hole);
   ui->carrier_curr_qcp->graph(2)->setData(x_total, y_total);
 
+  // save results temporally
+  raw_results.resize(4);
+  raw_results[0] = x_total;
+  raw_results[1] = y_total;
+  raw_results[2] = y_elec;
+  raw_results[3] = y_hole;
+
   // reescale and plot
   if ( index == 0 || index == 1)
   {
@@ -834,6 +843,14 @@ void MainWindow::drift_line_carrier()
   ui->carrier_curr_qcp->graph(1)->setData(x_hole, y_hole);
   ui->carrier_curr_qcp->graph(2)->setData(x_total, y_total);
 
+  // save results temporally
+  raw_results.resize(4);
+  raw_results[0] = x_total;
+  raw_results[1] = y_total;
+  raw_results[2] = y_elec;
+  raw_results[3] = y_hole;
+
+
   // reescale and plot
   if ( index == 0 || index == 1)
   {
@@ -886,6 +903,17 @@ void MainWindow::carrier_from_click(QMouseEvent * event)
   ui->s_carrier_y_pos_box->setValue(y_pos);
 
   drift_single_carrier();
+
+}
+
+void MainWindow::save_results_raw()
+{
+  // open file dialog to save results
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), "", tr("Text (*.txt *.dat *.out)"));
+
+  utilities::write_results_to_file(fileName, raw_results);
+
+
 
 }
 
@@ -942,6 +970,13 @@ void MainWindow::drift_carrier_collection()
   ui->gen_carrier_curr_qcp->graph(0)->setData(x_elec, y_elec);
   ui->gen_carrier_curr_qcp->graph(1)->setData(x_hole, y_hole);
   ui->gen_carrier_curr_qcp->graph(2)->setData(x_total, y_total);
+
+  // save results temporally
+  raw_results.resize(4);
+  raw_results[0] = x_total;
+  raw_results[1] = y_total;
+  raw_results[2] = y_elec;
+  raw_results[3] = y_hole;
 
   // reescale and plot
   ui->gen_carrier_curr_qcp->graph(0)->rescaleAxes();

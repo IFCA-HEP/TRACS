@@ -41,3 +41,31 @@ void  utilities::paint_TH2D_qcp(TH2D hist, QCPColorMap * color_map)
   color_map->setGradient(gpHot.inverted());
   color_map->rescaleDataRange(true);
 }
+
+// function to write results to file (in columns)
+void utilities::write_results_to_file(QString filename, QVector<QVector<double>> results)
+{
+  // open file
+  QFile file(filename);
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+      return;
+
+  QTextStream out(&file);
+  QString s_time = "#time";
+  QString s_total = "#total";
+  QString s_elec = "#elec";
+  QString s_holes = "#holes";
+
+  int s_width = 8;
+
+  out << s_time.leftJustified(s_width) << "\t" << s_total.leftJustified(s_width) << "\t" << s_elec.leftJustified(s_width) << "\t" << s_holes.leftJustified(s_width);
+
+  for (int i = 0; i < results[0].size(); i++ )
+  {
+    QString line = QString("\n%1\t%2\t%3\t%4").arg(results[0][i], s_width, 'E', 4)
+                                              .arg(results[1][i], s_width, 'E', 4)
+                                              .arg(results[2][i], s_width, 'E', 4)
+                                              .arg(results[3][i], s_width, 'E', 4);
+    out << line;
+  }
+}
