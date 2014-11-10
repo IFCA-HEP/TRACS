@@ -4,6 +4,7 @@
 #include "CarrierCollection.h"
 
 #include <TFile.h>
+#include <TH2D.h>
 
 #include <fstream>
 #include <iterator>
@@ -94,8 +95,15 @@ int main()
     shift_y_array[i] = i*step_size_y - c_value;
   }
 
+  TString hist_name = "curr_map_total";
+  TString hist_title = "curr_map_total";
+  TH2D curr_map_total = TH2D(hist_name, hist_title,
+                             n_steps_y + 1, y_min, y_max + 2*border,
+                             max_steps, 0.0, max_time );
+
   for (int i = 0; i < n_steps_y + 1; i++) {
 
+      std::cout << "### Step number ### " << i << " of " << n_steps_y + 1 << std::endl;
       curr_hole = 0;
       curr_elec = 0;
       curr_total = 0;
@@ -108,14 +116,15 @@ int main()
       QVector<double> x_hole(max_steps), y_hole(max_steps);
       QVector<double> x_total(max_steps), y_total(max_steps);
 
-      for (int i=0; i< max_steps; i++)
+      for (int j=0; j < max_steps; j++)
       {
-         x_elec[i] = i*dt;
-         x_hole[i] = i*dt;
-         x_total[i] = i*dt;
-         y_elec[i] = curr_elec[i];
-         y_hole[i] = curr_hole[i];
-         y_total[i] = curr_total[i];
+         x_elec[j] = j*dt;
+         x_hole[j] = j*dt;
+         x_total[j] = j*dt;
+         y_elec[j] = curr_elec[j];
+         y_hole[j] = curr_hole[j];
+         y_total[j] = curr_total[j];
+         curr_map_total.SetBinContent(i,j, y_total[j] );
       }
 
       // save results
@@ -131,6 +140,11 @@ int main()
       utilities::write_results_to_file(out_filename, raw_results);
 
   }
+
+  // Open a ROOT file to save result
+  TFile *tfile = new TFile("results.root","NEW" );
+  curr_map_total.Write();
+  tfile->Close();
 
   // No plot now
   // interactive();
