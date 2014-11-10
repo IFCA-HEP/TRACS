@@ -1,8 +1,7 @@
-#include <SMSDetector.h>
-
-#include <utilities.h>
-
-#include <Carrier.h>
+#include "SMSDetector.h"
+#include "utilities.h"
+#include "Carrier.h"
+#include "CarrierCollection.h"
 
 #include <TFile.h>
 
@@ -15,9 +14,9 @@ int main()
   parameters["allow_extrapolation"] = true;
 
   double pitch = 80.;
-  double width = 30.;
-  double depth = 200.;
-  int nns = 3;
+  double width = 80.;
+  double depth = 300.;
+  int nns = 0;
 
   double x_min = 0.;
   double x_max = pitch * (2*nns+1);
@@ -45,74 +44,96 @@ int main()
   //file.Close();
 
   // Save solution in VTK format
-  File file_u("periodic.pvd");
-  file_u << *w_u;
+  // File file_u("periodic.pvd");
+  // file_u << *w_u;
 
-  double v_bias = 150.0;
-  double v_depletion = 61.0;
+  double v_bias = 500.0;
+  double v_depletion = 100.0;
   detector.set_voltages(v_bias, v_depletion);
 
   detector.solve_d_u();
   Function * d_u = detector.get_d_u();
   // Plot solution
-  plot(*d_u,"Drift Potential","auto");
+  // plot(*d_u,"Drift Potential","auto");
 
   detector.solve_w_f_grad();
   Function * w_f_grad = detector.get_w_f_grad();
   // Plot solution
-  plot((*w_f_grad)[1],"Weighting Field (Y)","auto");
+  // plot((*w_f_grad)[1],"Weighting Field (Y)","auto");
 
   detector.solve_d_f_grad();
   Function * d_f_grad = detector.get_d_f_grad();
   // Plot solution
-  plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+  // plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
 
   // Create carrier and observe movement
   SMSDetector * dec_pointer = &detector;
-
-
 
   double dt = 1.e-11;
   double max_time = 10.e-9;
   // get number of steps from time
   const int max_steps = (int) std::floor(max_time / dt);
 
+  // filename to get carrier distribution
+  QString filename = "tpa.carriers";
+  CarrierCollection * carrier_collection = new CarrierCollection(dec_pointer);
+  carrier_collection->add_carriers_from_file(filename);
 
-  std::valarray<double> curr_holes((size_t) max_steps);
+  // init arrays
   std::valarray<double> curr_elec((size_t) max_steps);
-  int times = 100;
+  std::valarray<double> curr_hole((size_t) max_steps);
+  std::valarray<double> curr_total((size_t) max_steps);
 
-  curr_holes = 0;
-  curr_elec = 0;
-
-  Carrier hole('h', 1. , 300., 190. , dec_pointer, 0.0);
-  Carrier electron('e', 1. , 300., 190. , dec_pointer, 0.0);
-
-  for (int i = 0 ; i < times; i++)
-  {
-    curr_holes += hole.simulate_drift( dt , max_time, 300., 190.);
-    curr_elec += electron.simulate_drift( dt , max_time, 300., 190.);
-    std::cout << "Number of carrier: " << 2*i << std::endl;
+  // array of shifts
+  const int n_steps_y = 50;
+  double border = 0.;
+  double c_value = 150.;
+  double step_size_y = (depth + 2*border)/ 50;
+  std::vector<double>  shift_y_array(n_steps_y+1);
+  for (int i = 0; i < n_steps_y + 1; i++ ) {
+    shift_y_array[i] = i*step_size_y - c_value;
   }
 
-  std::ofstream output_file("./example.txt");
-  output_file << "curr_holes[]={";
-  for ( const double &value : curr_holes )
-  {
-      output_file << value << ", ";
+  for (int i = 0; i < n_steps_y + 1; i++) {
+
+      curr_hole = 0;
+      curr_elec = 0;
+      curr_total = 0;
+
+      carrier_collection -> simulate_drift(dt, max_time, 0.0, shift_y_array [i],  curr_elec, curr_hole);
+
+      curr_total = curr_elec + curr_hole;
+
+      QVector<double> x_elec(max_steps), y_elec(max_steps);
+      QVector<double> x_hole(max_steps), y_hole(max_steps);
+      QVector<double> x_total(max_steps), y_total(max_steps);
+
+      for (int i=0; i< max_steps; i++)
+      {
+         x_elec[i] = i*dt;
+         x_hole[i] = i*dt;
+         x_total[i] = i*dt;
+         y_elec[i] = curr_elec[i];
+         y_hole[i] = curr_hole[i];
+         y_total[i] = curr_total[i];
+      }
+
+      // save results
+      QVector<QVector<double>> raw_results;
+      raw_results.resize(4);
+      raw_results[0] = x_total;
+      raw_results[1] = y_total;
+      raw_results[2] = y_elec;
+      raw_results[3] = y_hole;
+
+      QString out_filename = "result_step_"+QString::number(i)+".plot";
+
+      utilities::write_results_to_file(out_filename, raw_results);
+
   }
-  output_file << "}" <<  std::endl;
 
-  output_file << "curr_elec[]={";
-  for ( const double &value : curr_elec )
-  {
-    output_file << value << ", ";
-  }
-  output_file << "}" <<  std::endl;
-
-  output_file.close();
-
-  interactive();
+  // No plot now
+  // interactive();
 
 
   return 0;
