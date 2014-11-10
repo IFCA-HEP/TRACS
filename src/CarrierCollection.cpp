@@ -46,6 +46,32 @@ void CarrierCollection::simulate_drift( double dt, double max_time, std::valarra
   }
 }
 
+void CarrierCollection::simulate_drift( double dt, double max_time, double shift_x, double shift_y, std::valarray<double> &curr_elec, std::valarray<double> &curr_hole)
+{
+  // range for through the carriers
+  for (auto carrier : _carrier_list)
+  {
+    char carrier_type = carrier.get_carrier_type();
+    // simulate drift and add to proper valarray
+    if (carrier_type == 'e')
+    {
+      // get and shift carrier position
+      std::array< double,2> x = carrier.get_x();
+      double x_init = x[0]+shift_x;
+      double y_init = x[1]+shift_y;
+      curr_elec += carrier.simulate_drift( dt , max_time, x_init, y_init);
+    }
+    else if (carrier_type =='h')
+    {
+      // get and shift carrier position
+      std::array< double,2> x = carrier.get_x();
+      double x_init = x[0]+shift_x;
+      double y_init = x[1]+shift_y;
+      curr_hole += carrier.simulate_drift( dt , max_time, x_init, y_init);
+    }
+  }
+}
+
 TH2D CarrierCollection::get_e_dist_histogram(int n_bins_x, int n_bins_y,  TString hist_name, TString hist_title)
 {
   // get detector limits
