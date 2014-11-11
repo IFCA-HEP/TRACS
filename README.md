@@ -1,5 +1,5 @@
-WeightFEM
-=========
+TRACS: Transient Current Simulator
+===================================
 
 Simulator of transient currents and charge collection in semiconductor detectors based on Shockley–Ramo theorem
 
@@ -16,9 +16,9 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 # Installation
 
-    git clone https://github.com/pablodecm/WeightFEM
-    cd WeightFEM
+    git clone https://github.com/pablodecm/TRACS
+    cd TRACS
     mkdir build
     cmake ..
-    make  # or make -jn for faster compilation (where n is number of threads)
+    make
 
