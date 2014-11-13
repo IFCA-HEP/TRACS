@@ -3,7 +3,7 @@ TRACS: Transient Current Simulator
 
 Simulator of transient currents and charge collection in semiconductor detectors based on Shockley–Ramo theorem
 
-![Screenshot of ](/docs/images/weightfem_potentials_screenshot.png?raw=true)
+![Screenshot of ](/docs/images/tracs_potentials_screenshot.png?raw=true)
 
 
 # Requisites
