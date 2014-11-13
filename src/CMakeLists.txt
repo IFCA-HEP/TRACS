@@ -68,10 +68,10 @@ qt4_wrap_cpp(NONGUI_MOC ${HEADERS} OPTIONS   -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDE
 
 
 # Executable
-add_executable(WeightFEM main.cpp ${SRC} ${HEADERS} ${NONGUI_MOC})
+add_executable(TRACS main.cpp ${SRC} ${HEADERS} ${NONGUI_MOC})
 
 # Target libraries
-target_link_libraries(WeightFEM ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES})
+target_link_libraries(TRACS ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES})
 
 
 set(GUI_HEADERS mainWindow.h qcustomplot.h)
@@ -116,8 +116,8 @@ qt4_wrap_ui(GUI_UIS_HEADERS ${GUI_UIS})
 
 
 # Executable
-add_executable(WeightFEM-GUI main_gui.cpp ${GUI_SRC} ${GUI_MOC} ${GUI_UIS_HEADERS} )
-target_link_libraries(WeightFEM-GUI ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES} QVTK )
+add_executable(TRACS-GUI main_gui.cpp ${GUI_SRC} ${GUI_MOC} ${GUI_UIS_HEADERS} )
+target_link_libraries(TRACS-GUI ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES} QVTK )
 
 
 

@@ -11,6 +11,12 @@ Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , S
 {
   _x[0] = x_init;
   _x[1] = y_init;
+  if (_carrier_type == 'e') {
+    _sign = -1;
+  }
+  else {
+    _sign = 1;
+  }
 }
 
 std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
@@ -47,7 +53,7 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
       _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
-      i_n[i] = _q * _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
+      i_n[i] = _q *_sign*_mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
       stepper.do_step(_drift, _x, t, dt);
     }
     t+=dt;
@@ -72,6 +78,8 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
   Array<double> wrap_e_field(2, _e_field.data());
   Array<double> wrap_w_field(2, _w_field.data());
 
+
+
   double t=0.0;
 
   for ( int i = 0 ; i < max_steps; i++)
@@ -91,7 +99,7 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
       _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
-      i_n[i] = _q * _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
+      i_n[i] = _q *_sign* _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
       stepper.do_step(_drift, _x, t, dt);
     }
     t+=dt;

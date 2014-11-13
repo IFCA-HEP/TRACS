@@ -142,7 +142,7 @@ int main()
   }
 
   // Open a ROOT file to save result
-  TFile *tfile = new TFile("results.root","NEW" );
+  TFile *tfile = new TFile("results.root","REWRITE" );
   curr_map_total.Write();
   tfile->Close();
 
