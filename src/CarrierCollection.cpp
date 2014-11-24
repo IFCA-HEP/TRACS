@@ -23,7 +23,7 @@ void CarrierCollection::add_carriers_from_file(QString filename)
     double q, x_init, y_init, gen_time;
     if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) { break;}  //show error?
 
-    Carrier carrier(carrier_type, q, x_init, y_init , _detector, 0.0);
+    Carrier carrier(carrier_type, q, x_init, y_init , _detector, 1e-9);
     _carrier_list.push_back(carrier);
   }
 }

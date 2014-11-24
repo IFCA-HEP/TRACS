@@ -935,6 +935,13 @@
            <string>CONSTANT CARRIER DISTRIBUTION THROUGH A LINE</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
+           <item row="3" column="1">
+            <widget class="QPushButton" name="l_carrier_button">
+             <property name="text">
+              <string>Generate and Drift</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="1">
             <layout class="QHBoxLayout" name="l_carrier_end_point">
              <item>
@@ -953,10 +960,24 @@
              </item>
             </layout>
            </item>
+           <item row="4" column="1">
+            <widget class="QPushButton" name="save_results_currents">
+             <property name="text">
+              <string>Save Results to File</string>
+             </property>
+            </widget>
+           </item>
            <item row="2" column="0">
             <widget class="QLabel" name="label_3">
              <property name="text">
               <string>Carrier Separation (mum)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Start Point (x[mum], y[mum]) </string>
              </property>
             </widget>
            </item>
@@ -967,17 +988,10 @@
              </property>
             </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="l_carrier_sep_box">
-             <property name="maximum">
-              <double>100.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="label">
+           <item row="3" column="0">
+            <widget class="QPushButton" name="view_carrier_line_button">
              <property name="text">
-              <string>Start Point (x[mum], y[mum]) </string>
+              <string>View Line</string>
              </property>
             </widget>
            </item>
@@ -999,24 +1013,10 @@
              </item>
             </layout>
            </item>
-           <item row="3" column="1">
-            <widget class="QPushButton" name="l_carrier_button">
-             <property name="text">
-              <string>Generate and Drift</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="view_carrier_line_button">
-             <property name="text">
-              <string>View Line</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QPushButton" name="save_results_currents">
-             <property name="text">
-              <string>Save Results to File</string>
+           <item row="2" column="1">
+            <widget class="QDoubleSpinBox" name="l_carrier_sep_box">
+             <property name="maximum">
+              <double>100.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -1181,7 +1181,7 @@
      <x>0</x>
      <y>0</y>
      <width>1063</width>
-     <height>25</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>

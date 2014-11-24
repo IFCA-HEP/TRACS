@@ -49,7 +49,7 @@ int main()
   // file_u << *w_u;
 
   double v_bias = 500.0;
-  double v_depletion = 100.0;
+  double v_depletion = 50.0;
   detector.set_voltages(v_bias, v_depletion);
 
   detector.solve_d_u();
@@ -70,7 +70,7 @@ int main()
   // Create carrier and observe movement
   SMSDetector * dec_pointer = &detector;
 
-  double dt = 1.e-11;
+  double dt = 6.25e-12;
   double max_time = 10.e-9;
   // get number of steps from time
   const int max_steps = (int) std::floor(max_time / dt);
@@ -86,13 +86,13 @@ int main()
   std::valarray<double> curr_total((size_t) max_steps);
 
   // array of shifts
-  const int n_steps_y = 50;
-  double border = 0.;
+  const int n_steps_y = 60;
+  double border = 7.15284952e+01;
   double c_value = 150.;
-  double step_size_y = (depth + 2*border)/ 50;
+  double step_size_y = 2*3.51;
   std::vector<double>  shift_y_array(n_steps_y+1);
   for (int i = 0; i < n_steps_y + 1; i++ ) {
-    shift_y_array[i] = i*step_size_y - c_value;
+    shift_y_array[i] = i*step_size_y - c_value - border;
   }
 
   TString hist_name = "curr_map_total";
@@ -100,6 +100,10 @@ int main()
   TH2D curr_map_total = TH2D(hist_name, hist_title,
                              n_steps_y + 1, y_min, y_max + 2*border,
                              max_steps, 0.0, max_time );
+
+  TH2D curr_map_shaped = TH2D("curr_map_shaped", "curr_map_shaped",
+                            n_steps_y + 1, y_min, y_max + 2*border,
+                            max_steps, 0.0, max_time - dt);
 
   for (int i = 0; i < n_steps_y + 1; i++) {
 
@@ -124,8 +128,22 @@ int main()
          y_elec[j] = curr_elec[j];
          y_hole[j] = curr_hole[j];
          y_total[j] = curr_total[j];
-         curr_map_total.SetBinContent(i,j, y_total[j] );
+         curr_map_total.SetBinContent(i+1,j+1, y_total[j] );
       }
+
+      // RC shaping
+      double C = 15e-12; // 17 pF
+      double RC = 50.*C; // 50 ohms*C
+      double dt = 6.25e-12;
+      double alfa = dt/(RC+dt);
+      QVector<double> y_shaped(max_steps);
+      y_shaped[0]=y_total[0];
+      curr_map_shaped.SetBinContent(i+1, 1, y_shaped[0]);
+      for (int j = 1; j <max_steps; j++) {
+        y_shaped[j]=alfa*y_total[j]+(1-alfa)*y_shaped[j-1];
+        curr_map_shaped.SetBinContent(i+1,j+1,y_shaped[j]);
+      }
+
 
       // save results
       QVector<QVector<double>> raw_results;
@@ -142,8 +160,9 @@ int main()
   }
 
   // Open a ROOT file to save result
-  TFile *tfile = new TFile("results.root","REWRITE" );
+  TFile *tfile = new TFile("results.root","RECREATE" );
   curr_map_total.Write();
+  curr_map_shaped.Write();
   tfile->Close();
 
   // No plot now
