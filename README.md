@@ -8,7 +8,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 # Requisites
 
-  - C++11 compatible compiler
+  - C++11 compatible compiler (**Important!**)
   - CMake
   - [Fenics Libraries](http://fenicsproject.org/download/)
   - Qt4
@@ -19,6 +19,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
     git clone https://github.com/pablodecm/TRACS
     cd TRACS
     mkdir build
+    cd build
     cmake ..
     make
 
