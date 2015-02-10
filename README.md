@@ -16,7 +16,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 # Installation
 
-    git clone https://github.com/pablodecm/TRACS
+    git clone https://github.com/IFCA-HEP/TRACS
     cd TRACS
     mkdir build
     cd build
