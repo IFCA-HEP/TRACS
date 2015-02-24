@@ -525,13 +525,13 @@ void MainWindow::show_w_field_vert_cut()
     double w_f_x = ((*w_f_grad)[0])(x_cut_value, y_value);
     double w_f_y = ((*w_f_grad)[1])(x_cut_value, y_value);
     if (index == 0) {
-      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Modulus (m^-1)");
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Modulus (um^-1)");
       w_field[i] = sqrt(w_f_x*w_f_x + w_f_y*w_f_y);
     } else if ( index == 1) {
-      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field X (um^-1)");
       w_field[i] = w_f_x;
     } else if ( index == 2 ) {
-      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Y (um^-1)");
       w_field[i] = w_f_y;
     }
   }
@@ -571,13 +571,13 @@ void MainWindow::show_w_field_hor_cut()
     double w_f_x = ((*w_f_grad)[0])(x_value, y_cut_value);
     double w_f_y = ((*w_f_grad)[1])(x_value, y_cut_value);
     if (index == 0) {
-      ui->weighting_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (m^-1)");
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (V um^-1)");
       w_field[i] = sqrt(w_f_x*w_f_x + w_f_y*w_f_y);
     } else if ( index == 1) {
-      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field X (V um^-1)");
       w_field[i] = w_f_x;
     } else if ( index == 2 ) {
-      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
+      ui->weighting_field_cut_qcp->yAxis->setLabel("Weighting Field Y (V um^-1)");
       w_field[i] = w_f_y;
     }
   }
@@ -617,13 +617,13 @@ void MainWindow::show_e_field_vert_cut()
     double e_f_x = ((*e_f_grad)[0])(x_cut_value, y_value);
     double e_f_y = ((*e_f_grad)[1])(x_cut_value, y_value);
     if (index == 0) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (m^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (V um^-1)");
       e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
     } else if ( index == 1) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field X (V um^-1)");
       e_field[i] = e_f_x;
     } else if ( index == 2 ) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field Y (V um^-1)");
       e_field[i] = e_f_y;
     }
   }
@@ -664,13 +664,13 @@ void MainWindow::show_e_field_hor_cut()
     double e_f_x = ((*e_f_grad)[0])(x_value, y_cut_value);
     double e_f_y = ((*e_f_grad)[1])(x_value, y_cut_value);
     if (index == 0) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (m^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (V um^-1)");
       e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
     } else if ( index == 1) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field X (m^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field X (V um^-1)");
       e_field[i] = e_f_x;
     } else if ( index == 2 ) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field Y (m^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Y (V um^-1)");
       e_field[i] = e_f_y;
     }
   }
@@ -1065,7 +1065,7 @@ void MainWindow::init_electric_potential_plot()
   ui->electric_pot_qcp->plotLayout()->addElement(0, 1, colorScale);
   colorScale->setType(QCPAxis::atRight);
   color_map_d_u->setColorScale(colorScale);
-  colorScale->axis()->setLabel("Electric Potential");
+  colorScale->axis()->setLabel("Electric Potential (V)");
 
   // get inital variables
   int n_bins_x = ui->n_cellsx_int_box->value();
