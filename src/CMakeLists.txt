@@ -117,7 +117,7 @@ qt4_wrap_ui(GUI_UIS_HEADERS ${GUI_UIS})
 
 # Executable
 add_executable(TRACS-GUI main_gui.cpp ${GUI_SRC} ${GUI_MOC} ${GUI_UIS_HEADERS} )
-target_link_libraries(TRACS-GUI ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES} QVTK )
+target_link_libraries(TRACS-GUI ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES} )
 
 
 
