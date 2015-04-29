@@ -12,6 +12,16 @@
 
 using namespace boost::numeric::odeint;
 
+/*
+ **************************CARRIER************************
+ *
+ *
+ *  Detailed Description
+ *
+ *
+ *
+ *
+ */
 
 class Carrier
 {
