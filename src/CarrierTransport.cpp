@@ -1,7 +1,7 @@
 #include <CarrierTransport.h>
 
 DriftTransport::DriftTransport(char carrier_type, Function * d_f_grad) :
-  _mu(carrier_type, 300.)
+  _mu(carrier_type, 273.) // Last value accounts for detector temperature [you only need to change it here]
 {
   _d_f_grad = d_f_grad;
   if (carrier_type == 'e') {

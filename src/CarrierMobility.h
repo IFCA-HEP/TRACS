@@ -3,11 +3,22 @@
 
 #include <cmath>
 
+/*
+ ****************JACOBONI MOBILITY**************
+ *
+ * This class is able to calculate the mobility 
+ * of a charge carrier given its type, the 
+ * detector thickness and the electric field at
+ * de desired point.
+ *
+ *
+ */
+
 class JacoboniMobility
 {
   private:
-    double _T;
-    double _mu0;
+    double _T; // Detector thickness
+    double _mu0; // Mobility
     double _vsat;
     double _beta;
 

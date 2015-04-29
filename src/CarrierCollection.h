@@ -12,6 +12,16 @@
 
 #include "Carrier.h"
 
+/*
+ ***********************************CARRIER COLLECTION***********************************
+ *
+ *
+ *Detailed description
+ *
+ *
+ *
+ */
+
 class CarrierCollection
 {
   private:
