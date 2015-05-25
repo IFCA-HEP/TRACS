@@ -17,7 +17,7 @@
 class JacoboniMobility
 {
   private:
-    double _T; // Detector thickness
+    double _T; // Temperature of the detector
     double _mu0; // Mobility
     double _vsat;
     double _beta;

@@ -1,9 +1,10 @@
 #include <SMSDetector.h>
 
-SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100 ) :
+SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100, double tempK) :
     _pitch(pitch), //Distance between implants
     _width(width), //Size of the implant
     _depth(depth), //Vertical size of the pad (typically 300microns)
+    _tempK(tempK),
     _nns(nns),
     _bulk_type(bulk_type), //Dopant type of the silicon (p/n)
     _implant_type(implant_type), //Dopant type of the implant, normally opposite of the bulk (n/p)
@@ -199,6 +200,15 @@ double  SMSDetector::get_x_min()
 double  SMSDetector::get_x_max()
 {
   return _x_max;
+}
+/*
+ *
+ * Getter method for the temperature of the diode
+ *
+ */
+double  SMSDetector::get_temperature()
+{
+  return _tempK;
 }
 
 /*

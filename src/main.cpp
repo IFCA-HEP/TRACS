@@ -67,15 +67,15 @@ int main()
   char implant_type = 'n';
 
   // for loop that scans the detector in all desired depths
-	for (int iteration_depth = 0; iteration_depth <= depth; iteration_depth += 5)
-	{
+// 	for (int iteration_depth = 0; iteration_depth <= depth; iteration_depth += 5)
+//	{
   	
   	// for loop that simulates currents for voltajes [0-500]V 
   	// in steps of 50V. The position and angle at which the laser
   	// illuminates the detector is controlled via the read file
   	// which contains the CC position at generation time.
-		for (int voltaje_iteration = 0; voltaje_iteration < 11; ++voltaje_iteration)
-		{
+//		for (int voltaje_iteration = 0; voltaje_iteration < 11; ++voltaje_iteration)
+//		{
 
 		      parameters["allow_extrapolation"] = true;
 
@@ -99,7 +99,7 @@ int main()
 		      // File file_u("periodic.pvd");
 		      // file_u << *w_u;
 
-		      double v_bias = 50.0*voltaje_iteration; // Vias Voltage
+		      double v_bias = 500.;//*voltaje_iteration; // Vias Voltage
 		      double v_depletion = 180.0; // Depletion Voltaje
 		      detector.set_voltages(v_bias, v_depletion);
 
@@ -129,7 +129,7 @@ int main()
 
 		      // filename to get carrier distribution
 		      
-		      QString filename = "etct"+QString::number(iteration_depth)+".carriers";
+		      QString filename = "etct.carriers";//+QString::number(iteration_depth)+".carriers";
 		      CarrierCollection * carrier_collection = new CarrierCollection(dec_pointer);
 		      carrier_collection->add_carriers_from_file(filename);
 
@@ -224,14 +224,14 @@ int main()
 		      }
 
 		      // Open a ROOT file to save result
-		      TFile *tfile = new TFile("results.root","RECREATE" );
-		      curr_map_total.Write();
-		      curr_map_shaped.Write();
-		      tfile->Close();
+//		      TFile *tfile = new TFile("results.root","RECREATE" );
+//		      curr_map_total.Write();
+//		      curr_map_shaped.Write();
+//		      tfile->Close();
 
-		} // End for loop over voltajes
+//		} // End for loop over voltajes
     
-	} // End for loop over depths
+//	} // End for loop over depths
 
   // No plot now
   // interactive(); 

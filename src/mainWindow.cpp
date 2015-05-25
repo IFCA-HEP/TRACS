@@ -4,7 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    detector( new SMSDetector(100., 20., 300., 3, 'p', 'n', 180, 200))
+    detector( new SMSDetector(100., 20., 300., 3, 'p', 'n', 150, 150, 253.))
 {
   ui->setupUi(this);
 
@@ -79,7 +79,8 @@ void MainWindow::solve_fem()
   double pitch = ui->pitch_double_box->value();
   double width = ui->width_double_box->value();
   double depth = ui->depth_double_box->value();
-  double Temperature = ui->T_double_box->value();
+  double Temperature = ui->Temperature_double_box->value();
+  // Textern = Temperature;
   int nns = ui->nn_strips_int_box->value();
   char bulk_type = ui->bulk_type_combo_box->currentText().toStdString().c_str()[0];
   char implant_type = ui->implant_type_combo_box->currentText().toStdString().c_str()[0];
@@ -87,7 +88,7 @@ void MainWindow::solve_fem()
   int n_cellsy = ui->n_cellsy_int_box->value();
 
   ui->fem_progress_bar->setValue(10);
-  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy);
+  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy, Temperature);
 
   double v_bias = ui->bias_voltage_double_box->value();
   double v_depletion = ui->depletion_voltage_double_box->value();

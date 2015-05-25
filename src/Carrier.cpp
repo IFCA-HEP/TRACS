@@ -11,8 +11,9 @@ Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , S
   _q(q), //Charge in electron units. Always positive.
   _gen_time(gen_time), // Instant of CC generation
   _detector(detector), // Detector type and characteristics
-  _drift(_carrier_type, _detector->get_d_f_grad()),
-  _mu(_carrier_type, -20.) // Mobility of the CC
+  _myTemp(_detector->get_temperature()), // Temperature of the diode
+  _drift(_carrier_type, _detector->get_d_f_grad(), _myTemp), // Carrier Transport object
+  _mu(_carrier_type, _myTemp) // Mobility of the CC
 {
   _x[0] = x_init; // Starting horizontal position
   _x[1] = y_init; // Starting vertical position

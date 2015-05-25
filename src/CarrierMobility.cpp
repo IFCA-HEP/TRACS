@@ -20,7 +20,7 @@
  *
  */
 
-JacoboniMobility::JacoboniMobility( char carrier_type, double T = -20.)
+JacoboniMobility::JacoboniMobility( char carrier_type, double T)
 {
   _T = T;
   if (carrier_type == 'e') // Electrons
