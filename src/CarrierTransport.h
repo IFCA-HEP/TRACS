@@ -17,7 +17,7 @@ class DriftTransport
 
 
   public:
-    DriftTransport(char carrier_type, Function * d_f_grad);
+    DriftTransport(char carrier_type, Function * d_f_grad, double givenT = 253.);
     ~DriftTransport();
     void operator() ( const std::array< double,2> &x , std::array< double,2> &dxdt , const double /* t */ );
 

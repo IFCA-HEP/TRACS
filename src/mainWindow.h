@@ -21,16 +21,19 @@
 #include <iterator>
 
 namespace Ui {
-class MainWindow;
+class MainWindow
+;
 }
 
 class MainWindow : public QMainWindow
 {
+
     Q_OBJECT
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+//  extern double Textern;
 
 private slots:
 
@@ -74,6 +77,8 @@ private slots:
 
     // other
     void save_results_raw();
+
+
 
 private:
     Ui::MainWindow *ui;

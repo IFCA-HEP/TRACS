@@ -1,24 +1,38 @@
 
 #include <Carrier.h>
 
+/*
+ * Constructor for Carrier.cpp that sets and stores the values given in their respective places.
+ *
+ */
 Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , SMSDetector * detector, double gen_time = 0.0 ) :
-  _carrier_type(carrier_type),
-  _q(q),
-  _gen_time(gen_time),
-  _detector(detector),
-  _drift(_carrier_type, _detector->get_d_f_grad()),
-  _mu(_carrier_type, 300.)
+	
+  _carrier_type(carrier_type), // Charge carrier(CC)  type. Typically  electron/positron
+  _q(q), //Charge in electron units. Always positive.
+  _gen_time(gen_time), // Instant of CC generation
+  _detector(detector), // Detector type and characteristics
+  _myTemp(_detector->get_temperature()), // Temperature of the diode
+  _drift(_carrier_type, _detector->get_d_f_grad(), _myTemp), // Carrier Transport object
+  _mu(_carrier_type, _myTemp) // Mobility of the CC
 {
-  _x[0] = x_init;
-  _x[1] = y_init;
-  if (_carrier_type == 'e') {
-    _sign = -1;
+  _x[0] = x_init; // Starting horizontal position
+  _x[1] = y_init; // Starting vertical position
+
+  if (_carrier_type == 'e') { // If electron-like
+    _sign = -1; // Negative charge
   }
-  else {
-    _sign = 1;
+  else { // it's hole-like
+    _sign = 1; // Positive charge
   }
 }
 
+/*
+ ******************** CARRIER DRIF SIMULATION METHOD**************************
+ *
+ * Simulates how the CC drifts inside the detector in the 
+ * desired number of steps
+ *
+ */
 std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
 {
   // get number of steps from time
@@ -36,14 +50,14 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
 
   double t=0.0;
 
-  for ( int i = 0 ; i < max_steps; i++)
+  for ( int i = 0 ; i < max_steps; i++) // Simulate for the desired number of steps
   {
 
     if (t < _gen_time)
     {
       i_n[i] = 0;
     }
-    else if (_detector->is_out(_x))
+    else if (_detector->is_out(_x)) // if outside of the detector
     {
       i_n[i] = 0;
       break;
@@ -61,6 +75,13 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
   return i_n;
 }
 
+/*
+ *
+ *
+ * TODO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ *
+ *
+ */
 std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double x_init, double y_init )
 {
   _x[0] = x_init;
@@ -80,19 +101,19 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
 
 
 
-  double t=0.0;
+  double t=0.0; // Start at time = 0
 
   for ( int i = 0 ; i < max_steps; i++)
   {
 
-    if (t < _gen_time)
+    if (t < _gen_time) // If CC not yet generated
     {
       i_n[i] = 0;
     }
-    else if (_detector->is_out(_x))
+    else if (_detector->is_out(_x)) // If CC outside detector
     {
       i_n[i] = 0;
-      break;
+      break; // Finish (CC gone out)
     }
     else
     {
@@ -107,15 +128,32 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
   return i_n;
 }
 
+/*
+ *
+ * Getter for the type of the CC (electro / hole)
+ *
+ */
+
 char Carrier::get_carrier_type()
 {
   return _carrier_type;
 }
 
+/*
+ *
+ * Getter for the position of the CC
+ *
+ */
+
 std::array< double,2> Carrier::get_x()
 {
   return _x;
 }
+
+/*
+ *
+ * Getter for the charge of the CC
+ */
 
 double Carrier::get_q()
 {
@@ -123,6 +161,13 @@ double Carrier::get_q()
 }
 
 
+/*
+ *
+ *
+ * TODO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ *
+ *
+ */
 Carrier::~Carrier()
 {
 

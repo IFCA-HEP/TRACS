@@ -1,8 +1,8 @@
 #include <CarrierTransport.h>
 
-DriftTransport::DriftTransport(char carrier_type, Function * d_f_grad) :
-  _mu(carrier_type, 300.)
-{
+DriftTransport::DriftTransport(char carrier_type, Function * d_f_grad, double givenT) :
+  _mu(carrier_type, givenT)
+ {
   _d_f_grad = d_f_grad;
   if (carrier_type == 'e') {
     _sign = -1;

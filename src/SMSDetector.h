@@ -17,9 +17,10 @@ class SMSDetector
     double _pitch; // in microns
     double _width; // in microns
     double _depth; // in microns
-    int _nns;
-    char _bulk_type;
-    char _implant_type;
+    double _tempK; // temperature in Kelvin
+    int _nns; // numbre of neighbouring strips
+    char _bulk_type; // p or n
+    char _implant_type; // n or p
 
     // some useful derived variables
     double _x_min; // in microns
@@ -68,7 +69,7 @@ class SMSDetector
   public:
     // default constructor and destructor
     SMSDetector(double pitch, double width, double depth,
-                int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y);
+                int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y, double tempK = 253.);
     ~SMSDetector();
     // set methods
     void set_voltages(double v_bias, double v_depletion);
@@ -98,6 +99,7 @@ class SMSDetector
     double get_x_max();
     double get_y_min();
     double get_y_max();
+    double get_temperature();
 
     // some other methods
     bool is_out(const std::array< double,2> &x);

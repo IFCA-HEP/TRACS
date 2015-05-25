@@ -12,6 +12,16 @@
 
 using namespace boost::numeric::odeint;
 
+/*
+ **************************CARRIER************************
+ *
+ *
+ *  Detailed Description
+ *
+ *
+ *
+ *
+ */
 
 class Carrier
 {
@@ -26,6 +36,7 @@ class Carrier
     int _sign; // sign to describe if carrier moves in e field direction or opposite
 
     SMSDetector * _detector;
+    double _myTemp; // Temperature of the detector
     DriftTransport _drift;
     JacoboniMobility _mu;
 
