@@ -39,6 +39,7 @@ class Carrier
     double _myTemp; // Temperature of the detector
     DriftTransport _drift;
     JacoboniMobility _mu;
+    double _trapping_time;
 
   public:
     Carrier( char carrier_type, double q, double x_init, double y_init, SMSDetector * detector, double gen_time);

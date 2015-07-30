@@ -14,12 +14,15 @@ CarrierCollection::CarrierCollection(SMSDetector * detector) :
 
 }
 
-
 void CarrierCollection::add_carriers_from_file(QString filename)
 {
   // get char representation and make ifstream
   char * char_fn = filename.toLocal8Bit().data();
   std::ifstream infile(char_fn);
+
+  if (!infile.good()){
+	  std::cout<<"Warning: File not found"<<std::endl;
+  }
 
   // process line by line
   std::string line;
@@ -28,9 +31,13 @@ void CarrierCollection::add_carriers_from_file(QString filename)
     std::istringstream iss(line);
     char carrier_type;
     double q, x_init, y_init, gen_time;
-    if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) { break;}  //TODO show error?
+    if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) 
+		{
+			std::cout << "Error while reading file" << std::endl; 
+			break;
+		}
 
-    Carrier carrier(carrier_type, q, x_init, y_init , _detector, 1e-9);
+    Carrier carrier(carrier_type, q, x_init, y_init , _detector, 1e-10);
     _carrier_list.push_back(carrier);
   }
 }
@@ -47,7 +54,7 @@ void CarrierCollection::simulate_drift( double dt, double max_time, std::valarra
       curr_elec += carrier.simulate_drift( dt , max_time);
     }
     else if (carrier_type =='h')
-    {
+   { 
       curr_hole += carrier.simulate_drift( dt , max_time);
     }
   }
@@ -104,3 +111,11 @@ TH2D CarrierCollection::get_e_dist_histogram(int n_bins_x, int n_bins_y,  TStrin
   return e_dist;
 }
 
+
+/*
+ ********************** DESTRUCTOR OF THE CLASS CARRIER	COLLECTION **************************
+ */
+CarrierCollection::~CarrierCollection()
+{
+
+}

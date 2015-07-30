@@ -24,6 +24,7 @@ set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(${CMAKE_SOURCE_DIR}/include)
+#include_directories(${CMAKE_SOURCE_DIR}/build/bin)
 
 if(COVERAGE_ENABLED)
     set(CMAKE_CXX_FLAGS_DEBUG "-Wall -fPIC -O0 -ggdb -fprofile-arcs -ftest-coverage")
@@ -62,46 +63,10 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Debug")
 endif()
 
-# Boost, a collection of useful C++ utilities and idioms
-#find_package(Boost COMPONENTS
-#    program_options
-#    filesystem
-#    thread
-#    system
-#    REQUIRED)
-#include_directories(${Boost_INCLUDE_DIR})
-#set(LIBRARIES ${LIBRARIES} ${Boost_LIBRARIES})
-
 #ROOT, a library for HEP data analysis (contains RooFit)
 find_package(ROOT REQUIRED)
 include_directories(${ROOT_INCLUDE_DIR})
 set(LIBRARIES ${LIBRARIES} ${ROOT_LIBRARIES})
-#set(LIBRARIES ${LIBRARIES} ${ROOFIT_LIBRARIES})
-
-# Eigen3, a template library for high performance linear algebra
-#find_package(Eigen3 REQUIRED)
-#include_directories(EIGEN3_INCLUDE_DIR)
-
-# Basic 3D graphics libraries: OpenGL, glew, glfw
-#find_package(OpenGL REQUIRED)
-#include_directories(${OPENGL_INCLUDE_DIR})
-#set(LIBRARIES ${LIBRARIES} ${OPENGL_LIBRARIES})
-#find_package(GLEW REQUIRED)
-#include_directories(${GLEW_INCLUDE_DIR})
-#set(LIBRARIES ${LIBRARIES} ${GLEW_LIBRARIES})
-#find_package(glfw REQUIRED)
-#include_directories(${GLFW_INCLUDE_DIR})
-#set(LIBRARIES ${LIBRARIES} ${GLFW_LIBRARY})
-
-# protobuf, an efficient data serialization protocol
-#find_package(Protobuf REQUIRED)
-#include_directories(${PROTOBUF_INCLUDE_DIR})
-#set(LIBRARIES ${LIBRARIES} ${PROTOBUF_LIBRARY})
-
-# glog, a powerful logging framework
-#find_package(Glog REQUIRED)
-#include_directories(${GLOG_INCLUDE_DIRS})
-#set(LIBRARIES ${LIBRARIES} ${GLOG_LIBRARIES})
 
 if(TESTS_ENABLED)
     add_subdirectory(test)
@@ -109,5 +74,5 @@ endif()
 
 add_subdirectory(src)
 
-# vim:ft=cmake
+set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 

@@ -2,6 +2,7 @@
 #define SMSDETECTOR_H
 
 #include <dolfin.h>
+#include <cmath> 
 
 #include "Poisson.h"
 #include "Gradient.h"
@@ -18,9 +19,12 @@ class SMSDetector
     double _width; // in microns
     double _depth; // in microns
     double _tempK; // temperature in Kelvin
+    double _trapping_time; // radiation damage
+    double _fluence; // irradiation fluence (in neq)
     int _nns; // numbre of neighbouring strips
     char _bulk_type; // p or n
     char _implant_type; // n or p
+		double _vdep; // depletion voltage
 
     // some useful derived variables
     double _x_min; // in microns
@@ -69,7 +73,7 @@ class SMSDetector
   public:
     // default constructor and destructor
     SMSDetector(double pitch, double width, double depth,
-                int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y, double tempK = 253.);
+                int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100, double tempK = 253., double trapping = 9e300, double fluence = 0.0);
     ~SMSDetector();
     // set methods
     void set_voltages(double v_bias, double v_depletion);
@@ -82,7 +86,9 @@ class SMSDetector
     void set_n_cells_x(int n_cells_x);
     void set_n_cells_y(int n_cells_y);
     void set_derived(); // Properly sets all derived quantities
-
+    void set_temperature(double temperature);
+    void set_trapping_time(double trapping_tau);
+    void set_fluence(double fluencia);
 
     // solve potentials
     void solve_w_u();
@@ -100,6 +106,16 @@ class SMSDetector
     double get_y_min();
     double get_y_max();
     double get_temperature();
+    double get_trapping_time();
+    double get_fluence();
+		double get_depth();
+		double get_pitch();
+		double get_width();
+		int get_nns();
+		char get_bulk_type();
+		char get_implant_type();
+		double get_vbias();
+		double get_vdep();
 
     // some other methods
     bool is_out(const std::array< double,2> &x);

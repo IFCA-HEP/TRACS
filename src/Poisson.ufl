@@ -29,5 +29,5 @@ u = TrialFunction(element)
 v = TestFunction(element)
 f = Coefficient(element)
 
-a = dot(grad(u), grad(v))*dx
-L = f*v*dx
+a = inner(nabla_grad(u),nabla_grad(v)) #dot(grad(u), grad(v))*dx
+L = f*dx*x*v*dx

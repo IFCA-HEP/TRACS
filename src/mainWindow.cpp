@@ -498,7 +498,7 @@ void MainWindow::show_e_field_y_3d()
 {
   // Get weighting field grad
   Function * e_f_grad = detector->get_d_f_grad();
-  // Plot weighting field in an external window
+  // Plot electric field in an external window
   plot(reference_to_no_delete_pointer((*e_f_grad)[1]),"Electric Field Y Component","auto");
   interactive();
 }
@@ -622,10 +622,10 @@ void MainWindow::show_e_field_vert_cut()
       ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Modulus (V um^-1)");
       e_field[i] = sqrt(e_f_x*e_f_x + e_f_y*e_f_y);
     } else if ( index == 1) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field X (V um^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field X (V um^-1)");
       e_field[i] = e_f_x;
     } else if ( index == 2 ) {
-      ui->electric_field_cut_qcp->yAxis->setLabel("Weighting Field Y (V um^-1)");
+      ui->electric_field_cut_qcp->yAxis->setLabel("Electric Field Y (V um^-1)");
       e_field[i] = e_f_y;
     }
   }
@@ -993,10 +993,10 @@ void MainWindow::show_gen_carrier_map_qcp()
   // get some required variables
   int n_bins_x = ui->n_cellsx_int_box->value();
   int n_bins_y = ui->n_cellsy_int_box->value();
-  double x_min = detector->get_x_min();
-  double x_max = detector->get_x_max();
-  double y_min = detector->get_y_min();
-  double y_max = detector->get_y_max();
+//  double x_min = detector->get_x_min();
+//  double x_max = detector->get_x_max();
+//  double y_min = detector->get_y_min();
+//  double y_max = detector->get_y_max();
 
   // get color map
   QCPColorMap * color_map = qobject_cast<QCPColorMap *>(ui->gen_carrier_map_qcp->plottable(0));
