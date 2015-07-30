@@ -78,8 +78,8 @@ int main()
 	// RC shaping
 	double C = 1.e-12; // in Farad
 	//  double RC = 50.*C; // Ohms*Farad
-	double dt = 10* 2*5.e-11; // in seconds this is also the simulation timestep
-	double max_time = 2*1.5e-8;
+	double dt = 5.e-11; // in seconds this is also the simulation timestep
+	double max_time = 1.5e-8;
 
 	// Voltages (might be modified inside the for loops)
 	double v_bias = 260.;// Still needed, should get rid of it later
@@ -90,8 +90,8 @@ int main()
 	int n_vSteps = (int) std::floor((v_init-v_max)/deltaV);
 
 	// Shifting CC from laser beam 
-	double margin = 0;
-	double step_size_y = 30000; // microns 
+	double margin = 10;
+	double step_size_y = 3.000; // microns 
 	int n_steps_y  = (int) std::floor((depth+margin*2)/step_size_y); // Simulation Steps
 	TH1D *hnoconv , *hconv ;
 
@@ -238,11 +238,8 @@ int main()
 
 			std::string z_height = std::to_string((int) std::floor(i*step_size_y));
 
-			// Write to file using arrays	
-			utilities::write_to_file_row(out_filename, raw_results, dt);
-
 			// Write file from TH1D
-			utilities::write_to_file_row(hetct_filename, hconv, detector.get_temperature(), i*step_size_y, voltages[k]);
+			utilities::write_to_file_row(hetct_filename, hnoconv, detector.get_temperature(), i*step_size_y, voltages[k]);
 		}
 
 		std::string root_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+type+".root";
