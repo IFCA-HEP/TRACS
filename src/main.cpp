@@ -72,35 +72,37 @@ int main()
 
 	// Laser
 	int landa = 1064; // in nm
-	std::string type = "edge"; // edge/TCT
+	std::string type = "edge"; // edge/top/bottom
 
 
 	// RC shaping
 	double C = 1.e-12; // in Farad
 	//  double RC = 50.*C; // Ohms*Farad
-	double dt = 5.e-11; // in seconds this is also the simulation timestep
+	double dt = 2*5.e-11; // in seconds this is also the simulation timestep
 	double max_time = 1.5e-8;
 
 	// Voltages (might be modified inside the for loops)
-	double v_bias = 260.;// Still needed, should get rid of it later
-	double v_init = 260;
-	double deltaV = 260;
-	double v_max = 260.; 
+	double v_bias = 300.;// Still needed, should get rid of it later
+	double v_init = 300;
+	double deltaV = 300;
+	double v_max = 300.; 
 	double v_depletion = 250.0; // Depletion Voltaje
 	int n_vSteps = (int) std::floor((v_init-v_max)/deltaV);
 
 	// Shifting CC from laser beam 
 	double margin = 10;
-	double step_size_y = 3.000; // microns 
-	int n_steps_y  = (int) std::floor((depth+margin*2)/step_size_y); // Simulation Steps
+	double deltaZ = 30.000; // microns 
+	int n_zSteps  = (int) std::floor((depth+margin*2)/deltaZ); // Simulation Steps
 	TH1D *hnoconv , *hconv ;
 
 
 	// Convert relevant simulation numbers to string for fileNaming	
 	std::string dtime = std::to_string((int) std::floor(dt*1.e12));
 	std::string neigh = std::to_string(nns);
+	std::string stepV = std::to_string((int) std::floor(deltaV)); 
+	std::string stepZ = std::to_string((int) std::floor(deltaZ));
 	std::string cap = std::to_string((int) std::floor(C*1.e12));
-	std::string z_step  = std::to_string((int) std::floor(step_size_y));
+	std::string z_step  = std::to_string((int) std::floor(deltaZ));
 	std::string voltage = std::to_string((int) std::floor(v_bias));
 
 	parameters["allow_extrapolation"] = true;
@@ -126,9 +128,9 @@ int main()
 	std::valarray<double> i_total((size_t) n_time_steps);
 
 	// Shifting  of Charge Carriers
-	// the laser gets shifted in x and/or y direction depending on the arrays 
+	// the laser gets shifted in x and/or z direction depending on the arrays 
 	// fed to the simulate_drift method inside the main for loop
-	std::vector<double>  z_shifts(n_steps_y+1);
+	std::vector<double>  z_shifts(n_zSteps+1);
 	std::vector<double>  voltages(n_vSteps+1);
 
 	for (int i = 0; i < n_vSteps + 1; i++ ) 
@@ -136,30 +138,34 @@ int main()
 		voltages[i] = (i*deltaV)+v_init;
 	}
 
-	for (int i = 0; i < n_steps_y + 1; i++ ) 
+	for (int i = 0; i < n_zSteps + 1; i++ ) 
 	{
-		z_shifts[i] = (i*step_size_y)-margin;
+		z_shifts[i] = (i*deltaZ)-margin;
 	}
 
 	TString hist_name = "i_ramo";
 	TString hist_title = "i_ramo";
 	TH2D i_ramo = TH2D(hist_name, hist_title,
 			n_time_steps, 0.0, max_time, 
-			n_steps_y + 1, -margin, depth+margin);
+			n_zSteps + 1, -margin, depth+margin);
 
 	TH2D i_rc = TH2D("i_rc", "i_rc",
-			n_time_steps, 0.0, max_time,
-			n_steps_y + 1, -margin, depth+margin);
+			n_time_steps*4, 0.0, max_time*4,
+			n_zSteps + 1, -margin, depth+margin);
 
 
 	hnoconv = new TH1D("hnoconv","Ramo current",n_time_steps, 0.0, max_time);
 	hconv   = new TH1D("hconv","Amplifier convoluted",n_time_steps, 0.0, max_time);
 
-	std::vector<double> z_chifs(n_steps_y+1);
+	// Convert Z to milimeters
+	std::vector<double> z_chifs(n_zSteps+1);
 	z_chifs = z_shifts;
 	std::transform(z_chifs.begin(), z_chifs.end(), z_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
 
-	std::string hetct_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+neigh+"nns_"+type+".hetct";
+	// filename for data analysis
+	std::string hetct_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+stepZ+"um_"+stepV+"V_"+neigh+"nns_"+type+".hetct";
+	
+	// write header for data analysis
 	utilities::write_to_hetct_header(hetct_filename, detector, C, dt, z_chifs, landa, type, file_carriers, voltages);
 
 	//Loop on voltages
@@ -171,9 +177,9 @@ int main()
 		detector.solve_w_f_grad();
 		detector.solve_d_f_grad();
 		// Loop on depth
-		for (int i = 0; i < n_steps_y + 1; i++) 
+		for (int i = 0; i < n_zSteps + 1; i++) 
 		{
-			std::cout << "Height " << z_shifts[i] << " of " << depth << "|| Voltage " << voltages[k] << " of " << v_max << std::endl;
+			std::cout << "Height " << z_shifts[i] << " of " << z_shifts.back() << " || Voltage " << voltages[k] << " of " << voltages.back() << std::endl;
 			i_hole = 0;
 			i_elec = 0;
 			i_total = 0;
@@ -187,6 +193,7 @@ int main()
 			QVector<double> x_elec(n_time_steps), y_elec(n_time_steps);
 			QVector<double> x_hole(n_time_steps), y_hole(n_time_steps);
 			QVector<double> x_total(n_time_steps), y_total(n_time_steps);
+
 
 			// Compute time + format vectors for writting to file
 			for (int j=0; j < n_time_steps; j++)
@@ -235,11 +242,8 @@ int main()
 			raw_results[2] = y_elec;
 			raw_results[3] = y_hole;
 
-
-			std::string z_height = std::to_string((int) std::floor(i*step_size_y));
-
 			// Write file from TH1D
-			utilities::write_to_file_row(hetct_filename, hnoconv, detector.get_temperature(), i*step_size_y, voltages[k]);
+			utilities::write_to_file_row(hetct_filename, hconv, detector.get_temperature(), z_shifts[i], voltages[k]);
 		}
 
 		std::string root_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+type+".root";

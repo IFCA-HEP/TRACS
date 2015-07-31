@@ -111,6 +111,7 @@ void utilities::write_to_file_row(std::string filename, QVector<QVector<double>>
 void utilities::write_to_file_row(std::string filename, TH1D *hconv, double temp, double height, double voltage)
 {
   unsigned long int steps = hconv->GetNbinsX();
+ height = height/1000.;
 
   std::ofstream out; // open file
 	out.open(filename, std::ios_base::app);
@@ -120,9 +121,7 @@ void utilities::write_to_file_row(std::string filename, TH1D *hconv, double temp
 		out << temp-273. << " ";
 		out << voltage << " ";
 		out << "0 0 " << height << " ";
-//		out << std::fixed << std::setprecision(15) << dt; // set det with enough precision
 
-		// dt and #points at the start of the line
 
 	  // Scan on times
 	  for (unsigned int i = 1; i <= steps; i++ )
@@ -155,8 +154,8 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	int nZ = z_shifts.size();
 	int nV = voltages.size();
 	int nScans = (nX + nY + nZ)*nV;
-	double deltaZ = std::abs(z_shifts[1]-z_shifts[0]);
-	double deltaV = std::abs(voltages[1]-voltages[0]);
+	double deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
+	double deltaV = std::abs((voltages.back()-voltages.back())/(nV-1));
 	double temp = detector.get_temperature() - 273;
 	
 	// Convert relevant quantities to string for outputting
@@ -171,7 +170,10 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	if (header.is_open())
 	{ 
 		// Store header string 
-		header << "================\n SSD simulation file\n version: 1.0\n ================\n";
+		header << "================\n";
+		header << "SSD simulation file\n";
+		header << "version: 1.0\n";
+		header << "================\n";
 		header << "scanType: " << "TRACS\n";
 		header << "startTime: " << s_date << "\n" ;
 		header << "landaLaser: " << landa << "\n";
