@@ -76,22 +76,22 @@ int main()
 
 
 	// RC shaping
-	double C = 1.e-12; // in Farad
+	double C = 5.e-12; // in Farad
 	//  double RC = 50.*C; // Ohms*Farad
-	double dt = 2*5.e-11; // in seconds this is also the simulation timestep
+	double dt = 5.e-11; // in seconds this is also the simulation timestep
 	double max_time = 1.5e-8;
 
 	// Voltages (might be modified inside the for loops)
-	double v_bias = 300.;// Still needed, should get rid of it later
-	double v_init = 300;
-	double deltaV = 300;
-	double v_max = 300.; 
+	double v_bias = 350.;// Still needed, should get rid of it later
+	double v_init = 350;
+	double deltaV = 350;
+	double v_max = 350.; 
 	double v_depletion = 250.0; // Depletion Voltaje
 	int n_vSteps = (int) std::floor((v_init-v_max)/deltaV);
 
 	// Shifting CC from laser beam 
 	double margin = 10;
-	double deltaZ = 30.000; // microns 
+	double deltaZ = 3.0000; // microns 
 	int n_zSteps  = (int) std::floor((depth+margin*2)/deltaZ); // Simulation Steps
 	TH1D *hnoconv , *hconv ;
 
@@ -149,10 +149,6 @@ int main()
 			n_time_steps, 0.0, max_time, 
 			n_zSteps + 1, -margin, depth+margin);
 
-	TH2D i_rc = TH2D("i_rc", "i_rc",
-			n_time_steps*4, 0.0, max_time*4,
-			n_zSteps + 1, -margin, depth+margin);
-
 
 	hnoconv = new TH1D("hnoconv","Ramo current",n_time_steps, 0.0, max_time);
 	hconv   = new TH1D("hconv","Amplifier convoluted",n_time_steps, 0.0, max_time);
@@ -163,20 +159,28 @@ int main()
 	std::transform(z_chifs.begin(), z_chifs.end(), z_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
 
 	// filename for data analysis
-	std::string hetct_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+stepZ+"um_"+stepV+"V_"+neigh+"nns_"+type+".hetct";
+	std::string hetct_filename = "NOirrad_conv_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+stepZ+"um_"+stepV+"V_"+neigh+"nns_"+type+".hetct";
+	std::string hetct_noconv_filename = "NOirrad_noconv_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+stepZ+"um_"+stepV+"V_"+neigh+"nns_"+type+".hetct";
+
 	
 	// write header for data analysis
 	utilities::write_to_hetct_header(hetct_filename, detector, C, dt, z_chifs, landa, type, file_carriers, voltages);
+	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, z_chifs, landa, type, file_carriers, voltages);
 
 	//Loop on voltages
+		detector.solve_w_u();
+		detector.solve_w_f_grad();
+	
 	for (int k = 0; k < n_vSteps + 1; k++) 
 	{
-		detector.solve_w_u();
 		detector.set_voltages(voltages[k], v_depletion);
 		detector.solve_d_u();
-		detector.solve_w_f_grad();
 		detector.solve_d_f_grad();
-		// Loop on depth
+		
+		
+		TH2D *i_rc ;
+		       
+	        // Loop on depth
 		for (int i = 0; i < n_zSteps + 1; i++) 
 		{
 			std::cout << "Height " << z_shifts[i] << " of " << z_shifts.back() << " || Voltage " << voltages[k] << " of " << voltages.back() << std::endl;
@@ -209,23 +213,29 @@ int main()
 			}
 
 			hconv = H1DConvolution( hnoconv , C*1.e12 );
+		        if (i==0) i_rc = new TH2D("i_rc", "i_rc", hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() ,
+		                                        n_zSteps + 1, -margin, depth+margin);
+
+			
+
+			
 
 #ifdef RCONLY
 			QVector<double> y_shaped(n_time_steps);
 			y_shaped[0]=y_total[0];
-			i_rc.SetBinContent(1, i+1, y_shaped[0]);
+			i_rc->SetBinContent(1, i+1, y_shaped[0]);
 			double alfa = dt/(RC+dt);
 
 			for (int j = 1; j <n_time_steps; j++) 
 			{
 				y_shaped[j]=y_shaped[j-1]+alfa*(y_total[j]-y_shaped[j-1]);
-				i_rc.SetBinContent(j+1,i+1,y_shaped[j]);
+				i_rc->SetBinContent(j+1,i+1,y_shaped[j]);
 			}
 #endif
 
-			for (int j = 1; j <=600; j++)
+			for (int j = 1; j <=hconv->GetNbinsX(); j++)
 			{
-				i_rc.SetBinContent(j, i+1 , hconv->GetBinContent(j) );
+				i_rc->SetBinContent(j, i+1 , hconv->GetBinContent(j) );
 			}
 
 
@@ -244,6 +254,7 @@ int main()
 
 			// Write file from TH1D
 			utilities::write_to_file_row(hetct_filename, hconv, detector.get_temperature(), z_shifts[i], voltages[k]);
+			utilities::write_to_file_row(hetct_noconv_filename, hnoconv, detector.get_temperature(), z_shifts[i], voltages[k]);
 		}
 
 		std::string root_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+type+".root";
@@ -251,8 +262,10 @@ int main()
 		// Open a ROOT file to save result
 		TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );
 		i_ramo.Write();
-		i_rc.Write();
+		i_rc->Write();
 		tfile->Close();
+		
+		delete i_rc;
 
 	} // End for loop over voltages
         	

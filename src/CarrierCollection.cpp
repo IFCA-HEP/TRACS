@@ -37,7 +37,7 @@ void CarrierCollection::add_carriers_from_file(QString filename)
 			break;
 		}
 
-    Carrier carrier(carrier_type, q, x_init, y_init , _detector, 1e-10);
+    Carrier carrier(carrier_type, q, x_init, y_init , _detector, gen_time);
     _carrier_list.push_back(carrier);
   }
 }

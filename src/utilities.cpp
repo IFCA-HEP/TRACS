@@ -154,8 +154,10 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	int nZ = z_shifts.size();
 	int nV = voltages.size();
 	int nScans = (nX + nY + nZ)*nV;
-	double deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
-	double deltaV = std::abs((voltages.back()-voltages.back())/(nV-1));
+	double deltaZ = 0;
+	double deltaV = 0;	
+	if (nZ > 1)	deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
+	if (nV > 1) deltaV = std::abs((voltages.back()-voltages.back())/(nV-1)); 	
 	double temp = detector.get_temperature() - 273;
 	
 	// Convert relevant quantities to string for outputting
@@ -227,8 +229,8 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 		header << "Vdep: " << detector.get_vdep() << "\n";
 		header << "Carriers File: " << carriers_file << "\n";
 		header << "================\n";
-		header <<	 " Nt T[C] Vset[V] x[mm] y[mm] z[mm] I(t)[A]\n";
-		header <<	 " ================\n";
+		header <<	 "Nt T[C] Vset[V] x[mm] y[mm] z[mm] I(t)[A]\n";
+		header <<	 "================\n";
 
 		header.close();
 	}

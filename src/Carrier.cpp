@@ -4,7 +4,7 @@
  * Constructor for Carrier.cpp that sets and stores the values given in their respective places.
  *
  */
-Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , SMSDetector * detector, double gen_time = 0.0 ) :
+Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , SMSDetector * detector, double gen_time = 1.e-9):
 	
   _carrier_type(carrier_type), // Charge carrier(CC)  type. Typically  electron/positron
   _q(q), //Charge in electron units. Always positive.
@@ -24,6 +24,7 @@ Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , S
   else { // it's hole-like
     _sign = 1; // Positive charge
   }
+
 }
 
 /*

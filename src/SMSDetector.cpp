@@ -90,7 +90,7 @@ void SMSDetector::solve_d_u()
 {
 	Constant fpois(_f_poisson); 
 	Source f;
-	if (_fluence <= 10)
+	if (_fluence <= 0)
 	{
 		_L_p.f = fpois;
 	}
