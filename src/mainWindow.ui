@@ -35,7 +35,7 @@
          <widget class="QCustomPlot" name="electric_pot_qcp" native="true">
           <property name="minimumSize">
            <size>
-            <width>300</width>
+            <width>150</width>
             <height>0</height>
            </size>
           </property>
@@ -60,20 +60,17 @@
               <double>9999.000000000000000</double>
              </property>
              <property name="value">
-              <double>180.00000000000000</double>
+              <double>250.00000000000000</double>
              </property>
             </widget>
            </item>
-
-
            <item row="6" column="0">
-	    <widget class="QLabel" name="temperature_label">
+      	    <widget class="QLabel" name="temperature_label">
              <property name="text">
               <string>Temperature</string>
              </property>
             </widget>
            </item>
-
            <item row="6" column="1">
             <widget class="QDoubleSpinBox" name="Temperature_double_box">
              <property name="maximum">
@@ -83,12 +80,10 @@
               <double>0.000000000000000000</double>
              </property>
              <property name="value">
-              <double>253.00000000000000</double>
+              <double>300.00000000000000</double>
              </property>
             </widget>
            </item>
-
-
            <item row="1" column="0">
             <widget class="QLabel" name="width_label">
              <property name="text">
@@ -119,7 +114,7 @@
               <double>100000.000000000000000</double>
              </property>
              <property name="value">
-              <double>20.000000000000000</double>
+              <double>25.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -150,7 +145,7 @@
               <double>100000.000000000000000</double>
              </property>
              <property name="value">
-              <double>100.00000000000000</double>
+              <double>80.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -233,7 +228,7 @@
               <double>1000.000000000000000</double>
              </property>
              <property name="value">
-              <double>500.000000000000000</double>
+              <double>260.000000000000000</double>
              </property>
             </widget>
            </item>
@@ -250,7 +245,7 @@
               <number>10</number>
              </property>
              <property name="value">
-              <number>3</number>
+              <number>2</number>
              </property>
             </widget>
            </item>
