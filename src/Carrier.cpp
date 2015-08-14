@@ -5,26 +5,25 @@
  *
  */
 Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , SMSDetector * detector, double gen_time = 1.e-9):
-	
   _carrier_type(carrier_type), // Charge carrier(CC)  type. Typically  electron/positron
   _q(q), //Charge in electron units. Always positive.
   _gen_time(gen_time), // Instant of CC generation
   _detector(detector), // Detector type and characteristics
   _myTemp(_detector->get_temperature()), // Temperature of the diode
   _drift(_carrier_type, _detector->get_d_f_grad(), _myTemp), // Carrier Transport object
-  _mu(_carrier_type, _myTemp), // Mobility of the CC
-  _trapping_time(_detector->get_trapping_time()) // Trapping constant due to radiation-induced defects
+  _mu(_carrier_type, _myTemp) // Mobility of the CC
 {
   _x[0] = x_init; // Starting horizontal position
   _x[1] = y_init; // Starting vertical position
 
-  if (_carrier_type == 'e') { // If electron-like
+  if (_carrier_type == 'e') 
+  { // If electron-like
     _sign = -1; // Negative charge 
   }
-  else { // it's hole-like
+  else 
+  { // it's hole-like
     _sign = 1; // Positive charge
   }
-
 }
 
 /*
@@ -69,8 +68,7 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
       _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
       i_n[i] = _q *_sign*_mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
-      // Trapping effects due to radiation-induced defects (traps)
-      i_n[i] = i_n[i]*exp(-t/_trapping_time);
+      // Trapping effects due to radiation-induced defects (traps) implemented in CarrierColleciton.cpp
       stepper.do_step(_drift, _x, t, dt);
     }
     t+=dt;
@@ -124,8 +122,7 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
       i_n[i] = _q *_sign* _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
       stepper.do_step(_drift, _x, t, dt);
-      // Trapping effects due to radiation-induced defects (traps)
-      i_n[i] = i_n[i]*exp(-t/_trapping_time);
+      // Trapping effects due to radiation-induced defects (traps) implemented in CarrierColleciton.cpp
     }
     t+=dt;
   }

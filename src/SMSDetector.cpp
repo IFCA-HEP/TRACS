@@ -155,11 +155,11 @@ bool SMSDetector::is_out(const std::array< double,2> &x)
   return out;
 }
 
-/*************************************************************************
-**************************************************************************
-***
-***              BEHOLD!! BORING SETTERS AND GETTERS AHEAD
-***
+/************************************************************************
+*************************************************************************
+***                                                                   ***
+***            BEHOLD!! BORING SETTERS AND GETTERS AHEAD              ***
+***                                                                   ***
 *************************************************************************
 *************************************************************************/
 
@@ -176,7 +176,7 @@ Function * SMSDetector::get_w_u()
  */
 Function * SMSDetector::get_w_f_grad()
 {
-  return &_w_f_grad;
+	return &_w_f_grad;
 }
 
 /*
@@ -184,7 +184,8 @@ Function * SMSDetector::get_w_f_grad()
  */
 Function * SMSDetector::get_d_u()
 {
-  return &_d_u;
+
+	return &_d_u;
 }
 
 /*
@@ -192,7 +193,7 @@ Function * SMSDetector::get_d_u()
  */
 Function * SMSDetector::get_d_f_grad()
 {
-  return &_d_f_grad;
+	return &_d_f_grad;
 }
 
 /*
@@ -410,3 +411,4 @@ SMSDetector::~SMSDetector()
 {
 
 }
+
