@@ -63,7 +63,7 @@ void call_from_thread2(CarrierCollection &cCollection, double dt, double max_tim
 int main()
 {
 	// Number of threads
-	int nThreads = 1;
+	int nThreads = 2;
 	std::thread t[nThreads-1];
 
 	// Physical properties of the detector
