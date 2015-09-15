@@ -23,32 +23,10 @@ Simulator of transient currents and charge collection in semiconductor detectors
     cmake ..
     make
 # How TRACS Works
+=================
 
-===========================================================================
-||                                                                       ||
-||                BRIEF INTRODUCTION TO HOW TRACS WORKS                  ||
-||                                                                       ||
-||     A summary of how TRACS functions can be found here. As a brief    ||
-|| introduction it is meant for young padowams that have never seen      ||
-|| TRACS before. More experienced users or anyone with some experience   ||
-|| in C++11 or detector simulation might find it more useful to read the ||
-|| code and comments in folder TRACS/src/                                ||
-||                                                                       ||
-||    If you decide to use/develop TRACS you will be part of a great     ||
-|| scientific project but you should proceed at your own risk as the     ||
-|| only thing TRACS usage/development guarantees is headeaches and       ||
-|| despairation.                                                         ||
-||                                                                       ||
-===========================================================================
+                BRIEF INTRODUCTION TO HOW TRACS WORKS                  
 
-
-=----------------------------- THE INPUTS --------------------------------=
-
-
-=--------------------- SETTING UP THE SIMULATION--------------------------=
-
-   
-=--------------------------- SIMULATION --------------------------------=
-
-
-=--------------------------- THE OUTPUT--------------------------------=
+     A summary of how TRACS functions can be found here. As a brief introduction it is meant for young padowams that have never seen TRACS before. More experienced users or anyone with some experience in C++11 or detector simulation might find it more useful to read the code and comments in folder TRACS/src/                                
+                                                                       
+    If you decide to use/develop TRACS you will be part of a great scientific project but you should proceed at your own risk as the only thing TRACS usage/development guarantees is headeaches and despairation.                                                         
