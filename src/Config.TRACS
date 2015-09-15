@@ -74,31 +74,31 @@
 # Distance between detector edges in the conventional Z-direction
 # This is typically called thickness and can be viewed as the distance 
 # between electrodes connected to the detector
-Depth = 300.0 ; # Double in nanometers
+Depth = 300.0 ; # Double in micrometers
 
 # Width of the read-out strips
-Width = 25.0 ; # Double in nanometers
+Width = 25.0 ; # Double in micrometers
 
 # Distance between read-out strips
-Pitch = 80.0 ; # Double in nanometers
+Pitch = 80.0 ; # Double in micrometers
 
 # Number of neighbouring strips simulated on each side of the main 
 # read-out strip (where we read and collect signal)
-NeighbouringStrips = 2 ;
+NeighbouringStrips = 2 ; # 0 for a diode
 
 # Temperature of the detector, affects mobility
 Temperature = 300.0 ; # Double in Kelvin
 
-# Trapping time-constant, affect total collected signal
-TrappingTime = 3.0e-9 ; # Double in nanoseconds
+# Trapping time-constant, affects total collected signal
+TrappingTime = 3.0e-9 ; # Double in seconds
 
 # Fluence to which the detector has been irradiated. Controls whether 
-# simulated diode is irradiated(>0) or not(<0)
+# simulated diode is irradiated(>0) or not(==0)
 Fluence = 1.0e14 ; # Double in neutronEquivalents
 
 
 # Number of threads used for simulation. Crashes if nThreads != 1
-NumberOfThreads = 2 ; # Integer
+NumberOfThreads = 1 ; # Integer
 
 #---------------------------- MESH PROPERTIES ----------------------------#
 #    
@@ -122,15 +122,14 @@ CellsY = 150 ; # Integer
 # Bulk type. Main detector volumen where carriers drift
 Bulk = 'p' ; # Character
 
-# Implant  type. Highest doped volumen, sits between the bulk and the 
-# read-out strips.
+# Implant  type. Highest doped volumen.
 Implant = 'n' ; # Character
 
 #----------------------- ILLUMINATION PROPERTIES -------------------------#
 #
 #     Here you can state the properties of the laser used for carrier 
 # generation. The properties are implemented through the carrier file that 
-# TRACS reads as imput. This values are only used for the naming the 
+# TRACS reads as imput. This values are only used for naming the 
 # output and for further analysis using TCT+ software.
 
 # Wavelenght of the laser shot at the detector, typically is IR for 
@@ -139,16 +138,44 @@ Lambda = 1064 ; # In nm
 
 # Type of scan to be simulated. Typical scans are: 
 #   -edge-TCT: IR laser moved along Z-axis
-#   -top-TCT: Red laser, one shot at different voltajes or scan on X-Y
-#   -bottom-TCT: Red laser, one shot at different voltajes or scan on X-Y
+#   -top-TCT: Red laser, one shot at different voltages or scan on X-Y
+#   -bottom-TCT: Red laser, one shot at different voltages or scan on X-Y
 ##################SCAN ON X-Y IS NOT IMPLEMENTED YET######################
 ScanType = "edge" ; # edge/top/bottom
 
 
 #------------------------ ELECTRONICS SHAPING ----------------------------#
-Capacitance = 5.e-12 ; // in Farad
-TimeStep = 5.e-11 ; // in seconds this is also the simulation timestep
-TotalTime = 1.5e-8 ;
+
+#    The electronics shaping on TRACS includes not only basic RC-shaping 
+# but also convolution with the amplifier transfer-function(TF). The 
+# amplifier TF is an actual amplifier response to a delta signal saved as 
+# a ROOT histogram/file. The user can use his own TF as long as it is in 
+# the same format as the original. The original can be found inside 
+# TRACS/src/files2move2bin/ 
+
+# Capacitance of the capacitor in the RC circuit.
+Capacitance = 5.e-12 ; # in Farad
+
+# Resistance of the circuit is assumed to be 50 Ohm and cannot be changed 
+# for the moment
+
+#----------------------- SIMULATION TIMING -------------------------------#
+
+#     Here we configure the time properties of the simulation; namely the 
+# time step and the maximum time for the simulation. The most important 
+# parameter is the Time Step, it should be small enough to yeild accurate 
+# output but large enough so that the simulation doesn't take forever. 
+# The TotalTime simulated should be big enough to contain all the signal.
+
+# Time elapsed between simulation steps. The finer the time step the 
+# more accurate the simulation will be; on the other hand, the coarser 
+# the time step, the faster the simulation will finish
+TimeStep = 5.e-11 ; # in seconds (<1 ns)
+
+# Time elapsed from the start to the end of the simulation. As long as 
+# the whole signal is collected before the end of the simulation it has 
+# no effect of the results
+TotalTime = 1.5e-8 ; # in seconds ( ~10ns)
 
 #------------------------ VOLTAGE PROPERTIES -----------------------------#
 BiasVoltage = 350. ; # Still needed, should get rid of it later
