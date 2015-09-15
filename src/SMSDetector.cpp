@@ -197,6 +197,14 @@ Function * SMSDetector::get_d_f_grad()
 }
 
 /*
+ * Getter for the mesh of both fields
+ */
+RectangleMesh * SMSDetector::get_mesh()
+{
+	return &_mesh;
+}
+
+/*
  * Getter for the minimum X value
  */
 double  SMSDetector::get_x_min()

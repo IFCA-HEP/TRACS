@@ -101,21 +101,22 @@ class SMSDetector
     Function * get_d_u();
     Function * get_w_f_grad();
     Function * get_d_f_grad();
+		RectangleMesh * get_mesh();
     double get_x_min();
     double get_x_max();
     double get_y_min();
     double get_y_max();
     double get_temperature();
     double get_trapping_time();
-	double get_fluence();
-	double get_depth();
-	double get_pitch();
-	double get_width();
-	int get_nns();
-	char get_bulk_type();
-	char get_implant_type();
-	double get_vbias();
-	double get_vdep();
+		double get_fluence();
+		double get_depth();
+		double get_pitch();
+		double get_width();
+		int get_nns();
+		char get_bulk_type();
+		char get_implant_type();
+		double get_vbias();
+		double get_vdep();
 
     // some other methods
     bool is_out(const std::array< double,2> &x);

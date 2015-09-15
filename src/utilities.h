@@ -28,6 +28,7 @@ namespace utilities
 	void write_to_file_row(std::string filename, TH1D *hconv, double temp, double height, double voltage);
 	void write_to_hetct_header(std::string filename, SMSDetector detector, double C, double dt, std::vector<double> z_shifts, double landa, std::string type, std::string carriers_file, std::vector<double> voltages);
 	std::string vector_to_string(std::vector<double> input_list);
+void parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &margin, double &deltaZ);
 }
 
 #endif // UTILITIES_H

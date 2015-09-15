@@ -9,10 +9,14 @@ Carrier::Carrier( char carrier_type, double q,  double x_init, double y_init , S
   _q(q), //Charge in electron units. Always positive.
   _gen_time(gen_time), // Instant of CC generation
   _detector(detector), // Detector type and characteristics
-  _myTemp(_detector->get_temperature()), // Temperature of the diode
+//	_electricField(_detector->get_d_f_grad(),
+//	_weightingField(_detector->get_w_f_grad(),
+  _myTemp(detector->get_temperature()), // Temperature of the diode
   _drift(_carrier_type, _detector->get_d_f_grad(), _myTemp), // Carrier Transport object
   _mu(_carrier_type, _myTemp) // Mobility of the CC
 {
+//	_electricField = _detector->get_d_f_grad();
+//	_weightingField = _detector->get_w_f_grad();
   _x[0] = x_init; // Starting horizontal position
   _x[1] = y_init; // Starting vertical position
 
@@ -66,6 +70,8 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
     {
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
       _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
+			//_weightingField->eval(wrap_w_field, wrap_x);
+			//_electricField->eval(wrap_w_field, wrap_x); 
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
       i_n[i] = _q *_sign*_mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
       // Trapping effects due to radiation-induced defects (traps) implemented in CarrierColleciton.cpp
@@ -119,8 +125,11 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
     {
 //std::lock_guard<std::mutex> lock(safeRead);
 			safeRead.lock();
+			//_detector->get_mesh()->bounding_box_tree();
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
       _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
+			//_weightingField->eval(wrap_w_field, wrap_x);
+			//_electricField->eval(wrap_w_field, wrap_x); 
 			safeRead.unlock();
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
       i_n[i] = _q *_sign* _mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
@@ -198,6 +207,8 @@ Carrier::Carrier(const Carrier& other)
 	_drift = other._drift;
 	_mu = other._mu;
 	_trapping_time = other._trapping_time;
+	//_electricField = other.//_electricField;
+	//_weightingField = other._weightingField;
 	std::lock_guard<std::mutex> lock(other.safeRead);
 }
 
@@ -221,6 +232,8 @@ Carrier& Carrier::operator = (const Carrier& other)
 	_myTemp = other._myTemp;
 	_drift = other._drift;
 	_trapping_time = other._trapping_time;
+	//_electricField = other._electricField;
+	//_weightingField = other._weightingField;
 	return *this;
 }
 
@@ -243,6 +256,8 @@ Carrier::Carrier(Carrier&& other)
 	_drift = std::move(other._drift);
 	_mu = std::move(other._mu);
 	_trapping_time = std::move(other._trapping_time);
+	//_electricField = std::move(_electricField);
+	//_weightingField = std::move(_weightingField);
 	std::lock_guard<std::mutex> lock(other.safeRead);
 }
 
@@ -277,6 +292,8 @@ Carrier& Carrier::operator = ( Carrier&& other)
 	_drift = std::move(other._drift);
 	_mu = std::move(other._mu);
 	_trapping_time = std::move(other._trapping_time);
+	//_electricField = std::move(_electricField);
+	//_weightingField = std::move(_weightingField);
 	other._trapping_time = 1e300;
 	return *this;
 }

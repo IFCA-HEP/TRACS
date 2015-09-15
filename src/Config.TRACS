@@ -1,0 +1,191 @@
+###########################################################################
+###########################################################################
+##                                                                       ##
+##                                                                       ##
+##       888888888888888888b.        d8888 .d8888b.  .d8888b.            ##
+##             888    888   Y88b      d88888d88P  Y88bd88P               ##
+##             888    888    888     d88P888888    888Y88b.              ##
+##             888    888   d88P    d88P 888888        "Y888b.           ##
+##             888    8888888P"    d88P  888888           "Y88b.         ##
+##             888    888 T88b    d88P   888888    888      "888         ##
+##             888    888  T88b  d8888888888Y88b  d88PY88b  d88P         ##
+##             888    888   T88bd88P     888 "Y8888P"  "Y8888P"          ##
+##                                                                       ##
+##                                                                       ##
+###########################################################################
+###########################################################################
+##                                                                       ##
+##            CONFIGURATION FILE FOR TRACS CLI-Execution                 ##
+##                                                                       ##
+##     This is the configuration file for the Comand Line Interface      ## 
+## part of TRACS. It contains all the necessary values for the program   ## 
+## to run properly. There are different seccions with different          ##
+## parameters according to what those parameters correspont to.          ##
+##                                                                       ##
+##     All the parameters are clearly labeled and accompanied by a       ##
+## description of what they do and the units they are in.                ##
+##                                                                       ##
+##     You will also find a brief description of how TRACS works         ##
+## internally and a trouble-shooting guide to solve the most common      ##
+## problems encountered during TRACS instalation.                        ##
+##                                                                       ##
+###########################################################################
+###########################################################################
+##                                                                       ##
+##                           BASIC GUIDELINES                            ##
+##                                                                       ##
+##    Usage of the configuration file is very simple and only requires   ##
+## to follow two simple rules:                                           ##
+##       - Only change the values and keep the rest EXACTLY the same     ##
+##       - DON'T TOUCH anything else                                     ##
+##                                                                       ##
+##    If you find this instructions too easy to follow please know that  ##
+## the parser used by TRACS reads values between '=' and ' ;' and stores  ##
+## them in the corresponding variables according to the order they are   ##
+## placed on the file. Any line starting with '#' is regarded as comment ## 
+## and will be automatically omitted.                                    ##
+##                                                                       ##
+##                                                                       ##
+###########################################################################
+###########################################################################
+##                                                                       ##
+##                       LICENSE AND COPYRIGHT                           ##
+##                                                                       ##
+##    TRACS is released  under GPLv3 license. You should have gotten a   ##
+## copy of the license with the software but in case you haven't, please ##
+## check: [LINK HERE]                                                    ##
+##                                                                       ##
+##  ---- TL ;DR ----                                                     ##
+##    Use, copy, modify if desired ; give credit if appropiate ;         ##
+## contribute if improved.                                               ##
+##                                                                       ##
+###########################################################################
+###########################################################################
+
+
+
+#-------------------------DETECTOR PROPERTIES-----------------------------#
+#                                                                      
+#    Here one should insert the properties of the detector to be simulated
+# but not the technical details about the computational part that takes 
+# part inside the class SMSDetector. 
+#             !!!!! Only Physical Properties Here !!!!!
+
+# Distance between detector edges in the conventional Z-direction
+# This is typically called thickness and can be viewed as the distance 
+# between electrodes connected to the detector
+Depth = 300.0 ; # Double in nanometers
+
+# Width of the read-out strips
+Width = 25.0 ; # Double in nanometers
+
+# Distance between read-out strips
+Pitch = 80.0 ; # Double in nanometers
+
+# Number of neighbouring strips simulated on each side of the main 
+# read-out strip (where we read and collect signal)
+NeighbouringStrips = 2 ;
+
+# Temperature of the detector, affects mobility
+Temperature = 300.0 ; # Double in Kelvin
+
+# Trapping time-constant, affect total collected signal
+TrappingTime = 3.0e-9 ; # Double in nanoseconds
+
+# Fluence to which the detector has been irradiated. Controls whether 
+# simulated diode is irradiated(>0) or not(<0)
+Fluence = 1.0e14 ; # Double in neutronEquivalents
+
+
+# Number of threads used for simulation. Crashes if nThreads != 1
+NumberOfThreads = 2 ; # Integer
+
+#---------------------------- MESH PROPERTIES ----------------------------#
+#    
+#    For solving the PDEs(ie.: Poisson's equation) TRACS divides the area 
+# of the detector in cells using a mesh. Here you can choose wether you 
+# want to have coarse mesh for faster simulation or rather prefer a finner 
+# more accurate PDE solution
+
+# Number of cells for the mesh in the X direction
+CellsX = 150 ; # Integer
+
+# Number of cells for the mesh in the Y direction
+CellsY = 150 ; # Integer
+
+#-------------------------- DOPING PROPERTIES ----------------------------#
+#
+#    Here you can decide which type of substrate and implant you want to 
+# simulate. Options are 'p' for p-doped (acceptor impurities) or 'n' for
+# n-doped (donnor impurities).
+
+# Bulk type. Main detector volumen where carriers drift
+Bulk = 'p' ; # Character
+
+# Implant  type. Highest doped volumen, sits between the bulk and the 
+# read-out strips.
+Implant = 'n' ; # Character
+
+#----------------------- ILLUMINATION PROPERTIES -------------------------#
+#
+#     Here you can state the properties of the laser used for carrier 
+# generation. The properties are implemented through the carrier file that 
+# TRACS reads as imput. This values are only used for the naming the 
+# output and for further analysis using TCT+ software.
+
+# Wavelenght of the laser shot at the detector, typically is IR for 
+# edge-TCT (~1064nm) and red for top/bottom-TCT (~663nm)
+Lambda = 1064 ; # In nm
+
+# Type of scan to be simulated. Typical scans are: 
+#   -edge-TCT: IR laser moved along Z-axis
+#   -top-TCT: Red laser, one shot at different voltajes or scan on X-Y
+#   -bottom-TCT: Red laser, one shot at different voltajes or scan on X-Y
+##################SCAN ON X-Y IS NOT IMPLEMENTED YET######################
+ScanType = "edge" ; # edge/top/bottom
+
+
+#------------------------ ELECTRONICS SHAPING ----------------------------#
+Capacitance = 5.e-12 ; // in Farad
+TimeStep = 5.e-11 ; // in seconds this is also the simulation timestep
+TotalTime = 1.5e-8 ;
+
+#------------------------ VOLTAGE PROPERTIES -----------------------------#
+BiasVoltage = 350. ; # Still needed, should get rid of it later
+InitialVoltage = 350 ;
+VoltageStep = 350 ;
+MaxVoltage = 350. ; 
+DepletionVoltage = 250.0 ; // Depletion Voltaje
+
+#-------------------------- Z-SCAN PROPERTIES ----------------------------#
+Margin = 10 ;
+ScanStep = 3.0000 ; // microns 
+
+###########################################################################
+##                                                                       ##
+##                BRIEF INTRODUCTION TO HOW TRACS WORKS                  ##
+##                                                                       ##
+##     A summary of how TRACS functions can be found here. As a brief    ##
+## introduction it is meant for young padowams that have never seen      ##
+## TRACS before. More experienced users or anyone with some experience   ##
+## in C++11 or detector simulation might find it more useful to read the ##
+## code and comments in folder TRACS/src/                                ##
+##                                                                       ##
+##    If you decide to use/develop TRACS you will be part of a great     ##
+## scientific project but you should proceed at your own risk as the     ##
+## only thing TRACS usage/development guarantees is headeaches and       ##
+## despairation.                                                         ##
+##                                                                       ##
+###########################################################################
+
+
+#----------------------------- THE INPUTS --------------------------------#
+
+
+#--------------------- SETTING UP THE SIMULATION--------------------------#
+
+   
+#--------------------------- SIMULATION --------------------------------#
+
+
+#--------------------------- THE OUTPUT--------------------------------#

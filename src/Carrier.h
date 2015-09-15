@@ -12,6 +12,7 @@
 #endif
 
 using namespace boost::numeric::odeint;
+//using namespace dolfin;
 
 /*
  **************************CARRIER************************
@@ -42,6 +43,8 @@ class Carrier
     DriftTransport _drift;
     JacoboniMobility _mu;
     double _trapping_time;
+//		Function _electricField;
+//		Function _weightingField;
 
   public:
     Carrier( char carrier_type, double q, double x_init, double y_init, SMSDetector * detector, double gen_time);

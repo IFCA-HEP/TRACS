@@ -62,20 +62,27 @@ void call_from_thread2(CarrierCollection &cCollection, double dt, double max_tim
 
 int main()
 {
-	// Number of threads
-	int nThreads = 2;
+	int nThreads = 0, nns = 0, n_cells_y = 0, n_cells_x = 0, waveLength = 0, n_vSteps = 0, n_zSteps;
+	double pitch = 0, width = 0, depth = 0, temp = 0, trapping = 0, fluence = 0, C = 0, dt = 0, max_time = 0, v_bias = 0, v_init = 0, deltaV = 0, v_max = 0, v_depletion = 0, margin = 0, deltaZ = 0;
+	std::string scanType = "defaultString";
+	char bulk_type = '\0', implant_type = '\0';
+
+
+	utilities::parse_config_file("Config.TRACS", depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, v_bias, v_init, deltaV, v_max, v_depletion, margin, deltaZ);
+//	// Number of threads
+//	int nThreads = 1;
 	std::thread t[nThreads-1];
-
-	// Physical properties of the detector
-	double pitch = 80.00; // in microns
-	double width = 25.00; // in microns
-	double depth = 300.; // in microns
-	int nns = 2; // Neighbour Strips
-
-	// "Enviroment" properties
-	double temp = 300; // Temperature of the detector in Kelvin
-	double trapping = 3.e-9; // Trapping time in seconds
-	double fluence = 1.e14; // Fluence in neutron eq
+//
+//	// Physical properties of the detector
+//	double pitch = 80.00; // in microns
+//	double width = 25.00; // in microns
+//	double depth = 300.; // in microns
+//	int nns = 2; // Neighbour Strips
+//
+//	// "Enviroment" properties
+//	double temp = 300; // Temperature of the detector in Kelvin
+//	double trapping = 3.e-9; // Trapping time in seconds
+//	double fluence = 1.e14; // Fluence in neutron eq
 	std::string trap;
 	if (fluence <= 0) // if no fluence -> no trapping
 	{
@@ -87,39 +94,43 @@ int main()
 		trap = std::to_string((int) std::floor(1.e9*trapping));
 	}
 
-	// Mesh properties
-	int n_cells_x = 150;
-	int n_cells_y = 150;
-
-	// Doping
-	char bulk_type = 'p';
-	char implant_type = 'n';
-
-	// Laser
-	int landa = 1064; // in nm
-	std::string type = "edge"; // edge/top/bottom
-
-
-	// RC shaping
-	double C = 5.e-12; // in Farad
-	//  double RC = 50.*C; // Ohms*Farad
-	double dt = 5.e-11; // in seconds this is also the simulation timestep
-	double max_time = 1.5e-8;
-
-	// Voltages (might be modified inside the for loops)
-	double v_bias = 350.;// Still needed, should get rid of it later
-	double v_init = 350;
-	double deltaV = 350;
-	double v_max = 350.; 
-	double v_depletion = 250.0; // Depletion Voltaje
-	int n_vSteps = (int) std::floor((v_init-v_max)/deltaV);
-
-	// Shifting CC from laser beam 
-	double margin = 10;
-	double deltaZ = 3.0000; // microns 
-	int n_zSteps  = (int) std::floor((depth+margin*2)/deltaZ); // Simulation Steps
+//	// Mesh properties
+//	int n_cells_x = 150;
+//	int n_cells_y = 150;
+//
+//	// Doping
+//	char bulk_type = 'p';
+//	char implant_type = 'n';
+//
+//	// Laser
+//	int waveLength = 1064; // in nm
+//	std::string scanType = "edge"; // edge/top/bottom
+//
+//
+//	// RC shaping
+//	double C = 5.e-12; // in Farad
+//  //double RC = 50.*C; // Ohms*Farad
+//	double dt = 5.e-11; // in seconds this is also the simulation timestep
+//	double max_time = 1.5e-8;
+//
+//	// Voltages (might be modified inside the for loops)
+//	double v_bias = 350.;// Still needed, should get rid of it later
+//	double v_init = 350;
+//	double deltaV = 350;
+//	double v_max = 350.; 
+//	double v_depletion = 250.0; // Depletion Voltaje
+//
+//	// Shifting CC from laser beam 
+//	double margin = 10;
+//	double deltaZ = 3.0000; // microns 
 	TH1D *hnoconv , *hconv ;
 
+
+	n_zSteps  = (int) std::floor((depth+margin*2)/deltaZ); // Simulation Steps
+	n_vSteps = (int) std::floor((v_init-v_max)/deltaV);
+
+
+	std::cout << depth << std::endl;
 
 	// Convert relevant simulation numbers to string for fileNaming	
 	std::string dtime = std::to_string((int) std::floor(dt*1.e12));
@@ -196,10 +207,10 @@ int main()
 	std::transform(z_chifs.begin(), z_chifs.end(), z_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
 
 	// filename for data analysis
-	std::string hetct_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+stepZ+"um_"+stepV+"V_"+neigh+"nns_"+type+".hetct";
+	std::string hetct_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+stepZ+"um_"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
 	
 	// write header for data analysis
-	utilities::write_to_hetct_header(hetct_filename, detector, C, dt, z_chifs, landa, type, file_carriers, voltages);
+	utilities::write_to_hetct_header(hetct_filename, detector, C, dt, z_chifs, waveLength, scanType, file_carriers, voltages);
 
 	//Loop on voltages
 	
@@ -210,6 +221,8 @@ int main()
 		detector.solve_d_u();
 		detector.solve_w_f_grad();
 		detector.solve_d_f_grad();
+		detector.get_mesh()->bounding_box_tree();
+
 		
 		
 		TH2D *i_rc ;
@@ -328,7 +341,7 @@ int main()
 			utilities::write_to_file_row(hetct_filename, hnoconv, detector.get_temperature(), z_shifts[i], voltages[k]);
 		}
 
-		std::string root_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+type+".root";
+		std::string root_filename = "NOirrad_"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
 
 		// Open a ROOT file to save result
 		TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );

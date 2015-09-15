@@ -248,9 +248,220 @@ std::string utilities::vector_to_string(std::vector<double> input_list)
 	unsigned long int points = input_list.size();
 	std::stringstream converter; 
 
-	for (unsigned int i = 0; i < points; i++) {
+	for (unsigned int i = 0; i < points; i++) 
+	{
 		converter << input_list[i] << " ";
 	}
 
 	return converter.str();
+}
+
+// Utility to read values for the simulation so main need not be compiled everytime
+// one wishes to modify the simulation parameters
+void utilities::parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &margin, double &deltaZ)
+{
+	// Creat map to hold all values as strings 
+	std::map< std::string, std::string> valuesMap;
+	std::string id, eq, val;
+	std::stringstream converter;
+	std::string tempString;
+
+	std::ifstream configFile(fileName, std::ios_base::in);
+
+	if (configFile.is_open())
+	{
+
+		std::string line;
+		char comment = '#';
+		char empty = '\0';
+		while(std::getline(configFile, line))
+		{
+			char start = line[0];
+			if (start == comment || start == empty) continue;  // skip comments
+			std::istringstream isstream(line);
+			isstream >> id >> eq >> val;
+			if (eq != "=") 
+			{
+			std::cout << "Error ecountered while reading '" << id << std::endl;
+			break;
+			}
+			else
+			{
+			// Store value on map as map[variabel] = value
+			valuesMap[id] = val;
+			}
+		}
+
+	tempString = std::string("Depth");
+	converter << valuesMap[tempString];
+	converter >> depth;
+	converter.str("");
+	converter.clear();
+	tempString = std::string("");
+	
+	tempString = std::string("Width");
+	converter << valuesMap[tempString];
+	converter >> width;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Pitch");
+	converter << valuesMap[tempString];
+	converter >> pitch;
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("NeighbouringStrips");
+	converter << valuesMap[tempString];
+	converter >> nns;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Temperature");
+	converter << valuesMap[tempString];
+	converter >> temp;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("TrappingTime");
+	converter << valuesMap[tempString];
+	converter >> trapping;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Fluence");
+	converter << valuesMap[tempString];
+	converter >> fluence;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("NumberOfThreads");
+	converter << valuesMap[tempString];
+	converter >> nThreads;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("CellsX");
+	converter << valuesMap[tempString];
+	converter >> n_cells_x;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("CellsY");
+	converter << valuesMap[tempString];
+	converter >> n_cells_y;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Bulk");
+	converter << valuesMap[tempString];
+	converter >> bulk_type;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Implant");
+	converter << valuesMap[tempString];
+	converter >> implant_type;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Lambda");
+	converter << valuesMap[tempString];
+	converter >> waveLength;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("ScanStep");
+	converter << valuesMap[tempString];
+	converter >> scanType;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Capacitance");
+	converter << valuesMap[tempString];
+	converter >> C;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("TimeStep");
+	converter << valuesMap[tempString];
+	converter >> dt;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("TotalTime");
+	converter << valuesMap[tempString];
+	converter >> max_time;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("BiasVoltage");
+	converter << valuesMap[tempString];
+	converter >> v_bias;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("InitialVoltage");
+	converter << valuesMap[tempString];
+	converter >> v_init;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("VoltageStep");
+	converter << valuesMap[tempString];
+	converter >> deltaV;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("MaxVoltage");
+	converter << valuesMap[tempString];
+	converter >> v_max;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("DepletionVoltage");
+	converter << valuesMap[tempString];
+	converter >> v_depletion;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("Margin");
+	converter << valuesMap[tempString];
+	converter >> margin;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("ScanStep");
+	converter << valuesMap[tempString];
+	converter >> deltaZ;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	}
+	else
+	{
+		std::cout << "Error opening the file. Does the file " << fileName << " exist?" << std::endl;
+	}
 }
