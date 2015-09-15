@@ -143,7 +143,7 @@ void utilities::write_to_file_row(std::string filename, TH1D *hconv, double temp
 
 // function to write results to file (in rows)
 // overloaded (now from TH1D)
-void utilities::write_to_hetct_header(std::string filename, SMSDetector detector, double C, double dt, std::vector<double> z_shifts, double landa, std::string type, std::string carriers_file, std::vector<double> voltages)
+void utilities::write_to_hetct_header(std::string filename, SMSDetector detector, double C, double dt,std::vector<double> y_shifts, std::vector<double> z_shifts, double landa, std::string type, std::string carriers_file, std::vector<double> voltages)
 {
 	// Initialize stream for outputting to file
 	std::ofstream header;  
@@ -152,18 +152,22 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	int nX = 0;
 	int nY = 0;
 	int nZ = z_shifts.size();
+	//nt nY = y_shifts.size();
 	int nV = voltages.size();
 	int nScans = (nX + nY + nZ)*nV;
 	double deltaZ = 0;
 	double deltaV = 0;	
+	//double deltaY = 0;	
 	if (nZ > 1)	deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
 	if (nV > 1) deltaV = std::abs((voltages.back()-voltages.back())/(nV-1)); 	
+	//if (nY > 1) deltaY = std::abs((voltages.back()-voltages.back())/(nY-1)); 	
 	double temp = detector.get_temperature() - 273;
 	
 	// Convert relevant quantities to string for outputting
 	std::string s_date = "2015-06-15_19-25";
 	std::string s_zVector = utilities::vector_to_string(z_shifts);
 	std::string s_vVector = utilities::vector_to_string(voltages);
+	std::string s_yVector = utilities::vector_to_string(y_shifts);
 	
 	// Open file
 	header.open (filename);  
@@ -208,6 +212,7 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 		header << "xMax: 0.000\n";
 		header << "deltaX: 0\n";
 		header << "nX: 1\n";
+		// X o Y tengo que aclararme porque no lo entiendo!!!
 		header << "yMin: 0.000\n";
 		header << "yMax: 0.000\n";
 		header << "deltaY: 0\n";
@@ -258,7 +263,7 @@ std::string utilities::vector_to_string(std::vector<double> input_list)
 
 // Utility to read values for the simulation so main need not be compiled everytime
 // one wishes to modify the simulation parameters
-void utilities::parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &margin, double &deltaZ)
+void utilities::parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY)
 {
 	// Creat map to hold all values as strings 
 	std::map< std::string, std::string> valuesMap;
@@ -445,20 +450,47 @@ void utilities::parse_config_file(std::string fileName, double &depth, double &w
 	converter.str("");
 	tempString = std::string("");
 
-	tempString = std::string("Margin");
-	converter << valuesMap[tempString];
-	converter >> margin;
-	converter.clear();
-	converter.str("");
-	tempString = std::string("");
-
-	tempString = std::string("ScanStep");
+	tempString = std::string("StepInZ");
 	converter << valuesMap[tempString];
 	converter >> deltaZ;
 	converter.clear();
 	converter.str("");
 	tempString = std::string("");
 
+	tempString = std::string("InitialZ");
+	converter << valuesMap[tempString];
+	converter >> zInit;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("MaximumZ");
+	converter << valuesMap[tempString];
+	converter >> deltaZ;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("StepInY");
+	converter << valuesMap[tempString];
+	converter >> deltaY;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("InitialY");
+	converter << valuesMap[tempString];
+	converter >> yInit;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("MaximumY");
+	converter << valuesMap[tempString];
+	converter >> deltaY;
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
 	}
 	else
 	{
