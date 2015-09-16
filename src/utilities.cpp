@@ -150,17 +150,16 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 
 	// Derived quantities
 	int nX = 0;
-	int nY = 0;
 	int nZ = z_shifts.size();
-	//nt nY = y_shifts.size();
+	int nY = y_shifts.size();
 	int nV = voltages.size();
 	int nScans = (nX + nY + nZ)*nV;
 	double deltaZ = 0;
 	double deltaV = 0;	
-	//double deltaY = 0;	
+	double deltaY = 0;	
 	if (nZ > 1)	deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
 	if (nV > 1) deltaV = std::abs((voltages.back()-voltages.back())/(nV-1)); 	
-	//if (nY > 1) deltaY = std::abs((voltages.back()-voltages.back())/(nY-1)); 	
+	if (nY > 1) deltaY = std::abs((voltages.back()-voltages.back())/(nY-1)); 	
 	double temp = detector.get_temperature() - 273;
 	
 	// Convert relevant quantities to string for outputting
@@ -213,11 +212,11 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 		header << "deltaX: 0\n";
 		header << "nX: 1\n";
 		// X o Y tengo que aclararme porque no lo entiendo!!!
-		header << "yMin: 0.000\n";
-		header << "yMax: 0.000\n";
-		header << "deltaY: 0\n";
-		header << "nY: 1\n";
-		header << "yVector: 0.000 \n";
+		header << "yMin: " << y_shifts.front() << "\n";
+		header << "yMax: " << y_shifts.back() << "\n";
+		header << "deltaY: " << deltaY << "\n";
+		header << "nY: " << nY << "\n";
+		header << "yVector: " << s_yVector << "\n";
 		header << "zMin: " << z_shifts.front() << "\n";
 		header << "zMax: " << z_shifts.back() << "\n";
 		header << "deltaZ: " << deltaZ << "\n";
