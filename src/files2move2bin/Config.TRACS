@@ -74,7 +74,7 @@
 # Distance between detector edges in the conventional Z-direction
 # This is typically called thickness and can be viewed as the distance 
 # between electrodes connected to the detector
-Depth = 300.0   # Double in micrometers
+Depth = 311.0   # Double in micrometers
 
 # Width of the read-out strips
 Width = 25.0   # Double in micrometers
@@ -141,7 +141,7 @@ Lambda = 1064   # In nm
 #   -top-TCT: Red laser, one shot at different voltages or scan on X-Y
 #   -bottom-TCT: Red laser, one shot at different voltages or scan on X-Y
 ##################SCAN ON X-Y IS NOT IMPLEMENTED YET######################
-ScanType = "edge"   # edge/top/bottom
+ScanType = edge   # edge/top/bottom
 
 
 #------------------------ ELECTRONICS SHAPING ----------------------------#
@@ -216,11 +216,21 @@ DepletionVoltage = 250.0 # in volts
 #
 #     Z-Scan should be a self-explanatory name as it refers to a scan of 
 # the detector performed by moving the laser (or laser focus in TPA) in 
-# the Z direction. As for now a full Z-scan is assumed. 
+# the Z direction. In this direction the detector extends  from Z = 0 
+# to Z = Depth.
 
-InitialZ = 0.
+# First thing we need to set up for the Z-Scan is the starting position of
+# the laser. typically one wishes to perform either a full scan or just 
+# one position; in the former case starting at a negative value might make 
+# sense if one wishes to have the laser beam completely out of the 
+# detector.
+InitialZ = 0. # in micrometers
 
-MaximumZ = 300.
+# Next thing to set up is the last position of the laser for the 
+# simulation. As withe the initial position one might wish to have the
+# laser fall completely outside of the detector, this can be donde by 
+# setting MaximumZ to a value higher than Depth.
+MaximumZ = 300. # in micrometers
 
 # Quite intuitively StepInZ refers to the distance moved the laser along 
 # the Z-axis from one waveform simulation to the other. Recomended 
@@ -229,10 +239,30 @@ MaximumZ = 300.
 StepInZ = 3.
 
 
-#-------------------------- Z-SCAN PROPERTIES ----------------------------#
+#-------------------------- Y-SCAN PROPERTIES ----------------------------#
 
-InitialY = 0.
+#     This part is meanly designed for top/bottom-TCT and TPA scans but 
+# one can implement this scan for top/bottom-TCT if one wishes to do some 
+# exotic (non-real world) simulations.
+#
+#     Y-Scan should be a self-explanatory name as it refers to a scan of 
+# the detector performed by moving the laser (or laser focus in 
+# TPA/edge-TCT) in the Y direction. In this direction the detector 
+# extends from Y = 0 to Y = Depth.
 
-MaximumY = 0.
+# First thing we need to set up for the Y-Scan is the starting position of
+# the laser. typically one wishes to perform either a full scan or just 
+# one position; in the former case starting at a negative value might make 
+# sense if one wishes to have the laser beam completely out of the 
+# detector.
+InitialY = 0. # in micrometers
 
-StepInY = 0.
+# Next thing to set up is the last position of the laser for the 
+# simulation. As withe the initial position one might wish to have the
+# laser fall completely outside of the detector, this can be donde by 
+# setting MaximumY to a value higher than Depth.
+MaximumY = 10. # in micrometers
+
+# Quite intuitively StepInY refers to the distance moved the laser along 
+# the Y-axis from one waveform simulation to the other. 
+StepInY = 2. # in micrometers

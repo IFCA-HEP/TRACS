@@ -101,20 +101,10 @@ int main()
 
 	utilities::parse_config_file("Config.TRACS", depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, v_bias, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY);
 	
-//	// Number of threads
-//	int nThreads = 1;
+	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];
-//
-//	// Physical properties of the detector
-//	double pitch = 80.00; // in microns
-//	double width = 25.00; // in microns
-//	double depth = 300.; // in microns
-//	int nns = 2; // Neighbour Strips
-//
-//	// "Enviroment" properties
-//	double temp = 300; // Temperature of the detector in Kelvin
-//	double trapping = 3.e-9; // Trapping time in seconds
-//	double fluence = 1.e14; // Fluence in neutron eq
+
+	// Decide if there is trapping and make corresponding string
 	std::string trap;
 	if (fluence <= 0) // if no fluence -> no trapping
 	{
@@ -126,43 +116,11 @@ int main()
 		trap = std::to_string((int) std::floor(1.e9*trapping));
 	}
 
-//	// Mesh properties
-//	int n_cells_x = 150;
-//	int n_cells_y = 150;
-//
-//	// Doping
-//	char bulk_type = 'p';
-//	char implant_type = 'n';
-//
-//	// Laser
-//	int waveLength = 1064; // in nm
-//	std::string scanType = "edge"; // edge/top/bottom
-//
-//
-//	// RC shaping
-//	double C = 5.e-12; // in Farad
-//  //double RC = 50.*C; // Ohms*Farad
-//	double dt = 5.e-11; // in seconds this is also the simulation timestep
-//	double max_time = 1.5e-8;
-//
-//	// Voltages (might be modified inside the for loops)
-//	double v_bias = 350.;// Still needed, should get rid of it later
-//	double vInit = 350;
-//	double deltaV = 350;
-//	double vMax = 350.; 
-//	double v_depletion = 250.0; // Depletion Voltaje
-//
-//	// Shifting CC from laser beam 
-//	double margin = 10;
-//	double deltaZ = 3.0000; // microns 
-	
 	TH1D *hnoconv , *hconv ;
 
 	n_zSteps = (int) std::floor((zMax-zInit)/deltaZ); // Simulation Steps
 	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
-	n_ySteps = (int) std::floor((yInit-yMax)/deltaY);
-
-	std::cout << depth << std::endl;
+	n_ySteps = (int) std::floor((yMax-yInit)/deltaY);
 
 	// Convert relevant simulation numbers to string for fileNaming	
 	std::string dtime = std::to_string((int) std::floor(dt*1.e12));
@@ -258,7 +216,7 @@ int main()
 		detector.get_mesh()->bounding_box_tree();
 		
 		// Loop on Y-axis
-		for (int l = 0; l < n_ySteps; l++) 
+		for (int l = 0; l < n_ySteps + 1; l++) 
 		{
 			TH2D *i_rc ;
 

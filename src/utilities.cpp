@@ -466,7 +466,7 @@ void utilities::parse_config_file(std::string fileName, double &depth, double &w
 
 	tempString = std::string("MaximumZ");
 	converter << valuesMap[tempString];
-	converter >> deltaZ;
+	converter >> zMax;
 	converter.clear();
 	converter.str("");
 	tempString = std::string("");
@@ -487,7 +487,7 @@ void utilities::parse_config_file(std::string fileName, double &depth, double &w
 
 	tempString = std::string("MaximumY");
 	converter << valuesMap[tempString];
-	converter >> deltaY;
+	converter >> yMax;
 	converter.clear();
 	converter.str("");
 	tempString = std::string("");
