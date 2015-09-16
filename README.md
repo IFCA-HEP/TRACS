@@ -8,20 +8,17 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 # Requisites
 
-  - [C++11 compatible compiler](http://en.cppreference.com/w/cpp/compiler_support) (**Important!**) 
-  
+  - [C++11 compatible compiler](http://en.cppreference.com/w/cpp/compiler_support) (**Important!**) ||
     Tested only with g++-4.8
 
   - [CMake](http://www.cmake.org/download/)
   
   - [Fenics Libraries](http://fenicsproject.org/download/)
   
-  - [Qt4](http://download.qt.io/archive/qt/)
-  
+  - [Qt4](http://download.qt.io/archive/qt/)||
     Qt5 is not compatible 
 
-  - [ROOT](https://root.cern.ch/downloading-root) framework 
-  
+  - [ROOT](https://root.cern.ch/downloading-root) ||
     Used for exporting histograms and generation of arbitrary charge distributions
     Recommended version 6.x
 
