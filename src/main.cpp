@@ -14,13 +14,13 @@
 #include <limits>  // std::numeric_limits
 #include <functional>
 
+// Declaring external convolution function and threaded function
 extern TH1D *H1DConvolution( TH1D *htct , Double_t Cend=0. ) ; 
 void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts, std::vector<double> curr_elec, std::vector<double> curr_hole, int thr_id);
 
-// void call_from_thread2(CarrierCollection &cCollection, double dt, double max_time, double shift_x, double y_shifts, double curr_elec, int id);
-
 //------------
 
+// Threaded function to call carrier_collection
 void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts, std::vector<double> curr_elec, std::vector<double> curr_hole, int id)
 {
 	int nTimeSteps = curr_elec.size();
@@ -30,34 +30,10 @@ void call_from_thread(CarrierCollection & cCollection, double dt, double max_tim
 	curr_elec.assign(std::begin(i_elec), std::end(i_elec));
 	curr_hole.assign(std::begin(i_hole), std::end(i_hole));
 }
-
-// void call_from_thread2(CarrierCollection &cCollection, double dt, double max_time, double shift_x, double y_shifts, double curr_elec, int thr_id)
-//{
-//	std::cout << "Hello World" << std::endl;
-//}
-
 /*
- ************************TRACS-MAIN********************************
- *
- * Main function for TRACS program it performs all the required
- * tasks 
- *
- * Required data: - Pitch
- * 		  - Width
- * 		  - Depth
- * 		  - nns
- * 		  - Starting point (X,Y)
- * 		  - End point (X,Y)
- * 		  - cell x
- * 		  - cell y
- * 		  - Bulk type
- * 		  - Implant Type
- * 		  - Bias Voltage
- * 		  - Depletion Voltage
- * 		  - Time Step
- * 		  - Total time
- * 		  - Neighbour strips
- * 		  - 
+ ************** MAIN FUNCTION OF TRACS ***************
+ *****************************************************
+ ********** AKA: where the magic happens *************
  */
 
 int main()
@@ -77,7 +53,6 @@ int main()
 		   deltaV = 0,
 		   vMax = 0,
 		   v_depletion = 0,
-		   margin = 0,
 		   deltaZ = 0,
 		   zInit = 0.,
 		   zMax = depth,
@@ -105,15 +80,17 @@ int main()
 	std::thread t[nThreads-1];
 
 	// Decide if there is trapping and make corresponding string
-	std::string trap;
+	std::string trap, start;
 	if (fluence <= 0) // if no fluence -> no trapping
 	{
 		trapping = std::numeric_limits<double>::max();
 		trap = "NOtrapping";
+		start = "NOirrad";
 	}
 	else
 	{
 		trap = std::to_string((int) std::floor(1.e9*trapping));
+		start = "irrad";
 	}
 
 	TH1D *hnoconv , *hconv ;
@@ -172,18 +149,18 @@ int main()
 	// Creat shifts in Z
 	for (int i = 0; i < n_zSteps + 1; i++ ) 
 	{
-		z_shifts[i] = (i*deltaZ);
+		z_shifts[i] = (i*deltaZ)+zInit;
 	}
 	// Create shifts in Y
 	for (int i = 0; i < n_ySteps + 1; i++ ) 
 	{
-		y_shifts[i] = (i*deltaY);
+		y_shifts[i] = (i*deltaY)+yInit;
 	}
 	TString hist_name = "i_ramo";
 	TString hist_title = "i_ramo";
 	TH2D i_ramo = TH2D(hist_name, hist_title,
 			n_tSteps, 0.0, max_time, 
-			n_zSteps + 1, -margin, depth+margin);
+			n_zSteps + 1, zInit, zMax);
 
 	hnoconv = new TH1D("hnoconv","Ramo current",n_tSteps, 0.0, max_time);
 	hconv   = new TH1D("hconv","Amplifier convoluted",n_tSteps, 0.0, max_time);
@@ -199,10 +176,12 @@ int main()
 	std::transform(y_chifs.begin(), y_chifs.end(), y_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
 
 	// filename for data analysis
-	std::string hetct_filename = "NOirrad_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
+	std::string hetct_conv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_conv.hetct";
+	std::string hetct_noconv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_noconv.hetct";
 	
 	// write header for data analysis
-	utilities::write_to_hetct_header(hetct_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, file_carriers, voltages);
+	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, file_carriers, voltages);
+	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, file_carriers, voltages);
 
 	//Loop on voltages
 	
@@ -223,7 +202,7 @@ int main()
 			// Loop on depth
 			for (int i = 0; i < n_zSteps + 1; i++) 
 			{
-				std::cout << "Height " << z_shifts[i] << " of " << z_shifts.back() << " || Voltage " << voltages[k] << " of " << voltages.back() <<  " || Y Position " << y_shifts[l] << " of " << y_shifts.back() <<  std::endl;
+				std::cout << "Height " << z_shifts[i] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[l] << " of " << y_shifts.back() << " || Voltage " << voltages[k] << " of " << voltages.back() << std::endl;
 
 				i_total= 0;
 
@@ -271,29 +250,18 @@ int main()
 				hconv = H1DConvolution( hnoconv , C*1.e12 );
 				if (i==0)
 				{
-					i_rc = new TH2D("i_rc", "i_rc", hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() , n_zSteps + 1, -margin, depth+margin);
+					i_rc = new TH2D("i_rc", "i_rc", hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() , n_zSteps + 1, zInit, zMax);
 				}
-//#ifdef RCONLY
-//				QVector<double> y_shaped(n_tSteps);
-//				y_shaped[0]=y_total[0];
-//				i_rc->SetBinContent(1, i+1, y_shaped[0]);
-//				double alfa = dt/(RC+dt);
-//
-//				for (int j = 1; j <n_tSteps; j++) 
-//				{
-//					y_shaped[j]=y_shaped[j-1]+alfa*(y_total[j]-y_shaped[j-1]);
-//					i_rc->SetBinContent(j+1,i+1,y_shaped[j]);
-//				}
-//#endif
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{
 					i_rc->SetBinContent(j, i+1 , hconv->GetBinContent(j) );
 				}
 				// Write file from TH1D
-				utilities::write_to_file_row(hetct_filename, hnoconv, detector.get_temperature(), z_shifts[i], voltages[k]);
+				utilities::write_to_file_row(hetct_conv_filename, hconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
+				utilities::write_to_file_row(hetct_noconv_filename, hnoconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
 			}
-			 std::string root_filename = "NOirrad_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
-			std::string hetct_filename = "NOirrad_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
+			 std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
+			 // std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
 
 			// Open a ROOT file to save result
 			TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );

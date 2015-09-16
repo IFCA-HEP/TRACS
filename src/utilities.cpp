@@ -108,10 +108,11 @@ void utilities::write_to_file_row(std::string filename, QVector<QVector<double>>
 
 // function to write results to file (in rows)
 // overloaded (now from TH1D)
-void utilities::write_to_file_row(std::string filename, TH1D *hconv, double temp, double height, double voltage)
+void utilities::write_to_file_row(std::string filename, TH1D *hconv, double temp, double yShift, double height, double voltage)
 {
   unsigned long int steps = hconv->GetNbinsX();
  height = height/1000.;
+ yShift = yShift/1000.;
 
   std::ofstream out; // open file
 	out.open(filename, std::ios_base::app);
@@ -120,7 +121,7 @@ void utilities::write_to_file_row(std::string filename, TH1D *hconv, double temp
 		out << steps << " ";
 		out << temp-273. << " ";
 		out << voltage << " ";
-		out << "0 0 " << height << " ";
+		out << "0 " << " " << yShift << " " << height << " ";
 
 
 	  // Scan on times
