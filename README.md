@@ -15,7 +15,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
   
   - [Fenics Libraries](http://fenicsproject.org/download/)
   
-  - [Qt4](http://download.qt.io/archive/qt/)||
+  - [Qt4](http://download.qt.io/archive/qt/) ||
     Qt5 is not compatible 
 
   - [ROOT](https://root.cern.ch/downloading-root) ||
