@@ -8,20 +8,56 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 # Requisites
 
-  - C++11 compatible compiler (**Important!**)
-  - CMake
+  - [C++11 compatible compiler](http://en.cppreference.com/w/cpp/compiler_support) (**Important!**) ||
+    Tested only with g++-4.8
+
+  - [CMake](http://www.cmake.org/download/)
+  
   - [Fenics Libraries](http://fenicsproject.org/download/)
-  - Qt4
-  - ROOT framework (for exporting histograms and generation of arbitrary charge distributions)
+  
+  - [Qt4](http://download.qt.io/archive/qt/) ||
+    Qt5 is not compatible 
+
+  - [ROOT](https://root.cern.ch/downloading-root) ||
+    Used for exporting histograms and generation of arbitrary charge distributions
+    Recommended version 6.x
 
 # Installation
 
+1) Get the source
+
     git clone https://github.com/IFCA-HEP/TRACS
+    
+2)[OPTIONAL] Recompile fenics files
+
+    cd TRACS/src
+    ffc -l dolfin Poisson.ufl
+    ffc -l dolfin Gradient.ufl
+    cd ../
+    
+3) Creat folder to store executables
+
     cd TRACS
     mkdir build
     cd build
+    
+4) Configure CMake and creat Makefile
+
     cmake ..
-    make
+    
+5) Compile in a machin with [N] cores
+
+    make -j[N]
+    
+6) Move necessary files to the directory from which you will execute TRACS. eg.: TRACS/build/bin
+
+    mv ../src/files2move2bin/* ./bin/
+   
+7) Execute TRACS
+
+    cd bin/
+    ./TRACS # for Command line version
+    ./TRACS-GUI # for Grafical User Interface version
 
 # Brief Introduction on How TRACS Works
 
