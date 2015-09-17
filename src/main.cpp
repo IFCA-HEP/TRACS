@@ -252,6 +252,18 @@ int main()
 				{
 					i_rc = new TH2D("i_rc", "i_rc", hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() , n_zSteps + 1, zInit, zMax);
 				}
+//#ifdef RCONLY
+//				QVector<double> y_shaped(n_tSteps);
+//				y_shaped[0]=y_total[0];
+//				i_rc->SetBinContent(1, i+1, y_shaped[0]);
+//				double alfa = dt/(RC+dt);
+//
+//				for (int j = 1; j <n_tSteps; j++) 
+//				{
+//					y_shaped[j]=y_shaped[j-1]+alfa*(y_total[j]-y_shaped[j-1]);
+//					i_rc->SetBinContent(j+1,i+1,y_shaped[j]);
+//				}
+//#endif
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{
 					i_rc->SetBinContent(j, i+1 , hconv->GetBinContent(j) );

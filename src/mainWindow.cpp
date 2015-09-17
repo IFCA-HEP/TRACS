@@ -932,7 +932,7 @@ void MainWindow::load_carrier_collection()
   QString filename = ui->filename_display->text();
   carrier_collection = new CarrierCollection(detector);
 
-  carrier_collection->add_carriers_from_file(filename);
+  carrier_collection->add_carriers_from_file(filename,1);
 
   show_gen_carrier_map_qcp();
 }
