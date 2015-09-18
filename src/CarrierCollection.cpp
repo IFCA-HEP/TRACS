@@ -16,15 +16,11 @@ CarrierCollection::CarrierCollection(SMSDetector * detector) :
 
 void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) // should get N_thr=1 as input
 {
-	// if file read and then move carriers
-		// define temporal 1-D vector
-		// read all carriers
-		// get #carriers, #carriers/N_thr, initialize carrier_collection
-		// 2 for loops (N_thr(#carriers/N_thr)) to fill each dimension using new code
 
   // get char representation and make ifstream
   char * char_fn = filename.toLocal8Bit().data();
   std::ifstream infile(char_fn);
+	// define temporal 1-D vector
   std::vector<Carrier> allCarriers;
 
   if (!infile.good()){
@@ -45,15 +41,18 @@ void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) /
 			  break;
 		}
 
+	// read all carriers
     Carrier carrier(carrier_type, q, x_init, y_init , _detector, gen_time);
     allCarriers.push_back(carrier);
   }
 
+	  // get #carriers, #carriers/N_thr, initialize carrier_collection
 	  int nCarriers = allCarriers.size();
 	  int carrierPerThread = (int) std::ceil(nCarriers/nThreads);
 	  Carrier emptyCarrier('e', 0.0, -10.0, -10.0, _detector, 0);
 		  int count = 0;
 	  std::vector<Carrier> defaultVector (carrierPerThread, emptyCarrier);
+	  // 2 for-loops (N_thr(#carriers/N_thr)) to fill each dimension 
 	  for (int i = 0; i < nThreads; i++)
 	  {
 		  _carrier_list.push_back(defaultVector);

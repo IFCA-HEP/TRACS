@@ -101,7 +101,7 @@ class SMSDetector
     Function * get_d_u();
     Function * get_w_f_grad();
     Function * get_d_f_grad();
-		RectangleMesh * get_mesh();
+	RectangleMesh * get_mesh();
     double get_x_min();
     double get_x_max();
     double get_y_min();

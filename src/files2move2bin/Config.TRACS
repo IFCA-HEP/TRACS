@@ -302,25 +302,25 @@ StepInY = 5. # in micrometers
 # simplicity and easier understanding we provide a very schematic picture 
 # of what a Neff could look like and where are the points located.
 
-		#=====================================================#
-		#                 CUSTOM Neff EXAMPLE                 #
-		#=====================================================#
-		#                                                     #
-		#                                      Y              #    
-		#                                      ^              #  
-		#       (z0,y0)                   AXIS =>    | —>Z    #      
-		#       \                                             #     
-		#        \                                            #       
-		#         \                                           #      
-		#          \                                          #     
-		#           \___________ (z2,y2)                      #      
-		#      (z1,y1)          \                             #       
-		#                        \                            #      
-		#                         \                           #      
-		#                          \                          #      
-		#                           \(z3,y3)                  #      
-		#                                                     #
-		#=====================================================#
+	#=====================================================#
+	#                 CUSTOM Neff EXAMPLE                 #
+	#=====================================================#
+	#                                                     #
+	#                                      Y              #    
+	#                                      ^              #  
+	#       (z0,y0)                   AXIS =>    | —>Z    #      
+	#       \                                             #     
+	#        \                                            #       
+	#         \                                           #      
+	#          \                                          #     
+	#           \___________ (z2,y2)                      #      
+	#      (z1,y1)          \                             #       
+	#                        \                            #      
+	#                         \                           #      
+	#                          \                          #      
+	#                           \(z3,y3)                  #      
+	#                                                     #
+	#=====================================================#
 
 # Y-Axis
 # For Y units are not given as carriers/cm^3 as typically used by in some 
