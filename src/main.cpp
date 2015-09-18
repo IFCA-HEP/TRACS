@@ -1,4 +1,5 @@
 #include "SMSDetector.h"
+#include "Source.h"
 #include "utilities.h"
 #include "Carrier.h"
 #include "CarrierCollection.h"
@@ -73,8 +74,9 @@ int main()
 		 implant_type = '\0';
 
 	std::string scanType = "defaultString";
+	std::vector<double> neff_param(8,0.);
 
-	utilities::parse_config_file("Config.TRACS", depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, v_bias, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY);
+	utilities::parse_config_file("Config.TRACS", depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, v_bias, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param);
 	
 	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];
@@ -111,9 +113,10 @@ int main()
 
 	parameters["allow_extrapolation"] = true;
 
-	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence);
+	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param);
 
 	detector.set_voltages(vInit, v_depletion);
+
 
 	// Create carrier and observe movement
 	SMSDetector * dec_pointer = &detector;
@@ -193,12 +196,17 @@ int main()
 		detector.solve_w_f_grad();
 		detector.solve_d_f_grad();
 		detector.get_mesh()->bounding_box_tree();
+
+		Function * d_f_grad = detector.get_d_f_grad();
+		  // Plot solution
+		plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+		interactive();
 		
 		// Loop on Y-axis
 		for (int l = 0; l < n_ySteps + 1; l++) 
 		{
-			TH2D *i_rc ;
-
+			std::string ircName = "i_rc_"+std::to_string(y_shifts[l])+"y";
+			TH2D *i_rc = new TH2D(ircName.c_str(), ircName.c_str(), hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() , n_zSteps + 1, zInit, zMax);
 			// Loop on depth
 			for (int i = 0; i < n_zSteps + 1; i++) 
 			{
@@ -248,22 +256,6 @@ int main()
 					hnoconv->SetBinContent( j+1 , i_total[j] );
 				}
 				hconv = H1DConvolution( hnoconv , C*1.e12 );
-				if (i==0)
-				{
-					i_rc = new TH2D("i_rc", "i_rc", hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() , n_zSteps + 1, zInit, zMax);
-				}
-//#ifdef RCONLY
-//				QVector<double> y_shaped(n_tSteps);
-//				y_shaped[0]=y_total[0];
-//				i_rc->SetBinContent(1, i+1, y_shaped[0]);
-//				double alfa = dt/(RC+dt);
-//
-//				for (int j = 1; j <n_tSteps; j++) 
-//				{
-//					y_shaped[j]=y_shaped[j-1]+alfa*(y_total[j]-y_shaped[j-1]);
-//					i_rc->SetBinContent(j+1,i+1,y_shaped[j]);
-//				}
-//#endif
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{
 					i_rc->SetBinContent(j, i+1 , hconv->GetBinContent(j) );
@@ -271,7 +263,7 @@ int main()
 				// Write file from TH1D
 				utilities::write_to_file_row(hetct_conv_filename, hconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
 				utilities::write_to_file_row(hetct_noconv_filename, hnoconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
-			}
+			} // End of Z Loop
 			 std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
 			 // std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
 
@@ -280,10 +272,9 @@ int main()
 			i_ramo.Write();
 			i_rc->Write();
 			tfile->Close();
-
 			delete i_rc;
-		}
-	}
+		} // End of Y loop
+	} // End of V loop
 	delete carrier_collection;
 	return 0;
 }

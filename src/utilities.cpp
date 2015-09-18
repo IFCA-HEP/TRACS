@@ -263,7 +263,7 @@ std::string utilities::vector_to_string(std::vector<double> input_list)
 
 // Utility to read values for the simulation so main need not be compiled everytime
 // one wishes to modify the simulation parameters
-void utilities::parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY)
+void utilities::parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY, std::vector<double> &neff_param)
 {
 	// Creat map to hold all values as strings 
 	std::map< std::string, std::string> valuesMap;
@@ -279,10 +279,11 @@ void utilities::parse_config_file(std::string fileName, double &depth, double &w
 		std::string line;
 		char comment = '#';
 		char empty = '\0';
+		char tab = '\t';
 		while(std::getline(configFile, line))
 		{
 			char start = line[0];
-			if (start == comment || start == empty) continue;  // skip comments
+			if (start == comment || start == empty || start == tab) continue;  // skip comments
 			std::istringstream isstream(line);
 			isstream >> id >> eq >> val;
 			if (eq != "=") 
@@ -491,9 +492,58 @@ void utilities::parse_config_file(std::string fileName, double &depth, double &w
 	converter.clear();
 	converter.str("");
 	tempString = std::string("");
+
+	tempString = std::string("y0");
+	converter << valuesMap[tempString];
+	converter >> neff_param[0];
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("y1");
+	converter << valuesMap[tempString];
+	converter >> neff_param[1];
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("y2");
+	converter << valuesMap[tempString];
+	converter >> neff_param[2];
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("y3");
+	converter << valuesMap[tempString];
+	converter >> neff_param[3];
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	//z0 = 0.0
+	neff_param[4] = 0.0;
+
+	tempString = std::string("z1");
+	converter << valuesMap[tempString];
+	converter >> neff_param[5];
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	tempString = std::string("z2");
+	converter << valuesMap[tempString];
+	converter >> neff_param[6];
+	converter.clear();
+	converter.str("");
+	tempString = std::string("");
+
+	//z3 = depth
+	neff_param[7] = depth;
+
 	}
 	else
-	{
+{
 		std::cout << "Error opening the file. Does the file " << fileName << " exist?" << std::endl;
 	}
 }

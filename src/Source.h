@@ -14,17 +14,7 @@
  {
  public:
 
-   /*
-    * 3 ZONE space distribution
-    *
-    * This is the most general space charge distribution we expect
-    * to use; it consists in 3 different straight lines corresponding 
-    * to 3 different charge distributions
-    */
-	 
-   void eval(Array<double>& values, const Array<double>& x) const
-     {
-	// Concentratio//n in transition and extremal points
+	// Concentration in transition and extremal points
 	double y0 = -25.; // Neff(z0)
 	double y1 = 0.02; // Neff(z1)
 	double y2 = y1+y1*10; // Neff(z2)
@@ -36,6 +26,28 @@
 	double z2 = 220.;
 	double z3 = 300.;
 
+
+   /*
+    * 3 ZONE space distribution
+    *
+    * This is the most general space charge distribution we expect
+    * to use; it consists in 3 different straight lines corresponding 
+    * to 3 different charge distributions
+    */
+	 
+   void eval(Array<double>& values, const Array<double>& x) const
+     {
+//	// Concentration in transition and extremal points
+//	double y0 = -25.; // Neff(z0)
+//	double y1 = 0.02; // Neff(z1)
+//	double y2 = y1+y1*10; // Neff(z2)
+//	double y3 = 33; // Neff(z3)
+//
+//	// Define diferent zones in depth
+//	double z0 = 0.;
+//	double z1 = 120.;
+//	double z2 = 220.;
+//	double z3 = 300.;
 	// Charge concentration as a function of depthc (3zones)
 	double neff_1 = ((y0-y1)/(z0-z1))*(x[1]-z0) + y0;
 	double neff_2 = ((y1-y2)/(z1-z2))*(x[1]-z1) + y1;
@@ -74,5 +86,45 @@
 
 	
      }
+
+void set_y0(double newValue)
+{
+	y0 = newValue;
+}
+
+void set_y1(double newValue)
+{
+	y1 = newValue;
+}
+
+void set_y2(double newValue)
+{
+	y2 = newValue;
+}
+
+void set_y3(double newValue)
+{
+	y3 = newValue;
+}
+
+void set_z0(double newValue)
+{
+	z0 = newValue;
+}
+
+void set_z1(double newValue)
+{
+	z1 = newValue;
+}
+
+void set_z2(double newValue)
+{
+	z2 = newValue;
+}
+
+void set_z3(double newValue)
+{
+	z3 = newValue;
+}
 
  };
