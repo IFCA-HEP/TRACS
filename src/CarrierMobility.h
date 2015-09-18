@@ -24,6 +24,7 @@ class JacoboniMobility
 
   public:
     JacoboniMobility(char carrier_type, double T);
+		JacoboniMobility();
     ~JacoboniMobility();
     double obtain_mobility(double e_field_mod);
 };

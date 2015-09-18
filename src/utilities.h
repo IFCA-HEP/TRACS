@@ -25,9 +25,10 @@ namespace utilities
   void paint_TH2D_qcp(TH2D hist, QCPColorMap * color_map);
   void write_results_to_file(QString filename, QVector<QVector<double>> results);
   void write_to_file_row(std::string filename, QVector<QVector<double>> results, double dt);
-	void write_to_file_row(std::string filename, TH1D *hconv, double temp, double height, double voltage);
-	void write_to_hetct_header(std::string filename, SMSDetector detector, double C, double dt, std::vector<double> z_shifts, double landa, std::string type, std::string carriers_file, std::vector<double> voltages);
+	void write_to_file_row(std::string filename, TH1D *hconv, double temp, double yShift, double height, double voltage);
+	void write_to_hetct_header(std::string filename, SMSDetector detector, double C, double dt, std::vector<double> y_shifts, std::vector<double> z_shifts, double landa, std::string type, std::string carriers_file, std::vector<double> voltages);
 	std::string vector_to_string(std::vector<double> input_list);
+void parse_config_file(std::string fileName, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_bias, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY, std::vector<double> &neff_param);
 }
 
 #endif // UTILITIES_H

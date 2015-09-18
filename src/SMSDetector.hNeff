@@ -6,6 +6,7 @@
 
 #include "Poisson.h"
 #include "Gradient.h"
+#include "Neffective.h"
 
 #include <SMSDSubDomains.h>
 
@@ -19,12 +20,11 @@ class SMSDetector
     double _width; // in microns
     double _depth; // in microns
     double _tempK; // temperature in Kelvin
-    double _trapping_time; // radiation damage effect
+    double _trapping_time; // radiation damage
     double _fluence; // irradiation fluence (in neq)
     int _nns; // numbre of neighbouring strips
     char _bulk_type; // p or n
     char _implant_type; // n or p
-	std::vector<double> _neff_param; // Neff parametrization
 		double _vdep; // depletion voltage
 
     // some useful derived variables
@@ -43,6 +43,8 @@ class SMSDetector
 
     // poisson term for solving electric field
     double _f_poisson;
+	Neffective _neff;
+	std::vector<double> _neff_param;
 
     // meshes (one for each could be used)
     RectangleMesh _mesh; // mesh for both weighing and drifing potential
@@ -73,7 +75,7 @@ class SMSDetector
 
   public:
     // default constructor and destructor
-    SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100, double tempK = 253., double trapping = 9e300, double fluence = 0.0, std::vector<double> neff_param = {0});
+    SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100, double tempK = 253., double trapping = 9e300, double fluence = 0.0, std::vector<double> neff = {1,1,1,1,1,1,1,1,0});
     ~SMSDetector();
     // set methods
     void set_voltages(double v_bias, double v_depletion);
@@ -101,7 +103,7 @@ class SMSDetector
     Function * get_d_u();
     Function * get_w_f_grad();
     Function * get_d_f_grad();
-	RectangleMesh * get_mesh();
+		RectangleMesh * get_mesh();
     double get_x_min();
     double get_x_max();
     double get_y_min();
