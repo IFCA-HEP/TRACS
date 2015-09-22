@@ -140,9 +140,15 @@ Lambda = 1064   # In nm
 #   -edge-TCT: IR laser moved along Z-axis
 #   -top-TCT: Red laser, one shot at different voltages or scan on X-Y
 #   -bottom-TCT: Red laser, one shot at different voltages or scan on X-Y
-##################SCAN ON X-Y IS NOT IMPLEMENTED YET######################
+
 ScanType = edge   # edge/top/bottom
 
+# File where the carriers are stored. TRACS already provides carrier files 
+# for edge-TCT and TCT simulations but anyother file can be used, provided 
+# it has the same format. Here you should provide the path to the file 
+# to be used in the simulation. Relative path is set to the folder from 
+# which TRACS is executed.
+CarrierFile = etct.carriers
 
 #------------------------ ELECTRONICS SHAPING ----------------------------#
 
@@ -183,13 +189,7 @@ TotalTime = 1.5e-8   # in seconds ( ~10ns)
 # detector. These voltages include the depletion voltage as well as the 
 # various bias voltages that one may wish to apply to the detector.
 
-# Voltage applied to the detector in reverse mode (reverse bias) with 
-# respect to the natural voltage appearing in the detector due to p-n 
-# junction. This is a legacy value that will be eliminated as soon as we 
-# implement a loop to simulate different voltages at once.
-BiasVoltage = 350.   # in Volts # Still needed, should get rid of it later
-
-# Starting voltage for the simulation. One usually wishes that it is 
+# Starting bias voltage for the simulation. One usually wishes that it is 
 # higher than the depletion voltage for TRACS does not simulate thermal 
 # diffusion effects.
 InitialVoltage = 150 #volts

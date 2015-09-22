@@ -49,7 +49,6 @@ int main()
 		   C = 0,
 		   dt = 0,
 		   max_time = 0,
-		   v_bias = 0,
 		   vInit = 0,
 		   deltaV = 0,
 		   vMax = 0,
@@ -76,7 +75,8 @@ int main()
 	std::string scanType = "defaultString";
 	std::vector<double> neff_param(8,0.);
 
-	utilities::parse_config_file("Config.TRACS", depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, v_bias, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param);
+	std::string file_carriers = "etct.carriers";
+	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param);
 	
 	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];
@@ -109,7 +109,7 @@ int main()
 	std::string stepY = std::to_string((int) std::floor(deltaY));
 	std::string cap = std::to_string((int) std::floor(C*1.e12));
 	//std::string z_step  = std::to_string((int) std::floor(deltaZ));
-	std::string voltage = std::to_string((int) std::floor(v_bias));
+	std::string voltage = std::to_string((int) std::floor(vInit));
 
 	parameters["allow_extrapolation"] = true;
 
@@ -124,7 +124,6 @@ int main()
 	// get number of steps from time
 	int n_tSteps = (int) std::floor(max_time / dt);
 
-	std::string file_carriers = "etct.carriers";
 	QString filename = "etct.carriers";
 	CarrierCollection * carrier_collection = new CarrierCollection(dec_pointer);
 
