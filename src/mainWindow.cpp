@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->show_weighting_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_3d()));
   connect(ui->show_electric_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_2d()));
   connect(ui->show_electric_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_3d()));
-				  connect(ui->plot_neff_button, SIGNAL(clicked()), this, SLOT(show_carrier_map_line()));//show_custom_neff()));
+  connect(ui->plot_neff_button, SIGNAL(clicked()), this, SLOT(plot_custom_neff()));//show_custom_neff()));
 //				  when click on irrad_tab => z3 => setMaximum(depth) && setMinimum(depth)
 
   // currents tab connectors
@@ -237,6 +237,53 @@ void MainWindow::show_carrier_map_qcp()
   ui->carrier_map_qcp->replot();
 }
 
+void MainWindow::plot_custom_neff()
+{
+  // get data from ui
+  double y0 = ui->y0_double_box->value();
+  double y1 = ui->y1_double_box->value();
+  double y2 = ui->y2_double_box->value();
+  double y3 = ui->y3_double_box->value();
+  double z0 = 0.0;
+  double z1 = ui->z1_double_box->value();
+  double z2 = ui->z2_double_box->value();
+  double z3 = detector->get_depth();
+
+  unsigned int vectorSize = 500;
+QVector<double> x(vectorSize), y(vectorSize);
+double deltaX = (detector->get_depth())/(vectorSize-1);
+x[0] = 0.0; 
+y[0] = y0;
+
+//Intermediate variable (who cares about performance when using the GUI?)
+double neff_1, neff_2, neff_3, bridge_1, bridge_2, bridge_3;
+
+for(unsigned int i = 1; i < vectorSize; i++)
+{
+	x[i] = x[i-1] + deltaX;
+
+	neff_1 = ((y0-y1)/(z0-z1))*(x[i]-z0) + y0;
+	neff_2 = ((y1-y2)/(z1-z2))*(x[i]-z1) + y1;
+	neff_3 = ((y2-y3)/(z2-z3))*(x[i]-z2) + y2;
+
+	// For continuity and smoothness purposes
+	bridge_1 = tanh(1000*(x[i]-z0)) - tanh(1000*(x[i]-z1));
+	bridge_2 = tanh(1000*(x[i]-z1)) - tanh(1000*(x[i]-z2));
+	bridge_3 = tanh(1000*(x[i]-z2)) - tanh(1000*(x[i]-z3));
+
+	y[i] = 0.5*(neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3);
+}
+ui->neff_map->addGraph();
+ui->neff_map->graph(0)->setData(x, y);
+// give the axes some labels:
+ ui->neff_map->xAxis->setLabel("z/um");
+ ui->neff_map->yAxis->setLabel("Neff(z)");
+ // set axes ranges, so we see all data:
+ ui->neff_map->xAxis->setRange(z0, z3);
+ ui->neff_map->yAxis->setRange(y0, y3);
+ ui->neff_map->replot();
+ ui->neff_map->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
+}
 
 void MainWindow::show_w_field_mod_map()
 {

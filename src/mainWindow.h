@@ -43,6 +43,8 @@ private slots:
     void show_weighting_potential_3d();
     void show_electric_potential_2d();
     void show_electric_potential_3d();
+	void plot_custom_neff();
+	void plot_custom_neff_bg();
 
     // fields tab
     void show_w_field_mod_map();
