@@ -94,6 +94,8 @@ void SMSDetector::solve_d_u()
 	if (_fluence <= 0)
 	{
 		_L_p.f = fpois;
+		// Idiot-proofing
+		_trapping_time = std::numeric_limits<double>::max();
 	}
 	else 
 	{
@@ -422,6 +424,21 @@ void SMSDetector::set_trapping_time(double trapping_tau)
 void SMSDetector::set_fluence(double fluencia)
 {
   _fluence = fluencia;
+}
+
+/*
+ * Setter for changing the space charge distribution
+ */
+void SMSDetector::set_neff_param(std::vector<double> neff_parameters)
+{
+  _neff_param[0] = neff_parameters[0]; // y0
+  _neff_param[1] = neff_parameters[1]; // y1
+  _neff_param[2] = neff_parameters[2]; // y2
+  _neff_param[3] = neff_parameters[3]; // y3
+  _neff_param[4] = 0.0; // z0 (Idiot proof)
+  _neff_param[5] = neff_parameters[5]; // z1
+  _neff_param[6] = neff_parameters[6]; // z2
+  _neff_param[7] = _depth; // z3 (Idiot proof)
 }
 
 SMSDetector::~SMSDetector()

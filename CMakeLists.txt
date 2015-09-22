@@ -27,12 +27,12 @@ include_directories(${CMAKE_SOURCE_DIR}/include)
 #include_directories(${CMAKE_SOURCE_DIR}/build/bin)
 
 if(COVERAGE_ENABLED)
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -fPIC  -ggdb -fprofile-arcs -ftest-coverage")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O0 -fPIC  -ggdb -fprofile-arcs -ftest-coverage")
 else()
-    set(CMAKE_CXX_FLAGS_DEBUG "-Wall  -ggdb")
+    set(CMAKE_CXX_FLAGS_DEBUG "-Wall -O0 -ggdb")
 endif()
 
-set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O2")
+set(CMAKE_CXX_FLAGS_RELEASE "-Wall -O0")
 
 include(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)

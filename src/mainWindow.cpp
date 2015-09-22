@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->show_weighting_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_weighting_potential_3d()));
   connect(ui->show_electric_pot_2d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_2d()));
   connect(ui->show_electric_pot_3d_button, SIGNAL(clicked()), this, SLOT(show_electric_potential_3d()));
+				  connect(ui->plot_neff_button, SIGNAL(clicked()), this, SLOT(show_carrier_map_line()));//show_custom_neff()));
+//				  when click on irrad_tab => z3 => setMaximum(depth) && setMinimum(depth)
 
   // currents tab connectors
   connect(ui->s_carrier_button, SIGNAL(clicked()),this, SLOT(drift_single_carrier()));
@@ -86,9 +88,25 @@ void MainWindow::solve_fem()
   char implant_type = ui->implant_type_combo_box->currentText().toStdString().c_str()[0];
   int n_cellsx = ui->n_cellsx_int_box->value();
   int n_cellsy = ui->n_cellsy_int_box->value();
+  double trapping = 1.e-9 * ui->trapping_double_box->value();
+			double fluence = 0;
+			std::vector<double> neff_param (8, 0);
+			
+			if (ui->fluence_chckbx->isChecked())
+			{
+				fluence = 1e14;
+				neff_param[0] = ui->y0_double_box->value();
+				neff_param[1] = ui->y1_double_box->value();
+				neff_param[2] = ui->y2_double_box->value();
+				neff_param[3] = ui->y3_double_box->value();
+				neff_param[4] = 0.0;
+				neff_param[5] = ui->z1_double_box->value();
+				neff_param[6] = ui->z2_double_box->value();
+				neff_param[7] = ui->depth_double_box->value();
+			}else{}
 
   ui->fem_progress_bar->setValue(10);
-  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy, Temperature);
+  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy, Temperature, trapping, fluence, neff_param);
 
   double v_bias = ui->bias_voltage_double_box->value();
   double v_depletion = ui->depletion_voltage_double_box->value();
@@ -967,6 +985,10 @@ void MainWindow::drift_carrier_collection()
      y_hole[i] = curr_hole[i];
      y_total[i] = curr_total[i];
   }
+
+  // here one show implement electronics shaping
+  // Call H1DConvolution
+  // convert to QVector
 
   // set new data
   ui->gen_carrier_curr_qcp->graph(0)->setData(x_elec, y_elec);
