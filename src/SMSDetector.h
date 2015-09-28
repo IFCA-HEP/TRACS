@@ -3,6 +3,7 @@
 
 #include <dolfin.h>
 #include <cmath> 
+#include <limits>  // std::numeric_limits
 
 #include "Poisson.h"
 #include "Gradient.h"
@@ -89,7 +90,7 @@ class SMSDetector
     void set_temperature(double temperature);
     void set_trapping_time(double trapping_tau);
     void set_fluence(double fluencia);
-
+	void set_neff_param(std::vector<double> neff_parameters);
     // solve potentials
     void solve_w_u();
     void solve_d_u();
@@ -108,15 +109,15 @@ class SMSDetector
     double get_y_max();
     double get_temperature();
     double get_trapping_time();
-		double get_fluence();
-		double get_depth();
-		double get_pitch();
-		double get_width();
-		int get_nns();
-		char get_bulk_type();
-		char get_implant_type();
-		double get_vbias();
-		double get_vdep();
+	double get_fluence();
+	double get_depth();
+	double get_pitch();
+	double get_width();
+	int get_nns();
+	char get_bulk_type();
+	char get_implant_type();
+	double get_vbias();
+	double get_vdep();
 
     // some other methods
     bool is_out(const std::array< double,2> &x);
