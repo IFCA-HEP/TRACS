@@ -301,9 +301,9 @@ void MainWindow::plot_custom_neff()
   double z2 = ui->z2_double_box->value();
   double z3 = detector->get_depth();
 
-  unsigned int vectorSize = 500;
+  double deltaX = 0.25;
+  unsigned int vectorSize = (detector->get_depth())/deltaX;
 QVector<double> x(vectorSize), y(vectorSize);
-double deltaX = (detector->get_depth())/(vectorSize-1);
 x[0] = 0.0; 
 y[0] = y0;
 
