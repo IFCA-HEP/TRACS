@@ -247,7 +247,7 @@ void MainWindow::plot_custom_neff()
   double z0 = 0.0;
   double z1 = ui->z1_double_box->value();
   double z2 = ui->z2_double_box->value();
-  double z3 = detector->get_depth();
+  double z3 = ui->z3_double_box->value();
 
   unsigned int vectorSize = 500;
 QVector<double> x(vectorSize), y(vectorSize);
@@ -260,7 +260,7 @@ double neff_1, neff_2, neff_3, bridge_1, bridge_2, bridge_3;
 
 for(unsigned int i = 1; i < vectorSize; i++)
 {
-	x[i] = x[i-1] + deltaX;
+	x[i] = i *  deltaX;
 
 	neff_1 = ((y0-y1)/(z0-z1))*(x[i]-z0) + y0;
 	neff_2 = ((y1-y2)/(z1-z2))*(x[i]-z1) + y1;
@@ -273,6 +273,7 @@ for(unsigned int i = 1; i < vectorSize; i++)
 
 	y[i] = 0.5*(neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3);
 }
+y[vectorSize-1] = y3;
 ui->neff_map->addGraph();
 ui->neff_map->graph(0)->setData(x, y);
 // give the axes some labels:

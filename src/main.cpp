@@ -198,8 +198,8 @@ int main()
 
 		Function * d_f_grad = detector.get_d_f_grad();
 		  // Plot solution
-		plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
-		interactive();
+		//plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+//		interactive();
 		
 		// Loop on Y-axis
 		for (int l = 0; l < n_ySteps + 1; l++) 
