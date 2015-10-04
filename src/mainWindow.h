@@ -20,6 +20,8 @@
 #include <fstream>
 #include <iterator>
 
+extern TH1D *H1DConvolution( TH1D *htct, Double_t Cend=0. ) ; 
+
 namespace Ui {
 class MainWindow
 ;
