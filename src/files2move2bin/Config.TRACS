@@ -89,13 +89,6 @@ NeighbouringStrips = 2   # 0 for a diode
 # Temperature of the detector, affects mobility
 Temperature = 300.0   # Double in Kelvin
 
-# Trapping time-constant, affects total collected signal
-TrappingTime = 3.0e-9   # Double in seconds
-
-# Fluence to which the detector has been irradiated. Controls whether 
-# simulated diode is irradiated(>0) or not(==0)
-Fluence = 1.0e14   # Double in neutronEquivalents
-
 
 # Number of threads used for simulation. Crashes if nThreads != 1
 NumberOfThreads = 1   # Integer
@@ -288,6 +281,13 @@ StepInY = 5. # in micrometers
 # fluence can also be modified but only acts like a trigger as explained 
 # below.
 #
+# Trapping time-constant, affects total collected signal
+TrappingTime = 3.0e-9   # Double in seconds
+
+# Fluence to which the detector has been irradiated. Controls whether 
+# simulated diode is irradiated(>0) or not(==0)
+Fluence = 1.0e14   # Double in neutronEquivalents
+
 # Neff - CUSTOM DISTRIBUTION
 #
 # This is the most important part of the simulation of irradiated 
