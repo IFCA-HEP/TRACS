@@ -762,3 +762,47 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 	}
 }
 
+void utilities::valarray2Hist(TH1D *hist, std::valarray<double> &valar)
+{
+	if (valar.size() == hist->GetSize()-2) {
+		int steps = valar.size();
+		for (int i = 0; i < steps ; i++) 
+		{
+			hist->SetBinContent(i, valar[i]);
+		}
+	}
+	else
+	{
+		std::cout << "Error converting to Histogram" << std::endl;
+	}
+}
+
+void utilities::hist2Qvec(QVector<double> &qVec, TH1D *hist)
+{
+	if (qVec.size() == hist->GetSize()-2) {
+		int steps = qVec.size();
+		for (int i = 0; i < steps ; i++) 
+		{
+			qVec[i] = hist->GetBinContent(i);
+		}
+	}
+	else
+	{
+		std::cout << "Error converting to Histogram" << std::endl;
+	}
+}
+
+void utilities::hist2Qvec(QVector<double> &qVec, TH1D *hist, TH1D *histOverL)
+{
+	if (qVec.size() == hist->GetSize()-2) {
+		int steps = qVec.size();
+		for (int i = 0; i < steps ; i++) 
+		{
+			qVec[i] = hist->GetBinContent(i)+histOverL->GetBinContent(i);
+		}
+	}
+	else
+	{
+		std::cout << "Error converting to Histogram" << std::endl;
+	}
+}
