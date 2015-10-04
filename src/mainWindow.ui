@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1236</width>
+    <width>1246</width>
     <height>850</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>4</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -736,7 +736,6 @@
               <height>300</height>
              </size>
             </property>
-            <zorder>electric_pot_qcp</zorder>
            </widget>
           </item>
          </layout>
@@ -1166,146 +1165,6 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QGroupBox" name="s_carrier_group_box">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title">
-           <string>SINGLE CARRIER</string>
-          </property>
-          <layout class="QFormLayout" name="formLayout_2">
-           <property name="fieldGrowthPolicy">
-            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-           </property>
-           <item row="0" column="0">
-            <widget class="QLabel" name="s_carrier_type_label">
-             <property name="text">
-              <string>Carrier type</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="s_carrier_type">
-             <item>
-              <property name="text">
-               <string>electron+hole</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>electron</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>hole</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="s_carrier_q_label">
-             <property name="text">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;q&lt;/span&gt; (e units)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="s_carrier_q_box">
-             <property name="maximum">
-              <number>100000</number>
-             </property>
-             <property name="value">
-              <number>1</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="s_carrier_x_pos_label">
-             <property name="text">
-              <string>X Position (mum)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QDoubleSpinBox" name="s_carrier_x_pos_box">
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>300.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="s_carrier_y_pos_label">
-             <property name="text">
-              <string>Y Position (mum)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QDoubleSpinBox" name="s_carrier_y_pos_box">
-             <property name="maximum">
-              <double>1000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>100.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="s_carrier_time_step_label">
-             <property name="text">
-              <string>Time Step (ps)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QDoubleSpinBox" name="s_carrier_time_step_box">
-             <property name="maximum">
-              <double>10000.000000000000000</double>
-             </property>
-             <property name="value">
-              <double>10.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0">
-            <widget class="QLabel" name="s_carrier_max_time_label">
-             <property name="text">
-              <string>Max TIme (ns)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QDoubleSpinBox" name="s_carrier_max_time_box">
-             <property name="value">
-              <double>10.000000000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="s_carrier_n_steps_label">
-             <property name="text">
-              <string># Steps</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1">
-            <widget class="QPushButton" name="s_carrier_button">
-             <property name="text">
-              <string>Generate and Drift</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QGroupBox" name="groupBox_2">
           <property name="sizePolicy">
@@ -1406,6 +1265,206 @@
           </layout>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="QGroupBox" name="s_carrier_group_box">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="title">
+           <string>SINGLE CARRIER</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_20">
+           <item row="0" column="0">
+            <layout class="QVBoxLayout" name="verticalLayout_6">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QLabel" name="s_carrier_type_label">
+                 <property name="text">
+                  <string>Carrier type</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QComboBox" name="s_carrier_type">
+                 <item>
+                  <property name="text">
+                   <string>electron+hole</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>electron</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>hole</string>
+                  </property>
+                 </item>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_13">
+               <item>
+                <widget class="QLabel" name="s_carrier_q_label">
+                 <property name="text">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;q&lt;/span&gt; (e units)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSpinBox" name="s_carrier_q_box">
+                 <property name="maximum">
+                  <number>100000</number>
+                 </property>
+                 <property name="value">
+                  <number>1</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_14">
+               <item>
+                <widget class="QLabel" name="s_carrier_x_pos_label">
+                 <property name="text">
+                  <string>X Position (mum)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="s_carrier_x_pos_box">
+                 <property name="maximum">
+                  <double>10000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>300.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_18">
+               <item>
+                <widget class="QLabel" name="s_carrier_y_pos_label">
+                 <property name="text">
+                  <string>Y Position (mum)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="s_carrier_y_pos_box">
+                 <property name="maximum">
+                  <double>1000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>100.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_17">
+               <item>
+                <widget class="QLabel" name="s_carrier_time_step_label">
+                 <property name="text">
+                  <string>Time Step (ps)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="s_carrier_time_step_box">
+                 <property name="maximum">
+                  <double>10000.000000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>10.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_16">
+               <item>
+                <widget class="QLabel" name="s_carrier_max_time_label">
+                 <property name="text">
+                  <string>Max TIme (ns)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="s_carrier_max_time_box">
+                 <property name="value">
+                  <double>10.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_15">
+               <item>
+                <widget class="QLabel" name="s_carrier_n_steps_label">
+                 <property name="text">
+                  <string># Steps</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="s_carrier_button">
+                 <property name="text">
+                  <string>Generate and Drift</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_8">
+               <item>
+                <widget class="QCheckBox" name="rc_checkbox_2">
+                 <property name="text">
+                  <string>Electronics shaping</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_19">
+                 <property name="text">
+                  <string>||  Capacitance (pF)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                 <property name="maximum">
+                  <double>200.990000000000009</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>5.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="carriers_tab">
@@ -1439,6 +1498,7 @@
               <height>0</height>
              </size>
             </property>
+            <zorder>rc_checkbox</zorder>
            </widget>
           </item>
          </layout>
@@ -1450,7 +1510,7 @@
             <property name="title">
              <string>IMPORT CARRIERS FROM FILE</string>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout_7">
+            <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
               <layout class="QHBoxLayout" name="filename_layout">
                <item>
@@ -1522,15 +1582,39 @@
                </item>
               </layout>
              </item>
-             <item alignment="Qt::AlignHCenter">
-              <widget class="QCheckBox" name="rc_checkbox">
-               <property name="text">
-                <string>Electronics shaping</string>
-               </property>
-              </widget>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <widget class="QCheckBox" name="rc_checkbox">
+                 <property name="text">
+                  <string>Electronics shaping</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_18">
+                 <property name="text">
+                  <string>||  Capacitance (pF)</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                 <property name="maximum">
+                  <double>200.990000000000009</double>
+                 </property>
+                 <property name="singleStep">
+                  <double>0.100000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>5.000000000000000</double>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
+              <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
                 <widget class="QLabel" name="s_carrier_n_steps_label_3">
                  <property name="text">
@@ -1545,14 +1629,14 @@
                  </property>
                 </widget>
                </item>
-               <item>
-                <widget class="QPushButton" name="save_results_carriers">
-                 <property name="text">
-                  <string>Save to File</string>
-                 </property>
-                </widget>
-               </item>
               </layout>
+             </item>
+             <item>
+              <widget class="QPushButton" name="save_results_carriers">
+               <property name="text">
+                <string>Save to File</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -2412,7 +2496,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1236</width>
+     <width>1246</width>
      <height>27</height>
     </rect>
    </property>

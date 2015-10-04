@@ -235,7 +235,7 @@ void MainWindow::show_carrier_map_qcp()
   for (int x=0; x<n_bins_x; ++x)
     for (int y=0; y<n_bins_y; ++y)
       color_map_d_u->data()->setCell(x, y, (*d_u)(x*step_x, y*step_y));
-  color_map_d_u->setGradient(QCPColorGradient::gpGrayscale);
+  color_map_d_u->setGradient(QCPColorGradient::gpPolar);
   color_map_d_u->rescaleDataRange(true);
   ui->carrier_map_qcp->rescaleAxes();
   ui->carrier_map_qcp->replot();
@@ -934,11 +934,11 @@ void MainWindow::drift_line_carrier()
 
     if ( index == 0 || index == 1)
     {
-    curr_elec += electron.simulate_drift( dt , max_time, x_pos, y_pos);
+		curr_elec += electron.simulate_drift( dt , max_time, x_pos, y_pos);
     }
     if ( index == 0 || index == 2)
     {
-    curr_hole += hole.simulate_drift( dt , max_time, x_pos, y_pos);
+		curr_hole += hole.simulate_drift( dt , max_time, x_pos, y_pos);
     }
   }
 
@@ -1008,7 +1008,7 @@ void MainWindow::show_carrier_map_line()
   carrier_line->start->setCoords(l_start_x, l_start_y);
   carrier_line->end->setType( QCPItemPosition::ptPlotCoords);
   carrier_line->end->setCoords(l_end_x, l_end_y);
-  carrier_line->setPen(QPen(Qt::red));
+  carrier_line->setPen(QPen(Qt::green));
   ui->carrier_map_qcp->replot();
 
 }
@@ -1070,7 +1070,7 @@ void MainWindow::drift_carrier_collection()
 
   carrier_collection->simulate_drift( dt, max_time, curr_elec, curr_hole);
 
-    curr_total = curr_elec + curr_hole;
+//    curr_total = curr_elec + curr_hole;
 
   QVector<double> x_elec(max_steps), y_elec(max_steps);
   QVector<double> x_hole(max_steps), y_hole(max_steps);
@@ -1081,20 +1081,42 @@ void MainWindow::drift_carrier_collection()
      x_elec[i] = i*dt;
      x_hole[i] = i*dt;
      x_total[i] = i*dt;
-     y_elec[i] = curr_elec[i];
-     y_hole[i] = curr_hole[i];
-     y_total[i] = curr_total[i];
   }
 
   // here one show implement electronics shaping
   // Call H1DConvolution
   // convert to QVector
+//  if (checked)
+//  {
+//	  // Convert to TH1D
+//	  utilities::valarray2Hist(i_elec, curr_elec);
+//	  utilities::valarray2Hist(i_hole, curr_hole);
+//	  // Convolute
+//	  i_elec = H1DConvolution(i_elec, capacit_carriers);
+//	  i_hole = H1DConvolution(i_hole, capacit_carriers);
+//
+//	  // Convert to Qvector
+//	  utilities::Hist2Qvec(y_hole, i_hole);
+//	  utilities::Hist2Qvec(y_elec, i_elec);
+//
+//	  // Sum and convert to Qvector
+//	  utilities::HistSum2Qvec(y_total, i_elec, i_hole);
+//  }
+//  else
+//  {
+	  for (int i=0; i< max_steps; i++)
+	  {
+		  y_elec[i] = curr_elec[i];
+		  y_hole[i] = curr_hole[i];
+		  y_total[i] = curr_elec[i] + curr_hole[i];
+	  }
+//  }
+
 
   // set new data
   ui->gen_carrier_curr_qcp->graph(0)->setData(x_elec, y_elec);
   ui->gen_carrier_curr_qcp->graph(1)->setData(x_hole, y_hole);
   ui->gen_carrier_curr_qcp->graph(2)->setData(x_total, y_total);
-
   // save results temporally
   raw_results.resize(4);
   raw_results[0] = x_total;
