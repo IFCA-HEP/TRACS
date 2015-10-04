@@ -20,6 +20,8 @@
 #include <fstream>
 #include <iterator>
 
+extern TH1D *H1DConvolution( TH1D *htct, Double_t Cend=0. ) ; 
+
 namespace Ui {
 class MainWindow
 ;
@@ -69,12 +71,14 @@ private slots:
     void show_carrier_map_qcp();
     void show_carrier_map_line();
     void carrier_from_click(QMouseEvent *  event);
+//	double capacit_curr;
 
     // carriers tab
     void set_carrier_filename();
     void load_carrier_collection();
     void drift_carrier_collection();
     void show_gen_carrier_map_qcp();
+//	double capacit_carriers;
 
     // other
     void save_results_raw();

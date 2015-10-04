@@ -30,6 +30,9 @@ namespace utilities
 	std::string vector_to_string(std::vector<double> input_list);
 	void parse_config_file(std::string fileName, std::string &carrierFile, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY, std::vector<double> &neff_param);
 	void parse_config_file(std::string fileName, std::string &carrierFile, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, double &C, double &dt, double &max_time, double &vBias,double &vDepletion, double &zPos, double &yPos, std::vector<double> &neff_param);
+void valarray2Hist(TH1D *hist, std::valarray<double> &valar);
+void hist2Qvec(QVector<double> &qVec, TH1D *hist);
+void hist2Qvec(QVector<double> &qVec, TH1D *hist, TH1D *histOverL);
 }
 
 #endif // UTILITIES_H

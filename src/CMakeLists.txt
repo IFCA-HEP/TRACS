@@ -75,7 +75,7 @@ target_link_libraries(TRACS ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${
 
 
 set(GUI_HEADERS mainWindow.h qcustomplot.h)
-set(GUI_SRC mainWindow.cpp SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp CarrierCollection.cpp utilities.cpp qcustomplot.cpp)
+set(GUI_SRC mainWindow.cpp SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp CarrierCollection.cpp utilities.cpp qcustomplot.cpp H1DConvolution.C)
 set(GUI_UIS mainWindow.ui)
 
 
