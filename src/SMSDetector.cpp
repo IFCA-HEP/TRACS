@@ -2,7 +2,7 @@
 #include <dolfin.h>
 #include <Source.h>
 
-SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y, double tempK, double trapping, double fluence, std::vector<double> neff_param) :
+SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x, int n_cells_y, double tempK, double trapping, double fluence, std::vector<double> neff_param, std::string neff_type) :
     
     _pitch(pitch), //Distance between implants
     _width(width), //Size of the implant
@@ -13,6 +13,7 @@ SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char
     _nns(nns), // Number of neighbouring strips
     _bulk_type(bulk_type), //Dopant type of the silicon (p/n)
     _implant_type(implant_type), //Dopant type of the implant, normally opposite of the bulk (n/p)
+	_neff_type(neff_type), // Select aproach to parametrize Neff (irradiation only)
     _neff_param(neff_param), // Parametrized description of the Space Charge distribution
     _x_min(0.0), // Starting horizontal position for carrier generation (hereafter CG)
     _x_max(_pitch * (2*_nns+1)), // Endingvertical positio for CG
@@ -99,6 +100,7 @@ void SMSDetector::solve_d_u()
 	}
 	else 
 	{
+		f.set_NeffApproach(_neff_type);
 		f.set_y0(_neff_param[0]);
 		f.set_y1(_neff_param[1]);
 		f.set_y2(_neff_param[2]);
@@ -439,6 +441,11 @@ void SMSDetector::set_neff_param(std::vector<double> neff_parameters)
   _neff_param[5] = neff_parameters[5]; // z1
   _neff_param[6] = neff_parameters[6]; // z2
   _neff_param[7] = _depth; // z3 (Idiot proof)
+}
+
+void SMSDetector::set_neff_type(std::string newApproach)
+{
+	_neff_type = newApproach;
 }
 
 SMSDetector::~SMSDetector()

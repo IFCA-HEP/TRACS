@@ -94,11 +94,13 @@ void MainWindow::solve_fem()
   int n_cellsy = ui->n_cellsy_int_box->value();
   double trapping = 1.e-9 * ui->trapping_double_box->value();
   double fluence = 0;
+  std::string neff_type = "Trilinear";
   std::vector<double> neff_param (8, 0);
 			
 			if (ui->fluence_chckbx->isChecked())
 			{
 				fluence = 1.0e14;
+				neff_type = ui->neff_type_combo->currentText().toStdString();
 				neff_param[0] = ui->y0_double_box->value();
 				neff_param[1] = ui->y1_double_box->value();
 				neff_param[2] = ui->y2_double_box->value();
@@ -110,7 +112,7 @@ void MainWindow::solve_fem()
 			}else{}
 
   ui->fem_progress_bar->setValue(10);
-  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy, Temperature, trapping, fluence, neff_param);
+  detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cellsx, n_cellsy, Temperature, trapping, fluence, neff_param, neff_type);
 
   double v_bias = ui->bias_voltage_double_box->value();
   double v_depletion = ui->depletion_voltage_double_box->value();
@@ -309,23 +311,77 @@ y[0] = y0;
 
 //Intermediate variable (who cares about performance when using the GUI?)
 double neff_1, neff_2, neff_3, bridge_1, bridge_2, bridge_3;
+// Attempt to make CNVT easier to understand
+//Source f;
+//f.set_y0(y0);
+//f.set_y1(y1);
+//f.set_y2(y2);
+//f.set_y3(y3);
+//f.set_z0(z0);
+//f.set_z1(z1);
+//f.set_z2(z2);
+//f.set_z3(z3);
+//Array<double> zAxis(1), neffAxis(2);
+//zAxis[0] = 0.;
+//neffAxis[0] = 0.;
+//neffAxis[1] = 2.;
 
-for(unsigned int i = 1; i < vectorSize; i++)
+int index = ui->neff_type_combo->currentIndex();
+
+if (index == 0) //trilinear
 {
-	x[i] = i *  deltaX;
+	for(unsigned int i = 1; i < vectorSize; i++)
+	{
+		//	zAxis[1] = x[i];
+		//	f.eval(neffAxis, zAxis);
+		//	y[i] = neffAxis[0];
+		x[i] = i *  deltaX;
 
-	neff_1 = ((y0-y1)/(z0-z1))*(x[i]-z0) + y0;
-	neff_2 = ((y1-y2)/(z1-z2))*(x[i]-z1) + y1;
-	neff_3 = ((y2-y3)/(z2-z3))*(x[i]-z2) + y2;
+		neff_1 = ((y0-y1)/(z0-z1))*(x[i]-z0) + y0;
+		neff_2 = ((y1-y2)/(z1-z2))*(x[i]-z1) + y1;
+		neff_3 = ((y2-y3)/(z2-z3))*(x[i]-z2) + y2;
 
-	// For continuity and smoothness purposes
-	bridge_1 = tanh(1000*(x[i]-z0)) - tanh(1000*(x[i]-z1));
-	bridge_2 = tanh(1000*(x[i]-z1)) - tanh(1000*(x[i]-z2));
-	bridge_3 = tanh(1000*(x[i]-z2)) - tanh(1000*(x[i]-z3));
+		// For continuity and smoothness purposes
+		bridge_1 = tanh(1000*(x[i]-z0)) - tanh(1000*(x[i]-z1));
+		bridge_2 = tanh(1000*(x[i]-z1)) - tanh(1000*(x[i]-z2));
+		bridge_3 = tanh(1000*(x[i]-z2)) - tanh(1000*(x[i]-z3));
 
-	y[i] = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
+		y[i] = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
+	}
+	y[vectorSize-1] = y3;
+	ui->neff_map->yAxis->setRange(y0, y3);
 }
-y[vectorSize-1] = y3;
+else if (index == 1) //linear
+{
+	for(unsigned int i = 1; i < vectorSize; i++)
+	{
+		x[i] = i *  deltaX;
+
+		y[i]  = ((y0-y3)/(z0-z3))*(x[i]-z0) + y0;
+	}
+	y[vectorSize-1] = y3;
+	ui->neff_map->yAxis->setRange(y0, y3);
+}
+else if (index == 2) // triconstant
+{
+	for(unsigned int i = 1; i < vectorSize; i++)
+	{
+		x[i] = i *  deltaX;
+
+		neff_1 = y0;
+		neff_2 = y1;
+		neff_3 = y2;
+
+		// For continuity and smoothness purposes
+		bridge_1 = tanh(1000*(x[i]-z0)) - tanh(1000*(x[i]-z1));
+		bridge_2 = tanh(1000*(x[i]-z1)) - tanh(1000*(x[i]-z2));
+		bridge_3 = tanh(1000*(x[i]-z2)) - tanh(1000*(x[i]-z3));
+
+		y[i] = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
+		ui->neff_map->yAxis->setRange(y0, y2);
+	}
+}
+
 ui->neff_map->addGraph();
 ui->neff_map->graph(0)->setData(x, y);
 // give the axes some labels:
@@ -333,7 +389,6 @@ ui->neff_map->graph(0)->setData(x, y);
  ui->neff_map->yAxis->setLabel("Neff(z)");
  // set axes ranges, so we see all data:
  ui->neff_map->xAxis->setRange(z0, z3);
- ui->neff_map->yAxis->setRange(y0, y3);
  ui->neff_map->replot();
  ui->neff_map->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 }

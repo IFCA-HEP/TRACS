@@ -31,500 +31,6 @@
         <string>Potentials</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_11">
-        <item row="0" column="1">
-         <widget class="QTabWidget" name="potentials_miniTab">
-          <property name="minimumSize">
-           <size>
-            <width>400</width>
-            <height>400</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>400</width>
-            <height>500</height>
-           </size>
-          </property>
-          <property name="currentIndex">
-           <number>1</number>
-          </property>
-          <widget class="QWidget" name="noIrrad_tab">
-           <attribute name="title">
-            <string>Non Irradiated</string>
-           </attribute>
-           <widget class="QGroupBox" name="detector_properties_layout">
-            <property name="geometry">
-             <rect>
-              <x>10</x>
-              <y>10</y>
-              <width>331</width>
-              <height>311</height>
-             </rect>
-            </property>
-            <property name="font">
-             <font>
-              <pointsize>9</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="title">
-             <string>DETECTOR PROPERTIES</string>
-            </property>
-            <layout class="QGridLayout" name="gridLayout_2">
-             <item row="0" column="1">
-              <widget class="QDoubleSpinBox" name="pitch_double_box">
-               <property name="maximum">
-                <double>100000.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>80.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QDoubleSpinBox" name="depletion_voltage_double_box">
-               <property name="maximum">
-                <double>9999.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>250.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="0">
-              <widget class="QLabel" name="temperature_label">
-               <property name="text">
-                <string>Temperature (K)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="6" column="1">
-              <widget class="QDoubleSpinBox" name="Temperature_double_box">
-               <property name="minimum">
-                <double>0.000000000000000</double>
-               </property>
-               <property name="maximum">
-                <double>9999.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>300.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
-              <widget class="QLabel" name="width_label">
-               <property name="text">
-                <string>Width (um)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QDoubleSpinBox" name="depth_double_box">
-               <property name="maximum">
-                <double>10000.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>300.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
-              <widget class="QLabel" name="depletion_voltage_label">
-               <property name="text">
-                <string>Depletion Voltage (V)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QDoubleSpinBox" name="width_double_box">
-               <property name="maximum">
-                <double>100000.000000000000000</double>
-               </property>
-               <property name="value">
-                <double>25.000000000000000</double>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
-              <widget class="QLabel" name="depth_label">
-               <property name="text">
-                <string>Depth (um)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="0">
-              <widget class="QLabel" name="bulk_type_label">
-               <property name="text">
-                <string>Bulk Type</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="0">
-              <widget class="QLabel" name="pitch_label">
-               <property name="text">
-                <string>Pitch (um)</string>
-               </property>
-              </widget>
-             </item>
-             <item row="3" column="1">
-              <widget class="QComboBox" name="bulk_type_combo_box">
-               <item>
-                <property name="text">
-                 <string>p</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>n</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="implant_type_label">
-               <property name="text">
-                <string>Implant Type</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QComboBox" name="implant_type_combo_box">
-               <item>
-                <property name="text">
-                 <string>n</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>p</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-            </layout>
-            <zorder>depletion_voltage_double_box</zorder>
-            <zorder>Temperature_double_box</zorder>
-            <zorder>width_label</zorder>
-            <zorder>depth_double_box</zorder>
-            <zorder>depletion_voltage_label</zorder>
-            <zorder>width_double_box</zorder>
-            <zorder>depth_label</zorder>
-            <zorder>bulk_type_label</zorder>
-            <zorder>pitch_label</zorder>
-            <zorder>pitch_double_box</zorder>
-            <zorder>bulk_type_combo_box</zorder>
-            <zorder>implant_type_label</zorder>
-            <zorder>implant_type_combo_box</zorder>
-            <zorder>temperature_label</zorder>
-           </widget>
-          </widget>
-          <widget class="QWidget" name="irrad_tab">
-           <attribute name="title">
-            <string>Irradiated</string>
-           </attribute>
-           <layout class="QGridLayout" name="gridLayout_18">
-            <item row="5" column="1">
-             <widget class="QPushButton" name="plot_neff_button">
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>Plot 
- 
-
- Neff</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0" colspan="2">
-             <layout class="QGridLayout" name="gridLayout_9">
-              <item row="0" column="0">
-               <widget class="QLabel" name="pitch_label_2">
-                <property name="text">
-                 <string>z0</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="width_label_2">
-                <property name="text">
-                 <string>z1</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="depletion_voltage_label_2">
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>z2</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QLabel" name="width_label_4">
-                <property name="text">
-                 <string>z3</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QDoubleSpinBox" name="z0_double_box">
-                <property name="decimals">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QDoubleSpinBox" name="z1_double_box">
-                <property name="decimals">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <double>100000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>120.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QDoubleSpinBox" name="z2_double_box">
-                <property name="decimals">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <double>9999.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>220.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="QDoubleSpinBox" name="z3_double_box">
-                <property name="decimals">
-                 <number>1</number>
-                </property>
-                <property name="maximum">
-                 <double>100000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>300.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="pitch_label_3">
-                <property name="text">
-                 <string>y0</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLabel" name="width_label_3">
-                <property name="text">
-                 <string>y1</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QLabel" name="depletion_voltage_label_3">
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>y2</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="3">
-               <widget class="QLabel" name="width_label_5">
-                <property name="text">
-                 <string>y3</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QDoubleSpinBox" name="y0_double_box">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="minimum">
-                 <double>-10000.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>10000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>-25.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QDoubleSpinBox" name="y1_double_box">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="minimum">
-                 <double>-1000.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>1000.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.020000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="2">
-               <widget class="QDoubleSpinBox" name="y2_double_box">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="minimum">
-                 <double>-100.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>0.220000000000000</double>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="3">
-               <widget class="QDoubleSpinBox" name="y3_double_box">
-                <property name="decimals">
-                 <number>3</number>
-                </property>
-                <property name="minimum">
-                 <double>-100.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>100.000000000000000</double>
-                </property>
-                <property name="value">
-                 <double>33.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="fluence_chckbx">
-              <property name="text">
-               <string>Irradiation</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-              <property name="tristate">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <layout class="QGridLayout" name="gridLayout_17">
-              <item row="0" column="0">
-               <widget class="QLabel" name="trappingTime_label">
-                <property name="text">
-                 <string>Trapping Time (ns)</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QDoubleSpinBox" name="trapping_double_box">
-                <property name="decimals">
-                 <number>2</number>
-                </property>
-                <property name="minimum">
-                 <double>0.000000000000000</double>
-                </property>
-                <property name="maximum">
-                 <double>2000.000000000000000</double>
-                </property>
-                <property name="singleStep">
-                 <double>0.000001000000000</double>
-                </property>
-                <property name="value">
-                 <double>3.000000000000000</double>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item row="5" column="0">
-             <widget class="QCustomPlot" name="neff_map" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="rad_param_text">
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="frameShape">
-               <enum>QFrame::NoFrame</enum>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Sunken</enum>
-              </property>
-              <property name="lineWidth">
-               <number>2</number>
-              </property>
-              <property name="text">
-               <string>RADIATION PARAMETERS</string>
-              </property>
-              <property name="textFormat">
-               <enum>Qt::PlainText</enum>
-              </property>
-              <property name="textInteractionFlags">
-               <set>Qt::NoTextInteraction</set>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLabel" name="trappingTime_label_2">
-              <property name="font">
-               <font>
-                <pointsize>9</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>          Custom Neff Parametrization</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
-        </item>
         <item row="1" column="1">
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -739,6 +245,691 @@
            </widget>
           </item>
          </layout>
+        </item>
+        <item row="0" column="1">
+         <widget class="QTabWidget" name="potentials_miniTab">
+          <property name="minimumSize">
+           <size>
+            <width>400</width>
+            <height>400</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>400</width>
+            <height>500</height>
+           </size>
+          </property>
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="noIrrad_tab">
+           <attribute name="title">
+            <string>Non Irradiated</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_17">
+            <item row="0" column="0">
+             <widget class="QGroupBox" name="detector_properties_layout">
+              <property name="font">
+               <font>
+                <pointsize>9</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="title">
+               <string>DETECTOR PROPERTIES</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_9">
+               <item row="0" column="0">
+                <layout class="QVBoxLayout" name="verticalLayout_19">
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_12">
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_23">
+                     <item>
+                      <widget class="QLabel" name="pitch_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Pitch (um)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="pitch_double_box">
+                       <property name="maximum">
+                        <double>100000.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>80.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_27">
+                     <item>
+                      <widget class="QLabel" name="implant_type_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Implant Type</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="implant_type_combo_box">
+                       <item>
+                        <property name="text">
+                         <string>n</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>p</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_28">
+                     <item>
+                      <widget class="QLabel" name="bulk_type_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Bulk Type</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QComboBox" name="bulk_type_combo_box">
+                       <item>
+                        <property name="text">
+                         <string>p</string>
+                        </property>
+                       </item>
+                       <item>
+                        <property name="text">
+                         <string>n</string>
+                        </property>
+                       </item>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_31">
+                     <item>
+                      <widget class="QLabel" name="depth_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Depth (um)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="depth_double_box">
+                       <property name="maximum">
+                        <double>10000.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>300.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_30">
+                     <item>
+                      <widget class="QLabel" name="depletion_voltage_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Depletion Voltage (V)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="depletion_voltage_double_box">
+                       <property name="maximum">
+                        <double>9999.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>250.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_29">
+                     <item>
+                      <widget class="QLabel" name="width_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Width (um)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="width_double_box">
+                       <property name="maximum">
+                        <double>100000.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>25.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_22">
+                     <item>
+                      <widget class="QLabel" name="temperature_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Temperature (K)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="Temperature_double_box">
+                       <property name="minimum">
+                        <double>0.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>9999.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>300.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_13">
+                   <item>
+                    <widget class="QLabel" name="rad_param_text">
+                     <property name="font">
+                      <font>
+                       <pointsize>9</pointsize>
+                       <weight>75</weight>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="frameShape">
+                      <enum>QFrame::NoFrame</enum>
+                     </property>
+                     <property name="frameShadow">
+                      <enum>QFrame::Sunken</enum>
+                     </property>
+                     <property name="lineWidth">
+                      <number>2</number>
+                     </property>
+                     <property name="text">
+                      <string>   RADIATION PARAMETERS</string>
+                     </property>
+                     <property name="textFormat">
+                      <enum>Qt::PlainText</enum>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::NoTextInteraction</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QCheckBox" name="fluence_chckbx">
+                     <property name="layoutDirection">
+                      <enum>Qt::LeftToRight</enum>
+                     </property>
+                     <property name="text">
+                      <string>Irradiation</string>
+                     </property>
+                     <property name="checkable">
+                      <bool>true</bool>
+                     </property>
+                     <property name="checked">
+                      <bool>false</bool>
+                     </property>
+                     <property name="tristate">
+                      <bool>false</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_32">
+                     <item>
+                      <widget class="QLabel" name="trappingTime_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Trapping Time (ns)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="trapping_double_box">
+                       <property name="font">
+                        <font>
+                         <pointsize>9</pointsize>
+                         <weight>75</weight>
+                         <bold>true</bold>
+                        </font>
+                       </property>
+                       <property name="decimals">
+                        <number>2</number>
+                       </property>
+                       <property name="minimum">
+                        <double>0.000000000000000</double>
+                       </property>
+                       <property name="maximum">
+                        <double>2000.000000000000000</double>
+                       </property>
+                       <property name="singleStep">
+                        <double>0.000001000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>3.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+              <zorder>depletion_voltage_double_box</zorder>
+              <zorder>Temperature_double_box</zorder>
+              <zorder>width_label</zorder>
+              <zorder>depth_double_box</zorder>
+              <zorder>depletion_voltage_label</zorder>
+              <zorder>width_double_box</zorder>
+              <zorder>depth_label</zorder>
+              <zorder>bulk_type_label</zorder>
+              <zorder>pitch_label</zorder>
+              <zorder>pitch_double_box</zorder>
+              <zorder>bulk_type_combo_box</zorder>
+              <zorder>implant_type_label</zorder>
+              <zorder>implant_type_combo_box</zorder>
+              <zorder>temperature_label</zorder>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="irrad_tab">
+           <attribute name="title">
+            <string>Irradiated</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <widget class="QLabel" name="trappingTime_label_9">
+              <property name="font">
+               <font>
+                <pointsize>11</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Custom Neff Visualization Tool</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QSplitter" name="splitter">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <widget class="QWidget" name="layoutWidget_2">
+               <layout class="QHBoxLayout" name="horizontalLayout_24">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_25">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_15">
+                    <item>
+                     <widget class="QLabel" name="pitch_label_13">
+                      <property name="text">
+                       <string> Neff(z0)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="width_label_19">
+                      <property name="text">
+                       <string> Neff(z1)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="depletion_voltage_label_10">
+                      <property name="layoutDirection">
+                       <enum>Qt::LeftToRight</enum>
+                      </property>
+                      <property name="text">
+                       <string> Neff(z2)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="width_label_20">
+                      <property name="text">
+                       <string> Neff(z3)</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_16">
+                    <item>
+                     <widget class="QDoubleSpinBox" name="y0_double_box">
+                      <property name="decimals">
+                       <number>3</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-10000.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>10000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>-25.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="y1_double_box">
+                      <property name="decimals">
+                       <number>3</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-1000.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>1000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.020000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="y2_double_box">
+                      <property name="decimals">
+                       <number>3</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-100.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>100.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.220000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="y3_double_box">
+                      <property name="decimals">
+                       <number>3</number>
+                      </property>
+                      <property name="minimum">
+                       <double>-100.000000000000000</double>
+                      </property>
+                      <property name="maximum">
+                       <double>100.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>33.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_26">
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_17">
+                    <item>
+                     <widget class="QLabel" name="pitch_label_14">
+                      <property name="text">
+                       <string>z0</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="width_label_21">
+                      <property name="text">
+                       <string>z1</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="depletion_voltage_label_11">
+                      <property name="layoutDirection">
+                       <enum>Qt::LeftToRight</enum>
+                      </property>
+                      <property name="text">
+                       <string>z2</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QLabel" name="width_label_22">
+                      <property name="text">
+                       <string>z3</string>
+                      </property>
+                      <property name="alignment">
+                       <set>Qt::AlignCenter</set>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QVBoxLayout" name="verticalLayout_18">
+                    <item>
+                     <widget class="QDoubleSpinBox" name="z0_double_box">
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <double>0.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>0.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="z1_double_box">
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <double>100000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>120.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="z2_double_box">
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <double>9999.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>220.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QDoubleSpinBox" name="z3_double_box">
+                      <property name="decimals">
+                       <number>1</number>
+                      </property>
+                      <property name="maximum">
+                       <double>100000.000000000000000</double>
+                      </property>
+                      <property name="value">
+                       <double>300.000000000000000</double>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="layoutWidget">
+               <layout class="QGridLayout" name="gridLayout_25">
+                <item row="0" column="0" rowspan="2">
+                 <widget class="QCustomPlot" name="neff_map" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <layout class="QVBoxLayout" name="verticalLayout_14">
+                  <item>
+                   <widget class="QLabel" name="trappingTime_label_10">
+                    <property name="font">
+                     <font>
+                      <pointsize>11</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
+                    </property>
+                    <property name="layoutDirection">
+                     <enum>Qt::LeftToRight</enum>
+                    </property>
+                    <property name="text">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Neff &lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Approach&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="neff_type_combo">
+                    <property name="editable">
+                     <bool>false</bool>
+                    </property>
+                    <property name="currentIndex">
+                     <number>2</number>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Trilinear</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Linear</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Triconstant</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QPushButton" name="plot_neff_button">
+                  <property name="layoutDirection">
+                   <enum>Qt::LeftToRight</enum>
+                  </property>
+                  <property name="text">
+                   <string>Plot 
+ 
+
+ Neff</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1259,6 +1450,9 @@
             <widget class="QDoubleSpinBox" name="l_carrier_sep_box">
              <property name="maximum">
               <double>100.000000000000000</double>
+             </property>
+             <property name="value">
+              <double>10.000000000000000</double>
              </property>
             </widget>
            </item>

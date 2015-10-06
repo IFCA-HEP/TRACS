@@ -12,6 +12,7 @@
 #include "SMSDetector.h"
 #include "Carrier.h"
 #include "CarrierCollection.h"
+#include "Source.h"
 
 #include "utilities.h"
 
@@ -21,6 +22,7 @@
 #include <iterator>
 
 extern TH1D *H1DConvolution( TH1D *htct, Double_t Cend=0. ) ; 
+using namespace dolfin;
 
 namespace Ui {
 class MainWindow
