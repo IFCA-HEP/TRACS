@@ -73,10 +73,11 @@ int main()
 		 implant_type = '\0';
 
 	std::string scanType = "defaultString";
+	std::string neffType = "defaultString";
 	std::vector<double> neff_param(8,0.);
 
 	std::string file_carriers = "etct.carriers";
-	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param);
+	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
 	
 	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];

@@ -4,7 +4,7 @@
 TRACSInterface::TRACSInterface(std::string filename)
 {
 	neff_param = std::vector<double>(8,0);
-	utilities::parse_config_file(filename, carrierFile, depth, width, pitch, nns, temp, trapping, fluence, n_cells_x, n_cells_y, bulk_type, implant_type, C, dt, max_time, vBias, vDepletion, zPos, yPos, neff_param);
+	utilities::parse_config_file(filename, carrierFile, depth, width, pitch, nns, temp, trapping, fluence, n_cells_x, n_cells_y, bulk_type, implant_type, C, dt, max_time, vBias, vDepletion, zPos, yPos, neff_param, neffType);
 
 	// Initialize vectors / n_Steps / detector / set default zPos, yPos, vBias / carrier_collection 
 	if (fluence <= 0) // if no fluence -> no trapping
@@ -23,7 +23,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 
 	parameters["allow_extrapolation"] = true;
 
-	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param);
+	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
 	pDetector = &detector;
 	carrierCollection = new CarrierCollection(pDetector);
 	QString carrierFileName = QString::fromUtf8(carrierFile.c_str());
@@ -191,10 +191,23 @@ void TRACSInterface::set_vBias(double newVBias)
 	pDetector->set_voltages(vBias, vDepletion);
 }
 
-void TRACSInterface::set_fields()
+void TRACSInterface::calculate_fields()
 {
 	// Get detector ready
 	pDetector->solve_d_f_grad();
 	pDetector->solve_d_u();
 }
 
+void TRACSInterface::set_neffType(std::string newParametrization)
+{
+	neffType = newParametrization;
+	pDetector->set_neff_type(neffType);
+
+}
+
+
+void TRACSInterface::set_carrierFile(std::string newCarrFile)
+{
+	QString carrierFileName = QString::fromUtf8(newCarrFile.c_str());
+	carrierCollection->add_carriers_from_file(carrierFileName);
+}

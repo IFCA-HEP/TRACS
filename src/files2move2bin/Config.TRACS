@@ -301,13 +301,26 @@ Fluence = 1.0e14   # Double in neutronEquivalents
 # effective charge carrier concentration, in its typical position. For 
 # simplicity and easier understanding we provide a very schematic picture 
 # of what a Neff could look like and where are the points located.
+#
+# There are 3 different Neff parametrizations in TRACS at the moment, 
+# namely Linear, Triconstant, Trilinear. 
+# The Linear parametrization Neff is a straight line joining the points
+# (z0,y0) and (z3, y3). 
+# The Triconstant assumes 3 zones with the middle one starting at z1 and 
+# ending at z2. In this approach Neff is a constant in a given region 
+# with value y0 (first region), y1(second region) and y2(third region). 
+# The Trilinear approach is the more complex and generic case, it 
+# contains Linear as a particular case. Here we have 3 zones just like
+# in Triconstant, but with Neff follow a linear dependance on Z, different
+# for each zone. An schematic plot of this more complex parametrization is
+# shown below.
 
 	#=====================================================#
-	#                 CUSTOM Neff EXAMPLE                 #
+	#           CUSTOM Neff EXAMPLE (Trilinear)           #
 	#=====================================================#
 	#                                                     #
-	#                                      Y              #    
-	#                                      ^              #  
+	#                                            Y        #    
+	#                                            ^        #  
 	#       (z0,y0)                   AXIS =>    | —>Z    #      
 	#       \                                             #     
 	#        \                                            #       
@@ -321,6 +334,10 @@ Fluence = 1.0e14   # Double in neutronEquivalents
 	#                           \(z3,y3)                  #      
 	#                                                     #
 	#=====================================================#
+	
+# Neff Parametrization
+# Choose a String from Linear / Triconstant / Trilinear . If no String recognised, TRACS defaults to Trilinear.
+NeffParametrization = Linear # Choose wisely
 
 # Y-Axis
 # For Y units are not given as carriers/cm^3 as typically used by in some 
