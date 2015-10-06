@@ -348,6 +348,7 @@ if (index == 0) //trilinear
 
 		y[i] = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
 	}
+	y[vectorSize-1] = y3;
 }
 else if (index == 1) //linear
 {
@@ -357,6 +358,7 @@ else if (index == 1) //linear
 
 		y[i]  = ((y0-y3)/(z0-z3))*(x[i]-z0) + y0;
 	}
+	y[vectorSize-1] = y3;
 }
 else if (index == 2) // triconstant
 {
@@ -377,7 +379,6 @@ else if (index == 2) // triconstant
 	}
 }
 
-y[vectorSize-1] = y3;
 ui->neff_map->addGraph();
 ui->neff_map->graph(0)->setData(x, y);
 // give the axes some labels:
