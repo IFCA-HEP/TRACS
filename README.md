@@ -3,8 +3,7 @@ TRACS: Transient Current Simulator
 
 Simulator of transient currents and charge collection in semiconductor detectors based on Shockley–Ramo theorem
 
-![Screenshot of ](/docs/images/tracs_potentials_screenshot.png?raw=true)
-
+![Screenshot of ](/docs/images/TRACS_CNVT.png?raw=true)
 
 # Requisites
 
@@ -60,6 +59,12 @@ Simulator of transient currents and charge collection in semiconductor detectors
     ./TRACS-GUI # for Grafical User Interface version
 
 # Brief Introduction on How TRACS Works
+
+![Screenshot of ](/docs/images/TRACS_CNVT.png?raw=true)
+![Screenshot of ](/docs/images/TRACS_Fields_DJ.png?raw=true)
+![Screenshot of ](/docs/images/TRACS_Carr_DP.png?raw=true)
+![Screenshot of ](/docs/images/TRACS_Curr_DP.png?raw=true)
+
 
   A summary of how TRACS functions can be found here. As a brief introduction it is meant for young padowams that have never seen TRACS before. More experienced users or anyone with some experience in C++11 or detector simulation might find it more useful to read the code and comments in folder TRACS/src/                                
                                                                        
