@@ -25,6 +25,7 @@ class SMSDetector
     int _nns; // numbre of neighbouring strips
     char _bulk_type; // p or n
     char _implant_type; // n or p
+	std::string _neff_type;
 	std::vector<double> _neff_param; // Neff parametrization
 		double _vdep; // depletion voltage
 
@@ -74,7 +75,7 @@ class SMSDetector
 
   public:
     // default constructor and destructor
-    SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100, double tempK = 253., double trapping = 9e300, double fluence = 0.0, std::vector<double> neff_param = {0});
+    SMSDetector(double pitch, double width, double depth, int nns, char bulk_type, char implant_type, int n_cells_x = 100, int n_cells_y = 100, double tempK = 253., double trapping = 9e300, double fluence = 0.0, std::vector<double> neff_param = {0}, std::string neff_type = "Trilinear");
     ~SMSDetector();
     // set methods
     void set_voltages(double v_bias, double v_depletion);
@@ -91,6 +92,7 @@ class SMSDetector
     void set_trapping_time(double trapping_tau);
     void set_fluence(double fluencia);
 	void set_neff_param(std::vector<double> neff_parameters);
+	void set_neff_type(std::string newApproach);
     // solve potentials
     void solve_w_u();
     void solve_d_u();
