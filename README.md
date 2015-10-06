@@ -93,7 +93,7 @@ A typical user of TRACS-GUI would very likely wish to do some quick simulations 
  The user can decide to plot X, Y components or its modulus as well as to define the point at which the slice is taken. 2D and 3D plots ar also available throught VTK.
 
 ### 3) Fast transient checks
-![Screenshot of ](/docs/images/TRACS_Carr_DP.png?raw=true)
+![Screenshot of ](/docs/images/TRACS_Curr_DP.png?raw=true)
 
   Next logical step is to check that the currents araising from the previously mentioned fields are as one expected. For that we move on to the currents tab.
 
@@ -106,7 +106,7 @@ A typical user of TRACS-GUI would very likely wish to do some quick simulations 
   An common option for simulating the electronics shaping is available for both single pair and line simulations. The input parameter is the capacitance of the Resistor-Capacitor circuit that is simulated using a simple "low pass filter" type of loop. The resistance is assumed to be 50 Ohm as is the case in almost all the real-world cases.
 
 ### 4) Simulating real-world scenarios
-![Screenshot of ](/docs/images/TRACS_Curr_DP.png?raw=true)
+![Screenshot of ](/docs/images/TRACS_Carr_DP.png?raw=true)
 
   If all this tests are not enough, TRACS-GUI also provides a more sofisticated simulation including an arbitrary carrier distribution that can be made to simulate any laser illumination. Together with the source code TRACS provides various sample distributions including red-top-TCT and 3 heights of edge-TCT.
 
