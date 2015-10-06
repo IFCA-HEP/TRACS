@@ -1,6 +1,17 @@
 #include "TRACSInterface.h"
 
 
+/*
+ * Constructor of class TRACSInterface
+ * it takes the configuration file path as the only input and gets the 
+ * rest of the data from said file
+ *
+ * This class provides a modular interface to TRACS simulator via 
+ * different methods that allows the user to leverage all TRACS 
+ * functionalities with their own code and use TRACS as a library for 
+ * silicon detectors simulation.
+ *
+ */
 TRACSInterface::TRACSInterface(std::string filename)
 {
 	neff_param = std::vector<double>(8,0);
@@ -114,7 +125,7 @@ TH1D * TRACSInterface::GetItConv()
 
 /*
  * Performs the simulation for all given carriers and stores the current in a valarray.
- * No variable is returned. To get the current une must choose the apropiate Getter for 
+ * No variable is returned. To get the current one must choose the apropiate Getter for 
  * one's needs
  */
 void TRACSInterface::simulate_ramo_current()
@@ -131,6 +142,11 @@ void TRACSInterface::simulate_ramo_current()
 	i_total = i_elec + i_hole;
 }
 
+/*
+ * Sets the desired Neff parameters in the detector. Fields should be calculated 
+ * again before simulating any current. Note that different neff parametrizations 
+ * use different parameters so not all may be used at once.
+ */
 void TRACSInterface::set_NeffParam(std::vector<double> newParam)
 {
 	if ( newParam.size() == 8)
@@ -145,30 +161,34 @@ void TRACSInterface::set_NeffParam(std::vector<double> newParam)
 	pDetector->set_neff_param(neff_param);
 }
 
+/*
+ * Sets the trapping time in the detector to the input value. 
+ * Remember that the trapping time must be a positive number.
+ * The smaller the trapping time the bigger the signal loss.
+ */
 void TRACSInterface::set_trappingTime(double newTrapTime)
 {
-	if (newTrapTime > 0) 
-	{
-		trapping = newTrapTime;
-	}
-	else
-	{
-		std::cout << "Error setting up new Trapping Time, it must be a positive value" << std::endl;
-	}
-
+	trapping = newTrapTime;
 	pDetector->set_trapping_time(trapping);
-
 }
 
+/*
+ * Sets how much the carriers will be displaced in the Z axis from its original 
+ * position in the file read by TRACS. Note that if the carriers are not inside 
+ * the detector they will not produce current. This is relevant mainly for 
+ * edge-TCT simulations.
+ */
 void TRACSInterface::set_zPos(double newZPos)
 {
-	if (newZPos <= 0 && newZPos >= depth) 
-	{
-		std::cout << "Watch out! You probably set the laser out of the detector" << std::endl;
-	}
 	zPos = newZPos;
 }
 
+/*
+ * Sets how much the carriers will be displaced in the Y axis from its original 
+ * position in the file read by TRACS. Note that if the carriers are not inside 
+ * the detector they will not produce current. This is used to center the red 
+ * pulse in redTCT and to center the focus in TPA and edgeTCT
+ */
 void TRACSInterface::set_yPos(double newYPos)
 {
 	if (std::abs(newYPos) > (2*nns+1)*pitch)
@@ -178,19 +198,22 @@ void TRACSInterface::set_yPos(double newYPos)
 	yPos = newYPos;
 }
 
+/*
+ * Sets bias voltages in the detector, fields should be recalculated again 
+ * before simulating any transients
+ */
 void TRACSInterface::set_vBias(double newVBias)
 {
-	if (newVBias == vBias) 
-	{
-		std::cout << "The new Bias voltage is the same as the previous" << std::endl;
-	}
-	else
-	{
-		vBias = newVBias;
-	}
+	vBias = newVBias;
 	pDetector->set_voltages(vBias, vDepletion);
 }
 
+/*
+ * Calculates the electric field and potential inside the detector. It is 
+ * requied after any modification of the Neff or the bias voltage applied. 
+ * Weighting field and potential need not be calculated again since they 
+ * are independent on those parameters.
+ */
 void TRACSInterface::calculate_fields()
 {
 	// Get detector ready
@@ -198,6 +221,11 @@ void TRACSInterface::calculate_fields()
 	pDetector->solve_d_u();
 }
 
+/*
+ * Change parametrization of the Neff. Possibilities are: Trilinear (default)
+ * Linear, Triconstant. More information on this three parametrizarions can
+ * be found in the documentation (Config.TRACS and README.md)
+ */
 void TRACSInterface::set_neffType(std::string newParametrization)
 {
 	neffType = newParametrization;
@@ -206,6 +234,10 @@ void TRACSInterface::set_neffType(std::string newParametrization)
 }
 
 
+/*
+ * Allows the user to select a new carrier distribution from a file that
+ * complies with the TRACS format. 
+ */
 void TRACSInterface::set_carrierFile(std::string newCarrFile)
 {
 	QString carrierFileName = QString::fromUtf8(newCarrFile.c_str());
