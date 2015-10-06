@@ -54,7 +54,7 @@
 			double bridge_2 = tanh(1000*(x[1]-z1)) - tanh(1000*(x[1]-z2));
 			double bridge_3 = tanh(1000*(x[1]-z2)) - tanh(1000*(x[1]-z3));
 
-			double neff = 0.5*(neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3);
+			double neff = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
 			values[0] = neff*0.00152132;
 		}
 		else if (NeffApproach == "Linear") 
@@ -91,7 +91,7 @@
 			double bridge_2 = tanh(1000*(x[1]-z1)) - tanh(1000*(x[1]-z2));
 			double bridge_3 = tanh(1000*(x[1]-z2)) - tanh(1000*(x[1]-z3));
 
-			double neff = 0.5*(neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3);
+			double neff = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
 			values[0] = neff*0.00152132;
 		}
 		// Fix units from the PdC version

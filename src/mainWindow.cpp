@@ -349,6 +349,7 @@ if (index == 0) //trilinear
 		y[i] = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
 	}
 	y[vectorSize-1] = y3;
+	ui->neff_map->yAxis->setRange(y0, y3);
 }
 else if (index == 1) //linear
 {
@@ -359,6 +360,7 @@ else if (index == 1) //linear
 		y[i]  = ((y0-y3)/(z0-z3))*(x[i]-z0) + y0;
 	}
 	y[vectorSize-1] = y3;
+	ui->neff_map->yAxis->setRange(y0, y3);
 }
 else if (index == 2) // triconstant
 {
@@ -375,7 +377,8 @@ else if (index == 2) // triconstant
 		bridge_2 = tanh(1000*(x[i]-z1)) - tanh(1000*(x[i]-z2));
 		bridge_3 = tanh(1000*(x[i]-z2)) - tanh(1000*(x[i]-z3));
 
-		y[i] = 0.5*(neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3);
+		y[i] = 0.5*((neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3));
+		ui->neff_map->yAxis->setRange(y0, y2);
 	}
 }
 
@@ -386,7 +389,6 @@ ui->neff_map->graph(0)->setData(x, y);
  ui->neff_map->yAxis->setLabel("Neff(z)");
  // set axes ranges, so we see all data:
  ui->neff_map->xAxis->setRange(z0, z3);
- ui->neff_map->yAxis->setRange(y0, y3);
  ui->neff_map->replot();
  ui->neff_map->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
 }
