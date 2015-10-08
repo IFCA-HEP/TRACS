@@ -261,7 +261,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="noIrrad_tab">
            <attribute name="title">
@@ -306,6 +306,58 @@
                        </property>
                        <property name="value">
                         <double>80.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_29">
+                     <item>
+                      <widget class="QLabel" name="width_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Width (um)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="width_double_box">
+                       <property name="maximum">
+                        <double>100000.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>25.000000000000000</double>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="horizontalLayout_31">
+                     <item>
+                      <widget class="QLabel" name="depth_label">
+                       <property name="font">
+                        <font>
+                         <pointsize>10</pointsize>
+                        </font>
+                       </property>
+                       <property name="text">
+                        <string>Depth (um)</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QDoubleSpinBox" name="depth_double_box">
+                       <property name="maximum">
+                        <double>10000.000000000000000</double>
+                       </property>
+                       <property name="value">
+                        <double>300.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -372,32 +424,6 @@
                     </layout>
                    </item>
                    <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_31">
-                     <item>
-                      <widget class="QLabel" name="depth_label">
-                       <property name="font">
-                        <font>
-                         <pointsize>10</pointsize>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>Depth (um)</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QDoubleSpinBox" name="depth_double_box">
-                       <property name="maximum">
-                        <double>10000.000000000000000</double>
-                       </property>
-                       <property name="value">
-                        <double>300.000000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
                     <layout class="QHBoxLayout" name="horizontalLayout_30">
                      <item>
                       <widget class="QLabel" name="depletion_voltage_label">
@@ -418,32 +444,6 @@
                        </property>
                        <property name="value">
                         <double>250.000000000000000</double>
-                       </property>
-                      </widget>
-                     </item>
-                    </layout>
-                   </item>
-                   <item>
-                    <layout class="QHBoxLayout" name="horizontalLayout_29">
-                     <item>
-                      <widget class="QLabel" name="width_label">
-                       <property name="font">
-                        <font>
-                         <pointsize>10</pointsize>
-                        </font>
-                       </property>
-                       <property name="text">
-                        <string>Width (um)</string>
-                       </property>
-                      </widget>
-                     </item>
-                     <item>
-                      <widget class="QDoubleSpinBox" name="width_double_box">
-                       <property name="maximum">
-                        <double>100000.000000000000000</double>
-                       </property>
-                       <property name="value">
-                        <double>25.000000000000000</double>
                        </property>
                       </widget>
                      </item>
@@ -577,20 +577,6 @@
                 </layout>
                </item>
               </layout>
-              <zorder>depletion_voltage_double_box</zorder>
-              <zorder>Temperature_double_box</zorder>
-              <zorder>width_label</zorder>
-              <zorder>depth_double_box</zorder>
-              <zorder>depletion_voltage_label</zorder>
-              <zorder>width_double_box</zorder>
-              <zorder>depth_label</zorder>
-              <zorder>bulk_type_label</zorder>
-              <zorder>pitch_label</zorder>
-              <zorder>pitch_double_box</zorder>
-              <zorder>bulk_type_combo_box</zorder>
-              <zorder>implant_type_label</zorder>
-              <zorder>implant_type_combo_box</zorder>
-              <zorder>temperature_label</zorder>
              </widget>
             </item>
            </layout>
@@ -889,7 +875,7 @@
                      <bool>false</bool>
                     </property>
                     <property name="currentIndex">
-                     <number>2</number>
+                     <number>0</number>
                     </property>
                     <item>
                      <property name="text">
