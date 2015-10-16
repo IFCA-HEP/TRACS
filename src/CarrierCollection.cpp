@@ -14,6 +14,15 @@ CarrierCollection::CarrierCollection(SMSDetector * detector) :
 
 }
 
+/*
+ * Parallel overload of the method that reads an arbitrary carrier distribution from a file
+ * This bit of the code is not parallel and parallelizing it would not yield significant performance
+ * improvements as it's only run once per simulation.
+ *
+ * The parallelization difference with the standard method is done by storing the carriers in an N-dimensional
+ * array of Carriers for N threads simulaiton. This way each thread to have their own carrier list and 
+ * completetly avoid race conditions.
+ */
 void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) // should get N_thr=1 as input
 {
 
@@ -68,7 +77,12 @@ void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) /
 	}
 }
 
-// to thread or not to thread, that is the question (better thread-it)
+/*
+ * Parallelizable method for simulating the drift of a given carrier collection
+ *
+ * thrId is the number (thread ID) of the thread in which this method is run. Requires that the carrier 
+ * files has been read using the overload parallelization-read add_carriers_from_file method.
+ */
 void CarrierCollection::simulate_drift( double dt, double max_time, std::valarray<double> &curr_elec, std::valarray<double> &curr_hole, int thrId)
 {
 	// range for through the carriers
@@ -95,7 +109,15 @@ void CarrierCollection::simulate_drift( double dt, double max_time, std::valarra
 	}
 }
 
-// input should also include thrId to simulate and store only 1-D vectors for each thread
+/*
+ * Parallelizable method for simulating the drift of a given carrier collection
+ *
+ * thrId is the number (thread ID) of the thread in which this method is run. Requires that the carrier 
+ * files has been read using the overload parallelization-read add_carriers_from_file method.
+ *
+ * This method allows the user to move the carriers in the X-axis an amount shift_x and in the Y-axis by an amount shift_y
+ * Performance improves greatly over reading a new carriers file with said displacements.
+ */
 void CarrierCollection::simulate_drift( double dt, double max_time, double shift_x, double shift_y, std::valarray<double> &curr_elec, std::valarray<double> &curr_hole, int thrId)
 {
 	// range for through the carriers
