@@ -47,8 +47,10 @@ void utilities::write_results_to_file(QString filename, QVector<QVector<double>>
   // open file
   QFile file(filename);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  {
 	  std::cout<<"File could not be open for writing"<<std::endl; 
-      return;
+	  return;
+  }
 
   QTextStream out(&file);
   QString s_time = "#time";

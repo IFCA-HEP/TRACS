@@ -155,7 +155,7 @@
              <item row="0" column="2">
               <widget class="QDoubleSpinBox" name="bias_voltage_double_box">
                <property name="maximum">
-                <double>1000.000000000000000</double>
+                <double>999999999.000000000000000</double>
                </property>
                <property name="value">
                 <double>260.000000000000000</double>
@@ -261,7 +261,7 @@
            </size>
           </property>
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="noIrrad_tab">
            <attribute name="title">
@@ -440,7 +440,7 @@
                      <item>
                       <widget class="QDoubleSpinBox" name="depletion_voltage_double_box">
                        <property name="maximum">
-                        <double>9999.000000000000000</double>
+                        <double>999999999.000000000000000</double>
                        </property>
                        <property name="value">
                         <double>250.000000000000000</double>
@@ -560,7 +560,7 @@
                         <double>0.000000000000000</double>
                        </property>
                        <property name="maximum">
-                        <double>2000.000000000000000</double>
+                        <double>999999999.000000000000000</double>
                        </property>
                        <property name="singleStep">
                         <double>0.000001000000000</double>
@@ -1834,7 +1834,7 @@
      <x>0</x>
      <y>0</y>
      <width>1246</width>
-     <height>27</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
