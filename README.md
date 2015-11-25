@@ -8,11 +8,12 @@ Simulator of transient currents and charge collection in semiconductor detectors
 # Requisites
 
   - [C++11 compatible compiler](http://en.cppreference.com/w/cpp/compiler_support) (**Important!**) ||
-    Tested only with g++-4.8
+    Tested only with g++-4.8 and Clang 6.x
 
   - [CMake](http://www.cmake.org/download/)
   
-  - [Fenics Libraries](http://fenicsproject.org/download/)
+  - [Fenics Libraries](http://fenicsproject.org/download/) ||
+    Compatibility appears to be borken for 1.6.x and up
   
   - [Qt4](http://download.qt.io/archive/qt/) ||
     Qt5 is not compatible 
