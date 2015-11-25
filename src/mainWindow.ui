@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -1651,10 +1651,16 @@
        <attribute name="title">
         <string>Carriers</string>
        </attribute>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <layout class="QVBoxLayout" name="carrier_tab_plots">
-          <item>
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QSplitter" name="splitter_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QSplitter" name="splitter_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
            <widget class="QCustomPlot" name="gen_carrier_map_qcp" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1663,8 +1669,6 @@
              </sizepolicy>
             </property>
            </widget>
-          </item>
-          <item>
            <widget class="QCustomPlot" name="gen_carrier_curr_qcp" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -1679,148 +1683,186 @@
              </size>
             </property>
            </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QGroupBox" name="groupBox">
-            <property name="title">
-             <string>IMPORT CARRIERS FROM FILE</string>
-            </property>
-            <layout class="QVBoxLayout" name="verticalLayout_4">
-             <item>
-              <layout class="QHBoxLayout" name="filename_layout">
+          </widget>
+          <widget class="QWidget" name="layoutWidget">
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="title">
+               <string>IMPORT CARRIERS FROM FILE</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
                <item>
-                <widget class="QLineEdit" name="filename_display"/>
+                <layout class="QHBoxLayout" name="filename_layout">
+                 <item>
+                  <widget class="QLineEdit" name="filename_display"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="open_carriers_file">
+                   <property name="text">
+                    <string>Open File</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
                </item>
                <item>
-                <widget class="QPushButton" name="open_carriers_file">
+                <layout class="QGridLayout" name="gridLayout_6">
+                 <item row="0" column="2">
+                  <widget class="QLabel" name="s_carrier_time_step_label_5">
+                   <property name="text">
+                    <string>Carriers Shift in Y</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="0">
+                  <widget class="QLabel" name="s_carrier_time_step_label_4">
+                   <property name="text">
+                    <string>Carriers Shift in X</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="1">
+                  <widget class="QDoubleSpinBox" name="carrier_shift_x_box">
+                   <property name="maximum">
+                    <double>10000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="carrier_shift_y_box">
+                   <property name="maximum">
+                    <double>10000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_10">
+                 <item>
+                  <widget class="QLabel" name="label_17">
+                   <property name="text">
+                    <string># Carriers</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="load_carriers_button">
+                   <property name="text">
+                    <string>Load File</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="s_carrier_time_step_label_3">
+                   <property name="text">
+                    <string>Time Step (ps)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="a_carrier_time_step_box">
+                   <property name="maximum">
+                    <double>10000.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="s_carrier_max_time_label_3">
+                   <property name="text">
+                    <string>Max TIme (ns)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="a_carrier_max_time_box">
+                   <property name="value">
+                    <double>10.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <item>
+                  <widget class="QCheckBox" name="carr_rc_checkbox">
+                   <property name="text">
+                    <string>Electronics shaping</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLabel" name="label_18">
+                   <property name="text">
+                    <string>||  Capacitance (pF)</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QDoubleSpinBox" name="carr_capac_dbox">
+                   <property name="maximum">
+                    <double>200.990000000000009</double>
+                   </property>
+                   <property name="singleStep">
+                    <double>0.100000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>5.000000000000000</double>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_7">
+                 <item>
+                  <widget class="QLabel" name="s_carrier_n_steps_label_3">
+                   <property name="text">
+                    <string># Steps</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="a_carrier_drift_button">
+                   <property name="text">
+                    <string>Generate and Drift</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <widget class="QPushButton" name="save_results_carriers">
                  <property name="text">
-                  <string>Open File</string>
+                  <string>Save to File</string>
                  </property>
                 </widget>
                </item>
               </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_10">
-               <item>
-                <widget class="QLabel" name="label_17">
-                 <property name="text">
-                  <string># Carriers</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="load_carriers_button">
-                 <property name="text">
-                  <string>Load File</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_3">
-               <item>
-                <widget class="QLabel" name="s_carrier_time_step_label_3">
-                 <property name="text">
-                  <string>Time Step (ps)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="a_carrier_time_step_box">
-                 <property name="maximum">
-                  <double>10000.000000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>10.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_4">
-               <item>
-                <widget class="QLabel" name="s_carrier_max_time_label_3">
-                 <property name="text">
-                  <string>Max TIme (ns)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="a_carrier_max_time_box">
-                 <property name="value">
-                  <double>10.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_2">
-               <item>
-                <widget class="QCheckBox" name="carr_rc_checkbox">
-                 <property name="text">
-                  <string>Electronics shaping</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QLabel" name="label_18">
-                 <property name="text">
-                  <string>||  Capacitance (pF)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QDoubleSpinBox" name="carr_capac_dbox">
-                 <property name="maximum">
-                  <double>200.990000000000009</double>
-                 </property>
-                 <property name="singleStep">
-                  <double>0.100000000000000</double>
-                 </property>
-                 <property name="value">
-                  <double>5.000000000000000</double>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_7">
-               <item>
-                <widget class="QLabel" name="s_carrier_n_steps_label_3">
-                 <property name="text">
-                  <string># Steps</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="a_carrier_drift_button">
-                 <property name="text">
-                  <string>Generate and Drift</string>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-             <item>
-              <widget class="QPushButton" name="save_results_carriers">
-               <property name="text">
-                <string>Save to File</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-         </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>
