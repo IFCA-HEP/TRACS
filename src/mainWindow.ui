@@ -33,10 +33,34 @@
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0">
          <widget class="QSplitter" name="splitter_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>90</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
+           <size>
+            <width>45</width>
+            <height>0</height>
+           </size>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QSplitter" name="splitter_6">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -57,9 +81,9 @@
             </property>
            </widget>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <layout class="QVBoxLayout" name="verticalLayout_9">
-            <item>
+            <item alignment="Qt::AlignRight">
              <widget class="QTabWidget" name="potentials_miniTab">
               <property name="minimumSize">
                <size>
@@ -658,12 +682,12 @@
                    <widget class="QCustomPlot" name="neff_map" native="true">
                     <property name="sizePolicy">
                      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                      <horstretch>0</horstretch>
+                      <horstretch>1</horstretch>
                       <verstretch>0</verstretch>
                      </sizepolicy>
                     </property>
                    </widget>
-                   <widget class="QWidget" name="">
+                   <widget class="QWidget" name="layoutWidget">
                     <layout class="QVBoxLayout" name="verticalLayout_20">
                      <item>
                       <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -735,7 +759,7 @@
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
-              <item>
+              <item alignment="Qt::AlignRight">
                <widget class="QGroupBox" name="other_conf_layout">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -949,12 +973,12 @@
              <widget class="QCustomPlot" name="weighting_field_map_qcp" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>0</horstretch>
+                <horstretch>2</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
              </widget>
-             <widget class="QWidget" name="">
+             <widget class="QWidget" name="layoutWidget">
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_12">
@@ -1145,7 +1169,14 @@
                </item>
               </layout>
              </widget>
-             <widget class="QCustomPlot" name="weighting_field_cut_qcp" native="true"/>
+             <widget class="QCustomPlot" name="weighting_field_cut_qcp" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>2</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
             </widget>
            </item>
           </layout>
@@ -1159,11 +1190,24 @@
           <layout class="QGridLayout" name="gridLayout_10">
            <item row="0" column="0">
             <widget class="QSplitter" name="splitter_9">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>52</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
-             <widget class="QCustomPlot" name="electric_field_map_qcp" native="true"/>
-             <widget class="QWidget" name="">
+             <widget class="QCustomPlot" name="electric_field_map_qcp" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>2</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+             <widget class="QWidget" name="layoutWidget">
               <layout class="QVBoxLayout" name="verticalLayout_11">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_11">
@@ -1336,7 +1380,14 @@
                </item>
               </layout>
              </widget>
-             <widget class="QCustomPlot" name="electric_field_cut_qcp" native="true"/>
+             <widget class="QCustomPlot" name="electric_field_cut_qcp" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>2</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
             </widget>
            </item>
           </layout>
@@ -1367,6 +1418,12 @@
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QSplitter" name="splitter_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -1393,7 +1450,7 @@
             </property>
            </widget>
           </widget>
-          <widget class="QWidget" name="">
+          <widget class="QWidget" name="layoutWidget">
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
              <widget class="QGroupBox" name="s_carrier_group_box">
@@ -1602,7 +1659,7 @@
               <property name="title">
                <string>CONSTANT CARRIER DISTRIBUTION THROUGH A LINE</string>
               </property>
-              <widget class="QWidget" name="">
+              <widget class="QWidget" name="layoutWidget">
                <property name="geometry">
                 <rect>
                  <x>17</x>
@@ -1729,6 +1786,12 @@
            <enum>Qt::Horizontal</enum>
           </property>
           <widget class="QSplitter" name="splitter_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
@@ -1795,8 +1858,11 @@
                  </item>
                  <item row="0" column="1">
                   <widget class="QDoubleSpinBox" name="carrier_shift_x_box">
+                   <property name="minimum">
+                    <double>-999999.000000000000000</double>
+                   </property>
                    <property name="maximum">
-                    <double>10000.000000000000000</double>
+                    <double>999999.000000000000000</double>
                    </property>
                    <property name="value">
                     <double>0.000000000000000</double>
@@ -1805,8 +1871,11 @@
                  </item>
                  <item row="0" column="3">
                   <widget class="QDoubleSpinBox" name="carrier_shift_y_box">
+                   <property name="minimum">
+                    <double>-999999.000000000000000</double>
+                   </property>
                    <property name="maximum">
-                    <double>10000.000000000000000</double>
+                    <double>999999.000000000000000</double>
                    </property>
                    <property name="value">
                     <double>0.000000000000000</double>
