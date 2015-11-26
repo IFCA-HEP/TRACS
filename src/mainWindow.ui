@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -33,24 +33,6 @@
        <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0">
          <widget class="QSplitter" name="splitter_7">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>90</width>
-            <height>0</height>
-           </size>
-          </property>
-          <property name="baseSize">
-           <size>
-            <width>45</width>
-            <height>0</height>
-           </size>
-          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
@@ -64,7 +46,7 @@
            <property name="orientation">
             <enum>Qt::Vertical</enum>
            </property>
-           <widget class="QCustomPlot" name="electric_pot_qcp" native="true">
+           <widget class="QCustomPlot" name="weighting_pot_qcp" native="true">
             <property name="minimumSize">
              <size>
               <width>500</width>
@@ -72,7 +54,7 @@
              </size>
             </property>
            </widget>
-           <widget class="QCustomPlot" name="weighting_pot_qcp" native="true">
+           <widget class="QCustomPlot" name="electric_pot_qcp" native="true">
             <property name="minimumSize">
              <size>
               <width>500</width>
@@ -83,7 +65,7 @@
           </widget>
           <widget class="QWidget" name="layoutWidget">
            <layout class="QVBoxLayout" name="verticalLayout_9">
-            <item alignment="Qt::AlignRight">
+            <item>
              <widget class="QTabWidget" name="potentials_miniTab">
               <property name="minimumSize">
                <size>
@@ -687,7 +669,7 @@
                      </sizepolicy>
                     </property>
                    </widget>
-                   <widget class="QWidget" name="layoutWidget">
+                   <widget class="QWidget" name="layoutWidget2">
                     <layout class="QVBoxLayout" name="verticalLayout_20">
                      <item>
                       <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -759,7 +741,7 @@
             </item>
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_3">
-              <item alignment="Qt::AlignRight">
+              <item alignment="Qt::AlignHCenter">
                <widget class="QGroupBox" name="other_conf_layout">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -950,6 +932,8 @@
          </widget>
         </item>
        </layout>
+       <zorder>splitter_7</zorder>
+       <zorder>potentials_miniTab</zorder>
       </widget>
       <widget class="QWidget" name="fields_tab">
        <property name="enabled">
@@ -973,12 +957,12 @@
              <widget class="QCustomPlot" name="weighting_field_map_qcp" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>2</horstretch>
+                <horstretch>5</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
              </widget>
-             <widget class="QWidget" name="layoutWidget">
+             <widget class="QWidget" name="layoutWidget3">
               <layout class="QVBoxLayout" name="verticalLayout_10">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_12">
@@ -1172,7 +1156,7 @@
              <widget class="QCustomPlot" name="weighting_field_cut_qcp" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>2</horstretch>
+                <horstretch>10</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
@@ -1202,12 +1186,12 @@
              <widget class="QCustomPlot" name="electric_field_map_qcp" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>2</horstretch>
+                <horstretch>5</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
              </widget>
-             <widget class="QWidget" name="layoutWidget">
+             <widget class="QWidget" name="layoutWidget4">
               <layout class="QVBoxLayout" name="verticalLayout_11">
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout_11">
@@ -1383,7 +1367,7 @@
              <widget class="QCustomPlot" name="electric_field_cut_qcp" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>2</horstretch>
+                <horstretch>10</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
@@ -1450,7 +1434,7 @@
             </property>
            </widget>
           </widget>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget5">
            <layout class="QVBoxLayout" name="verticalLayout_8">
             <item>
              <widget class="QGroupBox" name="s_carrier_group_box">
@@ -1464,6 +1448,9 @@
                <string>SINGLE CARRIER</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_6">
+               <property name="bottomMargin">
+                <number>40</number>
+               </property>
                <item>
                 <layout class="QHBoxLayout" name="horizontalLayout">
                  <item>
@@ -1659,13 +1646,16 @@
               <property name="title">
                <string>CONSTANT CARRIER DISTRIBUTION THROUGH A LINE</string>
               </property>
-              <widget class="QWidget" name="layoutWidget">
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <widget class="QWidget" name="layoutWidget6">
                <property name="geometry">
                 <rect>
-                 <x>17</x>
-                 <y>25</y>
+                 <x>10</x>
+                 <y>30</y>
                  <width>361</width>
-                 <height>166</height>
+                 <height>310</height>
                 </rect>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -1818,7 +1808,7 @@
             </property>
            </widget>
           </widget>
-          <widget class="QWidget" name="layoutWidget">
+          <widget class="QWidget" name="layoutWidget7">
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
              <widget class="QGroupBox" name="groupBox">
@@ -1842,43 +1832,49 @@
                </item>
                <item>
                 <layout class="QGridLayout" name="gridLayout_6">
-                 <item row="0" column="2">
-                  <widget class="QLabel" name="s_carrier_time_step_label_5">
-                   <property name="text">
-                    <string>Carriers Shift in Y</string>
+                 <item row="0" column="3">
+                  <widget class="QDoubleSpinBox" name="carrier_shift_y_box">
+                   <property name="decimals">
+                    <number>0</number>
+                   </property>
+                   <property name="minimum">
+                    <double>-9999.000000000000000</double>
+                   </property>
+                   <property name="maximum">
+                    <double>9999.000000000000000</double>
+                   </property>
+                   <property name="value">
+                    <double>0.000000000000000</double>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="s_carrier_time_step_label_4">
+                 <item row="0" column="2" alignment="Qt::AlignHCenter">
+                  <widget class="QLabel" name="s_carrier_time_step_label_5">
                    <property name="text">
-                    <string>Carriers Shift in X</string>
+                    <string>Shift in Y</string>
                    </property>
                   </widget>
                  </item>
                  <item row="0" column="1">
                   <widget class="QDoubleSpinBox" name="carrier_shift_x_box">
+                   <property name="decimals">
+                    <number>0</number>
+                   </property>
                    <property name="minimum">
-                    <double>-999999.000000000000000</double>
+                    <double>-9999.000000000000000</double>
                    </property>
                    <property name="maximum">
-                    <double>999999.000000000000000</double>
+                    <double>9999.000000000000000</double>
                    </property>
                    <property name="value">
                     <double>0.000000000000000</double>
                    </property>
                   </widget>
                  </item>
-                 <item row="0" column="3">
-                  <widget class="QDoubleSpinBox" name="carrier_shift_y_box">
-                   <property name="minimum">
-                    <double>-999999.000000000000000</double>
-                   </property>
-                   <property name="maximum">
-                    <double>999999.000000000000000</double>
-                   </property>
-                   <property name="value">
-                    <double>0.000000000000000</double>
+                 <item row="0" column="0" alignment="Qt::AlignHCenter">
+                  <widget class="QLabel" name="s_carrier_time_step_label_4">
+                   <property name="text">
+                    <string>Shift in X</string>
                    </property>
                   </widget>
                  </item>
@@ -1942,18 +1938,41 @@
                 </layout>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                <layout class="QHBoxLayout" name="horizontalLayout_18">
                  <item>
-                  <widget class="QCheckBox" name="carr_rc_checkbox">
+                  <widget class="QLabel" name="s_carrier_max_time_label_4">
+                   <property name="font">
+                    <font>
+                     <family>Ubuntu Condensed</family>
+                     <italic>true</italic>
+                    </font>
+                   </property>
                    <property name="text">
-                    <string>Electronics shaping</string>
+                    <string>Electronics Shaping</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="label_18">
+                  <widget class="QCheckBox" name="carr_rc_checkbox">
                    <property name="text">
-                    <string>||  Capacitance (pF)</string>
+                    <string/>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item>
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <item>
+                  <widget class="QLabel" name="label_18">
+                   <property name="font">
+                    <font>
+                     <family>Ubuntu Condensed</family>
+                     <italic>true</italic>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>Capacitance (pF)</string>
                    </property>
                   </widget>
                  </item>
