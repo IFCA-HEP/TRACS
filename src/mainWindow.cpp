@@ -1137,6 +1137,11 @@ void MainWindow::drift_carrier_collection()
   double RC = 50.*C; // 50 ohms*C
   double alfa = dt/(RC+dt);
   double max_time = 1.e-9 * ui->a_carrier_max_time_box->value();
+  double shift_x = 0.0;
+  double shift_y = 0.0;
+  shift_x = ui->carrier_shift_x_box->value();
+  shift_y = ui->carrier_shift_y_box->value();
+
   // get number of steps from time
   int max_steps = (int) std::floor(max_time / dt);
 
@@ -1145,7 +1150,7 @@ void MainWindow::drift_carrier_collection()
   std::valarray<double> curr_hole((size_t) max_steps);
   std::valarray<double> curr_total((size_t) max_steps);
 
-  carrier_collection->simulate_drift( dt, max_time, curr_elec, curr_hole);
+  carrier_collection->simulate_drift( dt, max_time, shift_x, shift_y, curr_elec, curr_hole);
 
   curr_total = curr_elec + curr_hole;
 
@@ -1215,8 +1220,14 @@ void MainWindow::show_gen_carrier_map_qcp()
   // get color map
   QCPColorMap * color_map = qobject_cast<QCPColorMap *>(ui->gen_carrier_map_qcp->plottable(0));
 
+
+  double shift_x = 0.0;
+  double shift_y = 0.0;
+  shift_x = ui->carrier_shift_x_box->value();
+  shift_y = ui->carrier_shift_y_box->value();
+
   // fill root hist from distribution
-  TH2D hist =  carrier_collection->get_e_dist_histogram(n_bins_x,n_bins_y);
+  TH2D hist =  carrier_collection->get_e_dist_histogram(n_bins_x,n_bins_y, shift_x, shift_y);
   utilities::paint_TH2D_qcp(hist, color_map);
 
   // reescale and replot

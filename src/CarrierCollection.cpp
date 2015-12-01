@@ -285,6 +285,30 @@ TH2D CarrierCollection::get_e_dist_histogram(int n_bins_x, int n_bins_y,  TStrin
 	return e_dist;
 }
 
+TH2D CarrierCollection::get_e_dist_histogram(int n_bins_x, int n_bins_y, double shift_x, double shift_y, TString hist_name, TString hist_title)
+{
+	// get detector limits
+	double x_min = _detector->get_x_min();
+	double x_max = _detector->get_x_max();
+	double y_min = _detector->get_y_min();
+	double y_max = _detector->get_y_max();
+
+	// create histogram object
+	TH2D e_dist = TH2D(hist_name, hist_title, n_bins_x , x_min, x_max, n_bins_y, y_min, y_max);
+
+	// range for through the carriers and fill the histogram
+	for (auto carrier : _carrier_list_sngl)
+	{
+		char carrier_type = carrier.get_carrier_type();
+		if (carrier_type == 'e')
+		{
+			std::array< double,2> x = carrier.get_x();
+			double q = carrier.get_q();
+			e_dist.Fill(x[0]+shift_x, x[1]+shift_y, q);
+		}
+	}
+	return e_dist;
+}
 
 /*
  ********************** DESTRUCTOR OF THE CLASS CARRIER	COLLECTION **************************
