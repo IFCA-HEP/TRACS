@@ -113,10 +113,10 @@ CellsY = 150   # Integer
 # n-doped (donnor impurities).
 
 # Bulk type. Main detector volumen where carriers drift
-Bulk = 'p'   # Character
+Bulk = p   # Character
 
 # Implant  type. Highest doped volumen.
-Implant = 'n'   # Character
+Implant = n   # Character
 
 #----------------------- ILLUMINATION PROPERTIES -------------------------#
 #

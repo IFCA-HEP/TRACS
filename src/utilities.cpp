@@ -317,6 +317,7 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 	tempString = std::string("Pitch");
 	converter << valuesMap[tempString];
 	converter >> pitch;
+	converter.clear();
 	converter.str("");
 	tempString = std::string("");
 
