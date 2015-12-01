@@ -259,7 +259,7 @@
                          <item>
                           <widget class="QDoubleSpinBox" name="depletion_voltage_double_box">
                            <property name="maximum">
-                            <double>999999999.000000000000000</double>
+                            <double>99999999999999.0000000000</double>
                            </property>
                            <property name="value">
                             <double>250.000000000000000</double>
