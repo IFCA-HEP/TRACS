@@ -28,7 +28,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
     git clone https://github.com/IFCA-HEP/TRACS
     
-2)[OPTIONAL] Recompile fenics files
+2)[OPTIONAL-Recommended] Recompile fenics files
 
     cd TRACS/src
     ffc -l dolfin Poisson.ufl
@@ -45,7 +45,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
     cmake ..
     
-5) Compile in a machin with [N] cores
+5) Compile in a machine with [N] cores
 
     make -j[N]
     
