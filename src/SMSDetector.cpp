@@ -13,7 +13,7 @@ SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char
     _nns(nns), // Number of neighbouring strips
     _bulk_type(bulk_type), //Dopant type of the silicon (p/n)
     _implant_type(implant_type), //Dopant type of the implant, normally opposite of the bulk (n/p)
-	_neff_type(neff_type), // Select aproach to parametrize Neff (irradiation only)
+		_neff_type(neff_type), // Select aproach to parametrize Neff (irradiation only)
     _neff_param(neff_param), // Parametrized description of the Space Charge distribution
     _x_min(0.0), // Starting horizontal position for carrier generation (hereafter CG)
     _x_max(_pitch * (2*_nns+1)), // Endingvertical positio for CG
@@ -23,7 +23,11 @@ SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char
     // Mesh properties
     _n_cells_x(n_cells_x),
     _n_cells_y(n_cells_y),
+#if DOLFIN_VERSION_MINOR>=6
+    _mesh(Point(_x_min,_y_min),Point(_x_max,_y_max), _n_cells_x, _n_cells_y),
+#else
     _mesh(_x_min,_y_min,_x_max,_y_max, _n_cells_x, _n_cells_y),
+#endif
     _periodic_boundary(_x_min, _x_max, _depth),
 
     // More detector properties/parts
