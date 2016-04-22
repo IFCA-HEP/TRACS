@@ -46,16 +46,14 @@ class TRACSInterface
 		std::valarray<double> i_hole;
 
 		std::string carrierFile;
+		std::string neffType;
 
 		TH1D *i_ramo; 
 		TH1D *i_rc; 
 		TH1D *i_conv;
 
-		// Create carrier and observe movement
+		// Pointer to detector and carrier collection
 		SMSDetector * pDetector;
-
-		// get number of steps from time
-		QString filename;
 		CarrierCollection * carrierCollection;
 
 	public:
@@ -65,16 +63,25 @@ class TRACSInterface
 
 		// Destructor
 		~TRACSInterface();
+
+		// Getters
 		TH1D *GetItRamo();
 		TH1D *GetItRc();
 		TH1D *GetItConv();
+
+		// Simulations
 		void simulate_ramo_current();
+		void calculate_fields();
+
+		// Setters
 		void set_NeffParam(std::vector<double> newParam);
 		void set_trappingTime(double newTrapTime);
 		void set_zPos(double newZPos);
 		void set_yPos(double newYPos);
 		void set_vBias(double newVBias);
-		void set_fields();
+		void set_neffType(std::string newParametrization);
+		void set_carrierFile(std::string newCarrFile);
+
 		
 };
 

@@ -242,55 +242,6 @@ void MainWindow::show_carrier_map_qcp()
   ui->carrier_map_qcp->rescaleAxes();
   ui->carrier_map_qcp->replot();
 }
-//
-//void MainWindow::plot_custom_neff_FS()
-//{
-//  // get data from ui
-//  double y0 = ui->y0_double_box_FS->value();
-//  double y1 = ui->y1_double_box_FS->value();
-//  double y2 = ui->y2_double_box_FS->value();
-//  double y3 = ui->y3_double_box_FS->value();
-//  double z0 = 0.0;
-//  double z1 = ui->z1_double_box_FS->value();
-//  double z2 = ui->z2_double_box_FS->value();
-//  double z3 = detector->get_depth();
-//
-//  unsigned int vectorSize = 500;
-//QVector<double> x(vectorSize), y(vectorSize);
-//double deltaX = (detector->get_depth())/(vectorSize-1);
-//x[0] = 0.0; 
-//y[0] = y0;
-//
-////Intermediate variable (who cares about performance when using the GUI?)
-//double neff_1, neff_2, neff_3, bridge_1, bridge_2, bridge_3;
-//
-//for(unsigned int i = 1; i < vectorSize; i++)
-//{
-//	x[i] = x[i-1] + deltaX;
-//
-//	neff_1 = ((y0-y1)/(z0-z1))*(x[i]-z0) + y0;
-//	neff_2 = ((y1-y2)/(z1-z2))*(x[i]-z1) + y1;
-//	neff_3 = ((y2-y3)/(z2-z3))*(x[i]-z2) + y2;
-//
-//	// For continuity and smoothness purposes
-//	bridge_1 = tanh(1000*(x[i]-z0)) - tanh(1000*(x[i]-z1));
-//	bridge_2 = tanh(1000*(x[i]-z1)) - tanh(1000*(x[i]-z2));
-//	bridge_3 = tanh(1000*(x[i]-z2)) - tanh(1000*(x[i]-z3));
-//
-//	y[i] = 0.5*(neff_1*bridge_1)+(neff_2*bridge_2)+(neff_3*bridge_3);
-//}
-//ui->neff_map_2->addGraph();
-//ui->neff_map_2->graph(0)->setData(x, y);
-//// give the axes some labels:
-// ui->neff_map_2->xAxis->setLabel("z/um");
-// ui->neff_map_2->yAxis->setLabel("Neff(z)");
-// // set axes ranges, so we see all data:
-// ui->neff_map_2->xAxis->setRange(z0, z3);
-// ui->neff_map_2->yAxis->setRange(y0, y3);
-// ui->neff_map_2->replot();
-// ui->neff_map_2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP::iSelectPlottables);
-//}
-//
 void MainWindow::plot_custom_neff()
 {
   // get data from ui
@@ -311,30 +262,12 @@ y[0] = y0;
 
 //Intermediate variable (who cares about performance when using the GUI?)
 double neff_1, neff_2, neff_3, bridge_1, bridge_2, bridge_3;
-// Attempt to make CNVT easier to understand
-//Source f;
-//f.set_y0(y0);
-//f.set_y1(y1);
-//f.set_y2(y2);
-//f.set_y3(y3);
-//f.set_z0(z0);
-//f.set_z1(z1);
-//f.set_z2(z2);
-//f.set_z3(z3);
-//Array<double> zAxis(1), neffAxis(2);
-//zAxis[0] = 0.;
-//neffAxis[0] = 0.;
-//neffAxis[1] = 2.;
-
 int index = ui->neff_type_combo->currentIndex();
 
 if (index == 0) //trilinear
 {
 	for(unsigned int i = 1; i < vectorSize; i++)
 	{
-		//	zAxis[1] = x[i];
-		//	f.eval(neffAxis, zAxis);
-		//	y[i] = neffAxis[0];
 		x[i] = i *  deltaX;
 
 		neff_1 = ((y0-y1)/(z0-z1))*(x[i]-z0) + y0;
@@ -940,22 +873,6 @@ void MainWindow::drift_single_carrier()
 //        y_total[i] = y_elec[i] + y_hole[i]; 
         y_total[i]=alfa*curr_total[i]+(1-alfa)*y_total[i-1];
 	  }
-//	  TH1D * i_elec = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  TH1D * i_hole = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  // Convert to TH1D
-//	  utilities::valarray2Hist(i_elec, curr_elec);
-//	  utilities::valarray2Hist(i_hole, curr_hole);
-//	  // Convolute
-//	  i_elec = H1DConvolution(i_elec, C);
-//	  i_hole = H1DConvolution(i_hole, C);
-//
-//	  // Convert to Qvector
-//	  utilities::hist2Qvec(y_hole, i_hole);
-//	  utilities::hist2Qvec(y_elec, i_elec);
-//
-//	  // Sum and convert to Qvector
-//	  utilities::hist2Qvec(y_total, i_elec, i_hole);
-
   }
   else
   {
@@ -1093,22 +1010,6 @@ void MainWindow::drift_line_carrier()
 //        y_total[i] = y_elec[i] + y_hole[i]; 
         y_total[i]=alfa*curr_total[i]+(1-alfa)*y_total[i-1];
 	  }
-//	  TH1D * i_elec = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  TH1D * i_hole = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  // Convert to TH1D
-//	  utilities::valarray2Hist(i_elec, curr_elec);
-//	  utilities::valarray2Hist(i_hole, curr_hole);
-//	  // Convolute
-//	  i_elec = H1DConvolution(i_elec, C);
-//	  i_hole = H1DConvolution(i_hole, C);
-//
-//	  // Convert to Qvector
-//	  utilities::hist2Qvec(y_hole, i_hole);
-//	  utilities::hist2Qvec(y_elec, i_elec);
-//
-//	  // Sum and convert to Qvector
-//	  utilities::hist2Qvec(y_total, i_elec, i_hole);
-
   }
   else
   {
@@ -1121,27 +1022,11 @@ void MainWindow::drift_line_carrier()
 
 	  for (int i=1; i< max_steps; i++)
 	  {
-//        y_elec[i]=alfa*curr_elec[i]+(1-alfa)*y_elec[i-1];
-//        y_hole[i]=alfa*curr_hole[i]+(1-alfa)*y_hole[i-1];
+        y_elec[i]=alfa*curr_elec[i]+(1-alfa)*y_elec[i-1];
+        y_hole[i]=alfa*curr_hole[i]+(1-alfa)*y_hole[i-1];
 //        y_total[i] = y_elec[i] + y_hole[i]; 
         y_total[i]=alfa*curr_total[i]+(1-alfa)*y_total[i-1];
 	  }
-//	  TH1D * i_elec = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  TH1D * i_hole = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  // Convert to TH1D
-//	  utilities::valarray2Hist(i_elec, curr_elec);
-//	  utilities::valarray2Hist(i_hole, curr_hole);
-//	  // Convolute
-//	  i_elec = H1DConvolution(i_elec, C);
-//	  i_hole = H1DConvolution(i_hole, C);
-//
-//	  // Convert to Qvector
-//	  utilities::hist2Qvec(y_hole, i_hole);
-//	  utilities::hist2Qvec(y_elec, i_elec);
-//
-//	  // Sum and convert to Qvector
-//	  utilities::hist2Qvec(y_total, i_elec, i_hole);
-
   }
   else
   {
@@ -1252,6 +1137,11 @@ void MainWindow::drift_carrier_collection()
   double RC = 50.*C; // 50 ohms*C
   double alfa = dt/(RC+dt);
   double max_time = 1.e-9 * ui->a_carrier_max_time_box->value();
+  double shift_x = 0.0;
+  double shift_y = 0.0;
+  shift_x = ui->carrier_shift_x_box->value();
+  shift_y = ui->carrier_shift_y_box->value();
+
   // get number of steps from time
   int max_steps = (int) std::floor(max_time / dt);
 
@@ -1260,7 +1150,7 @@ void MainWindow::drift_carrier_collection()
   std::valarray<double> curr_hole((size_t) max_steps);
   std::valarray<double> curr_total((size_t) max_steps);
 
-  carrier_collection->simulate_drift( dt, max_time, curr_elec, curr_hole);
+  carrier_collection->simulate_drift( dt, max_time, shift_x, shift_y, curr_elec, curr_hole);
 
   curr_total = curr_elec + curr_hole;
 
@@ -1289,33 +1179,15 @@ void MainWindow::drift_carrier_collection()
 
 	  for (int i=1; i< max_steps; i++)
 	  {
-//        y_elec[i]=alfa*curr_elec[i]+(1-alfa)*y_elec[i-1];
-//        y_hole[i]=alfa*curr_hole[i]+(1-alfa)*y_hole[i-1];
+        y_elec[i]=alfa*curr_elec[i]+(1-alfa)*y_elec[i-1];
+        y_hole[i]=alfa*curr_hole[i]+(1-alfa)*y_hole[i-1];
 //        y_total[i] = y_elec[i] + y_hole[i]; 
         y_total[i]=alfa*curr_total[i]+(1-alfa)*y_total[i-1];
 	  }
-//	  TH1D * i_elec = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  TH1D * i_hole = new TH1D("hnoconv","Ramo current",max_steps, 0.0, max_time);
-//	  // Convert to TH1D
-//	  utilities::valarray2Hist(i_elec, curr_elec);
-//	  utilities::valarray2Hist(i_hole, curr_hole);
-//	  // Convolute
-//	  i_elec = H1DConvolution(i_elec, C);
-//	  i_hole = H1DConvolution(i_hole, C);
-//
-//	  // Convert to Qvector
-//	  utilities::hist2Qvec(y_hole, i_hole);
-//	  utilities::hist2Qvec(y_elec, i_elec);
-//
-//	  // Sum and convert to Qvector
-//	  utilities::hist2Qvec(y_total, i_elec, i_hole);
-
   }
   else
   {
   }
-
-
   // set new data
   ui->gen_carrier_curr_qcp->graph(0)->setData(x_elec, y_elec);
   ui->gen_carrier_curr_qcp->graph(1)->setData(x_hole, y_hole);
@@ -1348,8 +1220,14 @@ void MainWindow::show_gen_carrier_map_qcp()
   // get color map
   QCPColorMap * color_map = qobject_cast<QCPColorMap *>(ui->gen_carrier_map_qcp->plottable(0));
 
+
+  double shift_x = 0.0;
+  double shift_y = 0.0;
+  shift_x = ui->carrier_shift_x_box->value();
+  shift_y = ui->carrier_shift_y_box->value();
+
   // fill root hist from distribution
-  TH2D hist =  carrier_collection->get_e_dist_histogram(n_bins_x,n_bins_y);
+  TH2D hist =  carrier_collection->get_e_dist_histogram(n_bins_x,n_bins_y, shift_x, shift_y);
   utilities::paint_TH2D_qcp(hist, color_map);
 
   // reescale and replot

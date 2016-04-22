@@ -73,10 +73,11 @@ int main()
 		 implant_type = '\0';
 
 	std::string scanType = "defaultString";
+	std::string neffType = "defaultString";
 	std::vector<double> neff_param(8,0.);
 
 	std::string file_carriers = "etct.carriers";
-	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param);
+	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
 	
 	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];
@@ -124,7 +125,8 @@ int main()
 	// get number of steps from time
 	int n_tSteps = (int) std::floor(max_time / dt);
 
-	QString filename = "etct.carriers";
+//	QString filename = "etct.carriers";
+	QString filename = QString::fromUtf8(file_carriers.c_str());
 	CarrierCollection * carrier_collection = new CarrierCollection(dec_pointer);
 
 	// carrier_collection is now a #thr-dimensional vector
@@ -158,11 +160,9 @@ int main()
 	{
 		y_shifts[i] = (i*deltaY)+yInit;
 	}
-	TString hist_name = "i_ramo";
-	TString hist_title = "i_ramo";
-	TH2D i_ramo = TH2D(hist_name, hist_title,
-			n_tSteps, 0.0, max_time, 
-			n_zSteps + 1, zInit, zMax);
+//	TString hist_name = "i_ramo";
+//	TString hist_title = "i_ramo";
+	TH2D i_ramo = TH2D("i_ramo", "i_ramo", n_tSteps, 0.0, max_time, n_zSteps + 1, zInit, zMax);
 
 	hnoconv = new TH1D("hnoconv","Ramo current",n_tSteps, 0.0, max_time);
 	hconv   = new TH1D("hconv","Amplifier convoluted",n_tSteps, 0.0, max_time);
@@ -204,7 +204,7 @@ int main()
 		// Loop on Y-axis
 		for (int l = 0; l < n_ySteps + 1; l++) 
 		{
-			std::string ircName = "i_rc_"+std::to_string(y_shifts[l])+"y";
+			std::string ircName = "i_rc_"+std::to_string(std::floor(y_shifts[l]))+"_y";
 			TH2D *i_rc = new TH2D(ircName.c_str(), ircName.c_str(), hconv->GetNbinsX(), hconv->GetXaxis()->GetXmin(),hconv->GetXaxis()->GetXmax() , n_zSteps + 1, zInit, zMax);
 			// Loop on depth
 			for (int i = 0; i < n_zSteps + 1; i++) 

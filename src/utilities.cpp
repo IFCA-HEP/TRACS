@@ -47,8 +47,10 @@ void utilities::write_results_to_file(QString filename, QVector<QVector<double>>
   // open file
   QFile file(filename);
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  {
 	  std::cout<<"File could not be open for writing"<<std::endl; 
-      return;
+	  return;
+  }
 
   QTextStream out(&file);
   QString s_time = "#time";
@@ -263,7 +265,7 @@ std::string utilities::vector_to_string(std::vector<double> input_list)
 
 // Utility to read values for the simulation so main need not be compiled everytime
 // one wishes to modify the simulation parameters
-void utilities::parse_config_file(std::string fileName, std::string &carrierFile, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY, std::vector<double> &neff_param)
+void utilities::parse_config_file(std::string fileName, std::string &carrierFile, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &nThreads, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, int &waveLength, std::string &scanType, double &C, double &dt, double &max_time, double &v_init, double &deltaV, double &v_max, double &v_depletion, double &zInit, double &zMax, double &deltaZ, double &yInit, double &yMax, double &deltaY, std::vector<double> &neff_param, std::string &neffType)
 {
 	// Creat map to hold all values as strings 
 	std::map< std::string, std::string> valuesMap;
@@ -315,6 +317,7 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 	tempString = std::string("Pitch");
 	converter << valuesMap[tempString];
 	converter >> pitch;
+	converter.clear();
 	converter.str("");
 	tempString = std::string("");
 
@@ -483,6 +486,14 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 	carrierFile = valuesMap[tempString];
 	tempString = std::string("");
 
+	tempString = std::string("ScanType");
+	scanType = valuesMap[tempString];
+	tempString = std::string("");
+
+	tempString = std::string("NeffParametrization");
+	neffType = valuesMap[tempString];
+	tempString = std::string("");
+
 	tempString = std::string("y0");
 	converter << valuesMap[tempString];
 	converter >> neff_param[0];
@@ -542,7 +553,7 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 
 // Utility to read values for the simulation so main need not be compiled everytime
 // one wishes to modify the simulation parameters
-void utilities::parse_config_file(std::string fileName, std::string &carrierFile, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, double &C, double &dt, double &max_time, double &vBias, double &vDepletion, double &zPos, double &yPos, std::vector<double> &neff_param)
+void utilities::parse_config_file(std::string fileName, std::string &carrierFile, double &depth, double &width, double &pitch, int &nns, double &temp, double &trapping, double &fluence, int &n_cells_x, int &n_cells_y, char &bulk_type, char &implant_type, double &C, double &dt, double &max_time, double &vBias, double &vDepletion, double &zPos, double &yPos, std::vector<double> &neff_param, std::string &neffType)
 {
 	// Creat map to hold all values as strings 
 	std::map< std::string, std::string> valuesMap;
@@ -705,6 +716,10 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 
 	tempString = std::string("CarrierFile");
 	carrierFile = valuesMap[tempString];
+	tempString = std::string("");
+
+	tempString = std::string("NeffParametrization");
+	neffType = valuesMap[tempString];
 	tempString = std::string("");
 
 	tempString = std::string("y0");
