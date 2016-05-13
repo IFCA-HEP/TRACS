@@ -1,4 +1,4 @@
-TRACS: Transient Current Simulator
+TRACS: TRAnsient Current Simulator
 ===================================
 
 Simulator of transient currents and charge collection in semiconductor detectors based on Shockley–Ramo theorem
