@@ -69,10 +69,10 @@ int main()
 		n_zSteps = 0,
 		n_ySteps = 0;
 
-	bool saveDU = true,
-			 saveDF = true,
-			 saveWF = true,
-			 saveWU = true;
+	bool saveDU = false,
+			 saveDF = false,
+			 saveWF = false,
+			 saveWU = false;
 	char bulk_type = '\0', 
 		 implant_type = '\0';
 
