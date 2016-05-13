@@ -24,6 +24,8 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 # Installation
 
+Once you have installed all the software listed under "Requisites" you can now begin the installation process:
+
 1) Get the source
 
     git clone https://github.com/IFCA-HEP/TRACS
