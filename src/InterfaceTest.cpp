@@ -10,12 +10,19 @@ int main()
 	std::cout << "It compiled, yaay!" << std::endl;
 	//Interface to TRACS
 	std::string fnm="Config.TRACS";
-	TRACSInterface TRACSsim(fnm);
-	TRACSsim.simulate_ramo_current();
-	TRACSsim.GetItRamo();
+	//TRACSInterface TRACSsim(fnm);
+	TRACSInterface *TRACSsim = new TRACSInterface( fnm );
+	TRACSsim->set_zPos(30);
+	TRACSsim->set_yPos(30);
+	TRACSsim->set_vBias(400);
+	TRACSsim->calculate_fields();
+	TRACSsim->set_vBias(400);
+	TRACSsim->calculate_fields();
+	TRACSsim->simulate_ramo_current();
+	TRACSsim->GetItRamo();
 
 
-	//TRACSInterface *TRACSsim = new TRACSInterface( fnm );
+	
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;
 	//TracsSim.set_carrierFile("etct.carriers");
 	//TRACSInterface* TracsSim = new TRACSInterface("Config.TRACS");

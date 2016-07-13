@@ -34,20 +34,23 @@ TRACSInterface::TRACSInterface(std::string filename)
 
 	parameters["allow_extrapolation"] = true;
 
-	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
-	pDetector = &detector;
-	carrierCollection = new CarrierCollection(pDetector);
+	detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType):
+	//pDetector = &detector;
+	carrierCollection = new CarrierCollection(detector);
 	QString carrierFileName = QString::fromUtf8(carrierFile.c_str());
 	carrierCollection->add_carriers_from_file(carrierFileName);
 
-
-	pDetector->set_voltages(vBias, vDepletion);
-	pDetector->solve_w_u();
-	pDetector->solve_d_u();
-	pDetector->solve_w_f_grad();
-	pDetector->solve_d_f_grad();
-	pDetector->get_mesh()->bounding_box_tree();
-
+	
+	detector->set_voltages(vBias, vDepletion);
+	detector->solve_w_u();
+	detector->solve_d_u();
+	detector->solve_w_f_grad();
+	detector->solve_d_f_grad();
+	detector->get_mesh()->bounding_box_tree();
+	
 	i_ramo  = NULL;
 	i_rc    = NULL;
 	i_conv  = NULL;
@@ -158,7 +161,7 @@ void TRACSInterface::set_NeffParam(std::vector<double> newParam)
 		std::cout << "Error setting up new Neff, incorrect number of parameters" << std::endl;
 	}
 
-	pDetector->set_neff_param(neff_param);
+	detector->set_neff_param(neff_param);
 }
 
 /*
@@ -169,7 +172,7 @@ void TRACSInterface::set_NeffParam(std::vector<double> newParam)
 void TRACSInterface::set_trappingTime(double newTrapTime)
 {
 	trapping = newTrapTime;
-	pDetector->set_trapping_time(trapping);
+	detector->set_trapping_time(trapping);
 }
 
 /*
@@ -205,7 +208,7 @@ void TRACSInterface::set_yPos(double newYPos)
 void TRACSInterface::set_vBias(double newVBias)
 {
 	vBias = newVBias;
-	pDetector->set_voltages(vBias, vDepletion);
+	detector->set_voltages(vBias, vDepletion);
 }
 
 /*
@@ -217,8 +220,13 @@ void TRACSInterface::set_vBias(double newVBias)
 void TRACSInterface::calculate_fields()
 {
 	// Get detector ready
-	pDetector->solve_d_f_grad();
-	pDetector->solve_d_u();
+	//cd ..SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//pDetector = &detector;
+	detector->solve_d_f_grad();
+	detector->solve_d_u();
+	
+	
+	
 }
 
 /*
@@ -229,7 +237,7 @@ void TRACSInterface::calculate_fields()
 void TRACSInterface::set_neffType(std::string newParametrization)
 {
 	neffType = newParametrization;
-	pDetector->set_neff_type(neffType);
+	detector->set_neff_type(neffType);
 
 }
 
