@@ -25,12 +25,10 @@ TRACSInterface::TRACSInterface(std::string filename)
 
 	n_tSteps = (int) std::floor(max_time / dt);
 
-	std::valarray<double> i_elec ((size_t) n_tSteps);	
-	std::valarray<double> i_hole ((size_t) n_tSteps);
-	std::valarray<double> i_total((size_t) n_tSteps);
-	i_hole = 0;
-	i_elec = 0;
-	i_total = 0;
+	i_elec.resize((size_t) n_tSteps,0.);	
+	i_hole.resize ((size_t) n_tSteps,0.);
+	i_total.resize((size_t) n_tSteps,0.);
+	
 
 	parameters["allow_extrapolation"] = true;
 
