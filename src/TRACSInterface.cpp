@@ -15,7 +15,8 @@
 TRACSInterface::TRACSInterface(std::string filename)
 {
 	neff_param = std::vector<double>(8,0);
-	utilities::parse_config_file(filename, carrierFile, depth, width, pitch, nns, temp, trapping, fluence, n_cells_x, n_cells_y, bulk_type, implant_type, C, dt, max_time, vBias, vDepletion, zPos, yPos, neff_param, neffType);
+	//utilities::parse_config_file(filename, carrierFile, depth, width, pitch, nns, temp, trapping, fluence, n_cells_x, n_cells_y, bulk_type, implant_type, C, dt, max_time, vBias, vDepletion, zPos, yPos, neff_param, neffType);
+	utilities::parse_config_file(filename, carrierFile, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, vDepletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
 
 	// Initialize vectors / n_Steps / detector / set default zPos, yPos, vBias / carrier_collection 
 	if (fluence <= 0) // if no fluence -> no trapping
@@ -23,6 +24,29 @@ TRACSInterface::TRACSInterface(std::string filename)
 		trapping = std::numeric_limits<double>::max();
 	} else {}
 
+	n_zSteps = (int) std::floor((zMax-zInit)/deltaZ); // Simulation Steps
+	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
+	n_ySteps = (int) std::floor((yMax-yInit)/deltaY);
+	z_shifts.resize((size_t) n_zSteps+1,0.);	
+	y_shifts.resize ((size_t) n_ySteps+1,0.);
+	voltages.resize((size_t) n_vSteps+1,0.);
+	// Create voltages
+	for (int i = 0; i < n_vSteps + 1; i++ ) 
+	{
+		voltages[i] = (i*deltaV)+vInit;
+	}
+	// Creat shifts in Z
+	for (int i = 0; i < n_zSteps + 1; i++ ) 
+	{
+		z_shifts[i] = (i*deltaZ)+zInit;
+	}
+	// Create shifts in Y
+	for (int i = 0; i < n_ySteps + 1; i++ ) 
+	{
+		y_shifts[i] = (i*deltaY)+yInit;
+	}
+
+	//currents
 	n_tSteps = (int) std::floor(max_time / dt);
 
 	i_elec.resize((size_t) n_tSteps,0.);	
@@ -41,7 +65,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 	QString carrierFileName = QString::fromUtf8(carrierFile.c_str());
 	carrierCollection->add_carriers_from_file(carrierFileName);
 
-	
+	vBias = vInit;
 	detector->set_voltages(vBias, vDepletion);
 	detector->solve_w_u();
 	detector->solve_d_u();
@@ -249,3 +273,47 @@ void TRACSInterface::set_carrierFile(std::string newCarrFile)
 	QString carrierFileName = QString::fromUtf8(newCarrFile.c_str());
 	carrierCollection->add_carriers_from_file(carrierFileName);
 }
+
+
+/*
+ * A loop through one parameter (depends on argument)
+ *	v: voltage, z: z-axis, y: y-axis
+ *
+ *
+ */
+ void TRACSInterface::loop_on(std::string par)
+ {
+ 	params[0] = 0; //zPos 
+ 	params[1] = 0; //yPos;
+ 	params[2] = 0; //vPos;
+ 	int i;
+ 	if (!par.compare("z"))
+ 	{
+ 		n_par1 = n_zSteps;
+ 		i = 0;
+ 	}
+	 	else if (!par.compare("y"))
+	 		{
+	 		n_par1 = n_ySteps;
+	 		i = 1;
+	 		}
+		 		else if (!par.compare("v"))
+		 		{
+		 			n_par1 = n_vSteps;
+		 			i = 2;
+		 		}
+	//loop through the values and calculate
+	for (params[i] = 0; params[i] < n_par1; params[i]++)
+	{
+		set_zPos(z_shifts[params[0]]);
+		set_yPos(z_shifts[params[1]]);
+		detector->set_voltages(voltages[params[2]], vDepletion);
+		calculate_fields();
+		simulate_ramo_current();
+		GetItRamo();
+		GetItRc();
+		GetItConv();
+
+	}
+ 	n_par1 = 0;
+ }

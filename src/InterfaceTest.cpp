@@ -12,7 +12,7 @@ int main()
 	std::string fnm="Config.TRACS";
 	//TRACSInterface TRACSsim(fnm);
 	TRACSInterface *TRACSsim = new TRACSInterface( fnm );
-	TRACSsim->set_zPos(30);
+/*	TRACSsim->set_zPos(30);
 	TRACSsim->set_yPos(30);
 	TRACSsim->set_vBias(400);
 	TRACSsim->calculate_fields();
@@ -26,7 +26,8 @@ int main()
 	TRACSsim->GetItRamo();
 	TRACSsim->GetItRc();
 	TRACSsim->GetItConv();
-
+	*/
+	TRACSsim->loop_on("v");
 	
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;
 	//TracsSim.set_carrierFile("etct.carriers");

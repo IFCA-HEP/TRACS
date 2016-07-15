@@ -27,15 +27,35 @@ class TRACSInterface
 		double C; 
 		double dt; 
 		double max_time; 
+		double vInit; //added v
+		double deltaV;
+		double vMax;
+		double v_depletion;
+		double deltaZ;
+		double zInit;
+		double zMax;
+		double yInit;
+		double yMax; //((2*nns)+1)*pitch,
+		double deltaY; //added ^
 		double vBias; 
 		double vDepletion; 
 		double zPos; 
 		double yPos; 
 
+		int nThreads;
 		int nns; 
 		int n_cells_y; 
 		int n_cells_x; 
 		int n_tSteps;
+		int waveLength; //added v
+		int n_vSteps;
+		int n_zSteps;
+		int n_ySteps;
+
+		int n_par1;
+		int n_par2;
+		int n_par3;
+		std::vector<int> params = {0, 0, 0};
 
 		char bulk_type; 
 		char implant_type;
@@ -45,15 +65,21 @@ class TRACSInterface
 		std::valarray<double> i_elec;
 		std::valarray<double> i_hole;
 
+		std::vector<double>  z_shifts;
+		std::vector<double>  y_shifts; // laser shift in X axis to center laser focus over read-out strip
+		std::vector<double>  voltages;
+
 		std::string carrierFile;
 		std::string neffType;
+		std::string scanType;
 
+		//TH1D i_ramo;
 		TH1D *i_ramo; 
 		TH1D *i_rc; 
 		TH1D *i_conv;
 
 		// Pointer to detector and carrier collection
-		SMSDetector * detector;//URBAN
+		SMSDetector * detector;
 		//SMSDetector * pDetector;
 		CarrierCollection * carrierCollection;
 
@@ -66,6 +92,7 @@ class TRACSInterface
 		~TRACSInterface();
 
 		// Getters
+		//TH1D GetItRamo();
 		TH1D *GetItRamo();
 		TH1D *GetItRc();
 		TH1D *GetItConv();
@@ -82,7 +109,7 @@ class TRACSInterface
 		void set_vBias(double newVBias);
 		void set_neffType(std::string newParametrization);
 		void set_carrierFile(std::string newCarrFile);
-
+		void loop_on(std::string par);
 		
 };
 
