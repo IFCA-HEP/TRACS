@@ -5,6 +5,8 @@
 #include "utilities.h"
 #include "Carrier.h"
 #include "CarrierCollection.h"
+#include <TFile.h>
+#include "TF1.h"
 #include <TH1D.h> // 1 Dimesional ROOT histogram 
 #include <iterator>
 #include <limits>  // std::numeric_limits
@@ -72,6 +74,22 @@ class TRACSInterface
 		std::string carrierFile;
 		std::string neffType;
 		std::string scanType;
+
+		//file naming
+		std::string trap, start;
+		// Convert relevant simulation numbers to string for fileNaming	
+		std::string dtime;
+		std::string neigh;
+		std::string stepV; 
+		std::string stepZ;
+		std::string stepY;
+		std::string cap;
+		//std::string z_step  = std::to_string((int) std::floor(deltaZ));
+		std::string voltage;
+
+		// filename for data analysis
+		std::string hetct_conv_filename;
+		std::string hetct_noconv_filename;
 
 		//TH1D i_ramo;
 		TH1D *i_ramo; 
