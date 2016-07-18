@@ -52,9 +52,9 @@ class TRACSInterface
 		int n_zSteps;
 		int n_ySteps;
 
+		int n_par0;
 		int n_par1;
 		int n_par2;
-		int n_par3;
 		std::vector<int> params = {0, 0, 0};
 
 		char bulk_type; 
@@ -101,6 +101,11 @@ class TRACSInterface
 		void simulate_ramo_current();
 		void calculate_fields();
 
+		//Loops
+		void loop_on(std::string par);
+		void loop_on(std::string par1, std::string par2);
+		void loop_on(std::string par1, std::string par2, std::string par3);
+
 		// Setters
 		void set_NeffParam(std::vector<double> newParam);
 		void set_trappingTime(double newTrapTime);
@@ -109,7 +114,8 @@ class TRACSInterface
 		void set_vBias(double newVBias);
 		void set_neffType(std::string newParametrization);
 		void set_carrierFile(std::string newCarrFile);
-		void loop_on(std::string par);
+
+		
 		
 };
 

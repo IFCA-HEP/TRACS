@@ -27,7 +27,14 @@ int main()
 	TRACSsim->GetItRc();
 	TRACSsim->GetItConv();
 	*/
-	TRACSsim->loop_on("v");
+	//TRACSsim->loop_on("v");
+	//TRACSsim->loop_on("y");
+	//TRACSsim->loop_on("y","v","z");
+	TRACSsim->loop_on("v","y","z");
+	TRACSsim->loop_on("v","e");
+	TRACSsim->loop_on("v","y");
+	TRACSsim->loop_on("c");
+
 	
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;
 	//TracsSim.set_carrierFile("etct.carriers");

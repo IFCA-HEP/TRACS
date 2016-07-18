@@ -1,5 +1,5 @@
 #include "TRACSInterface.h"
-
+#include "TF1.h"
 
 /*
  * Constructor of class TRACSInterface
@@ -95,7 +95,13 @@ TH1D * TRACSInterface::GetItRamo()
 	}
 	else
 	{
-		i_ramo  = new TH1D("hnoconv","Ramo current",n_tSteps, 0.0, max_time);
+		TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
+   		float r = f1->GetRandom();
+		TString htit;
+		htit.Form("ramo %f", r);
+		i_ramo  = new TH1D(htit,"Ramo current",n_tSteps, 0.0, max_time);
+		std::cout << htit << std::endl;
+
 		// Compute time + format vectors for writting to file
 		for (int j=0; j < n_tSteps; j++)
 		{
@@ -235,7 +241,7 @@ void TRACSInterface::set_vBias(double newVBias)
 
 /*
  * Calculates the electric field and potential inside the detector. It is 
- * requied after any modification of the Neff or the bias voltage applied. 
+ * required after any modification of the Neff or the bias voltage applied. 
  * Weighting field and potential need not be calculated again since they 
  * are independent on those parameters.
  */
@@ -277,33 +283,38 @@ void TRACSInterface::set_carrierFile(std::string newCarrFile)
 
 /*
  * A loop through one parameter (depends on argument)
- *	v: voltage, z: z-axis, y: y-axis
- *
- *
+ *	"v": voltage, "z": z-axis, "y": y-axis
+ *	example: TRACSsim->loop_on("v");
+ * OVERLOADED!
  */
  void TRACSInterface::loop_on(std::string par)
  {
  	params[0] = 0; //zPos 
  	params[1] = 0; //yPos;
  	params[2] = 0; //vPos;
- 	int i;
+ 	int p;
  	if (!par.compare("z"))
  	{
- 		n_par1 = n_zSteps;
- 		i = 0;
+ 		n_par0 = n_zSteps;
+ 		p = 0;
  	}
 	 	else if (!par.compare("y"))
 	 		{
-	 		n_par1 = n_ySteps;
-	 		i = 1;
+	 		n_par0 = n_ySteps;
+	 		p = 1;
 	 		}
 		 		else if (!par.compare("v"))
 		 		{
-		 			n_par1 = n_vSteps;
-		 			i = 2;
+		 			n_par0 = n_vSteps;
+		 			p = 2;
 		 		}
+		 			else 
+		 			{
+		 				std::cout<<"Error in loop_on(string), invalid input argument! Use \"z\", \"y\", or \"v\"!" << std::endl;
+		 				return;
+		 			}
 	//loop through the values and calculate
-	for (params[i] = 0; params[i] < n_par1; params[i]++)
+	for (params[p] = 0; params[p] < n_par0; params[p]++)
 	{
 		set_zPos(z_shifts[params[0]]);
 		set_yPos(z_shifts[params[1]]);
@@ -315,5 +326,136 @@ void TRACSInterface::set_carrierFile(std::string newCarrFile)
 		GetItConv();
 
 	}
+ 	n_par0 = 0;
+ }
+/*
+ * A loop through one parameter (depends on argument)
+ *	"v": voltage, "z": z-axis, "y": y-axis
+ *	example: TRACSsim->loop_on("v", "Z");
+ */
+void TRACSInterface::loop_on(std::string par1, std::string par2)
+ {
+ 	params[0] = 0; //zPos 
+ 	params[1] = 0; //yPos;
+ 	params[2] = 0; //vPos;
+ 	char e1 = 0, e2 = 0, e3 = 0;
+ 	//v
+ 	if ((!par1.compare("v"))||((!par2.compare("v"))))
+ 	{
+ 		n_par2 = n_vSteps;
+ 		e1 = 1;
+ 	}
+ 	else
+ 		n_par2 = 1;
+ 	//y
+ 	if ((!par1.compare("y"))||((!par2.compare("y"))))
+ 	{
+ 		n_par1 = n_ySteps;
+ 		e2 = 1;
+  	}
+ 	else
+ 		n_par1 = 1;
+ 	//z
+ 	if ((!par1.compare("z"))||((!par2.compare("z"))))
+ 	{
+		n_par0 = n_zSteps;
+  		e3 = 1;
+ 	}
+ 	else
+ 		n_par0 = 1;
+ 		 		
+	if ((e1&e2)||(e1&e3)||(e2&e3))
+		 	 	{
+		 	 			//loop
+		 		 	for (params[2] = 0; params[2] < n_par2; params[2]++)
+		 			{
+		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
+						calculate_fields();
+
+						for (params[1] = 0; params[1] < n_par1; params[1]++)
+						{
+							set_yPos(z_shifts[params[1]]);
+
+							for (params[0] = 0; params[0] < n_par0; params[0]++)
+							{
+								set_zPos(z_shifts[params[0]]);
+								simulate_ramo_current();
+								GetItRamo();
+								GetItRc();
+								GetItConv();
+								std::cout<<"Success!" << std::endl;
+
+							}
+						}
+	 		 		}
+		 	 	}	
+	else
+		{
+ 			std::cout<<"Error in loop_on(str1, str2), invalid input arguments! Use \"z\", \"y\" and \"v\"!" << std::endl;
+ 		} 	 		
+	 		 		
+	 	
+ 		
+	 	
+ 	n_par0 = 0;
  	n_par1 = 0;
+ 	n_par2 = 0;
+
+ }
+
+/*
+ * A loop through all three parameters
+ *	"v": voltage, "z": z-axis, "y": y-axis
+ *	example: TRACSsim->loop_on("x","v","y");
+ * 
+ */
+  void TRACSInterface::loop_on(std::string par1, std::string par2, std::string par3)
+ {
+ 	params[0] = 0; //zPos 
+ 	params[1] = 0; //yPos;
+ 	params[2] = 0; //vPos;
+ 	char error = 1;
+ 	if ((!par1.compare("v"))||((!par2.compare("v")))||((!par3.compare("v"))))
+ 	{
+ 		 	if ((!par1.compare("y"))||((!par2.compare("y")))||((!par3.compare("y"))))
+ 		 	{
+ 		 		if ((!par1.compare("z"))||((!par2.compare("z")))||((!par3.compare("z"))))
+		 		{
+		 	 		n_par0 = n_zSteps;
+		 	 		n_par1 = n_ySteps;
+			 		n_par2 = n_vSteps;
+			 		error = 0;
+	 		 		//loop
+		 		 	for (params[2] = 0; params[2] < n_par2; params[2]++)
+		 			{
+		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
+						calculate_fields();
+
+						for (params[1] = 0; params[1] < n_par1; params[1]++)
+						{
+							set_yPos(z_shifts[params[1]]);
+							for (params[0] = 0; params[0] < n_par0; params[0]++)
+							{
+								set_zPos(z_shifts[params[0]]);
+								simulate_ramo_current();
+								GetItRamo();
+								GetItRc();
+								GetItConv();
+								std::cout<<"Success!" << std::endl;
+
+							}
+						}
+	 		 		}
+	 		 	}
+		 	}
+ 	}
+ 	if(error)
+ 		{
+ 			std::cout<<"Error in loop_on(str1, str2, str3), invalid input arguments! Use (\"z\", \"y\", \"v\")!" << std::endl;
+ 		}
+	 	
+ 	n_par0 = 0;
+ 	n_par1 = 0;
+ 	n_par2 = 0;
+
  }
