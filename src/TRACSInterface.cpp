@@ -21,7 +21,12 @@ TRACSInterface::TRACSInterface(std::string filename)
 	if (fluence <= 0) // if no fluence -> no trapping
 	{
 		trapping = std::numeric_limits<double>::max();
-	} else {}
+		trap = "NOtrapping";
+		start = "NOirrad";
+	} else 
+	{
+		start = "irrad";
+	}
 
 	n_zSteps = (int) std::floor((zMax-zInit)/deltaZ); // Simulation Steps
 	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
@@ -34,7 +39,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 	{
 		voltages[i] = (i*deltaV)+vInit;
 	}
-	// Creat shifts in Z
+	// CreatE shifts in Z
 	for (int i = 0; i < n_zSteps + 1; i++ ) 
 	{
 		z_shifts[i] = (i*deltaZ)+zInit;
@@ -48,9 +53,13 @@ TRACSInterface::TRACSInterface(std::string filename)
 	//currents
 	n_tSteps = (int) std::floor(max_time / dt);
 
-	i_elec.resize((size_t) n_tSteps,0.);	
-	i_hole.resize ((size_t) n_tSteps,0.);
-	i_total.resize((size_t) n_tSteps,0.);
+	i_elec.resize((size_t) n_tSteps);
+	i_hole.resize ((size_t) n_tSteps);
+	i_total.resize((size_t) n_tSteps);
+
+	i_elec = 0;
+	i_hole = 0;
+	i_total = 0;
 	
 
 	parameters["allow_extrapolation"] = true;
@@ -84,6 +93,8 @@ TRACSInterface::TRACSInterface(std::string filename)
 	//std::string z_step  = std::to_string((int) std::floor(deltaZ));
 	voltage = std::to_string((int) std::floor(vInit));
 
+	//hnoconv = new TH1D("hnoconv","Ramo current",n_tSteps, 0.0, max_time);
+	//hconv   = new TH1D("hconv","Amplifier convoluted",n_tSteps, 0.0, max_time);
 
 	// Convert Z to milimeters
 	std::vector<double> z_chifs(n_zSteps+1);
@@ -101,8 +112,8 @@ TRACSInterface::TRACSInterface(std::string filename)
 	hetct_noconv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_noconv.hetct";
 	
 	// write header for data analysis
-	//utilities::write_to_hetct_header(hetct_conv_filename, (SMSDetector) detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
-	//utilities::write_to_hetct_header(hetct_noconv_filename, (SMSDetector) detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
+	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
+	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 
 	
 	i_ramo  = NULL;
@@ -132,7 +143,7 @@ TH1D * TRACSInterface::GetItRamo()
 		TString htit;
 		htit.Form("ramo %f", r);
 		i_ramo  = new TH1D(htit,"Ramo current",n_tSteps, 0.0, max_time);
-		std::cout << htit << std::endl;
+		//std::cout << htit << std::endl;
 
 		// Compute time + format vectors for writting to file
 		for (int j=0; j < n_tSteps; j++)
@@ -288,10 +299,15 @@ void TRACSInterface::set_vBias(double newVBias)
 void TRACSInterface::calculate_fields()
 {
 	// Get detector ready
-	//cd ..SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
 	//pDetector = &detector;
-	detector->solve_d_f_grad();
+	detector->solve_w_u();
 	detector->solve_d_u();
+	detector->solve_w_f_grad();
+	detector->solve_d_f_grad();
+	detector->get_mesh()->bounding_box_tree();
+	//detector->solve_d_f_grad();
+	//detector->solve_d_u();
 	
 	
 	
@@ -414,7 +430,7 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 
 						for (params[1] = 0; params[1] < n_par1; params[1]++)
 						{
-							set_yPos(z_shifts[params[1]]);
+							set_yPos(y_shifts[params[1]]);
 
 							for (params[0] = 0; params[0] < n_par0; params[0]++)
 							{
@@ -466,25 +482,25 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 			 		n_par2 = n_vSteps;
 			 		error = 0;
 	 		 		//loop
-		 		 	for (params[2] = 0; params[2] < n_par2; params[2]++)
+		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
 		 			{
 		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
 						calculate_fields();
 
-						for (params[1] = 0; params[1] < n_par1; params[1]++)
+						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
 						{
-							set_yPos(z_shifts[params[1]]);
-							for (params[0] = 0; params[0] < n_par0; params[0]++)
+							set_yPos(y_shifts[params[1]]);
+							for (params[0] = 0; params[0] < n_par0 + 1; params[0]++)
 							{
+								std::cout << "Height " << z_shifts[params[0]] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[params[1]] << " of " << y_shifts.back() << " || Voltage " << voltages[params[2]] << " of " << voltages.back() << std::endl;								
 								set_zPos(z_shifts[params[0]]);
 								simulate_ramo_current();
 								GetItRamo();
 								GetItRc();
 								GetItConv();
-								std::cout<<"Success!" << std::endl;
 								//write to file
-								//utilities::write_to_file_row(hetct_conv_filename, hconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
-								//utilities::write_to_file_row(hetct_noconv_filename, hnoconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
+								utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
+								utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
 							}
 						}
 						std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";

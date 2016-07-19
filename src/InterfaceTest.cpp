@@ -31,9 +31,9 @@ int main()
 	//TRACSsim->loop_on("y");
 	//TRACSsim->loop_on("y","v","z");
 	TRACSsim->loop_on("v","y","z");
-	TRACSsim->loop_on("v","e");
-	TRACSsim->loop_on("v","y");
-	TRACSsim->loop_on("c");
+	//TRACSsim->loop_on("v","e");
+	//TRACSsim->loop_on("v","y");
+	//TRACSsim->loop_on("c");
 
 	
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;

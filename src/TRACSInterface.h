@@ -96,6 +96,7 @@ class TRACSInterface
 		TH1D *i_rc; 
 		TH1D *i_conv;
 
+		//TH1D *hnoconv , *hconv;
 		// Pointer to detector and carrier collection
 		SMSDetector * detector;
 		//SMSDetector * pDetector;
