@@ -51,7 +51,7 @@ class TRACSInterface
 		int n_tSteps;
 		int waveLength; //added v
 		int n_vSteps;
-		int n_zSteps;
+		int n_zSteps, n_zSteps1, n_zSteps2;
 		int n_ySteps;
 
 		int n_par0;
@@ -68,6 +68,7 @@ class TRACSInterface
 		std::valarray<double> i_hole;
 
 		std::vector<double>  z_shifts;
+		std::vector<double>  z_shifts1, z_shifts2;
 		std::vector<double>  y_shifts; // laser shift in X axis to center laser focus over read-out strip
 		std::vector<double>  voltages;
 
@@ -124,6 +125,7 @@ class TRACSInterface
 		void loop_on(std::string par);
 		void loop_on(std::string par1, std::string par2);
 		void loop_on(std::string par1, std::string par2, std::string par3);
+		void loop_on(int tid); //MULTITHREADING
 
 		// Setters
 		void set_NeffParam(std::vector<double> newParam);

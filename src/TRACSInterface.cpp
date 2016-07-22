@@ -29,60 +29,11 @@ TRACSInterface::TRACSInterface(std::string filename)
 	}
 
 	n_zSteps = (int) std::floor((zMax-zInit)/deltaZ); // Simulation Steps
+	n_zSteps1 = n_zSteps / 2;
+	n_zSteps2 = n_zSteps - n_zSteps1;
 	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
 	n_ySteps = (int) std::floor((yMax-yInit)/deltaY);
-	z_shifts.resize((size_t) n_zSteps+1,0.);	
-	y_shifts.resize ((size_t) n_ySteps+1,0.);
-	voltages.resize((size_t) n_vSteps+1,0.);
-	// Create voltages
-	for (int i = 0; i < n_vSteps + 1; i++ ) 
-	{
-		voltages[i] = (i*deltaV)+vInit;
-	}
-	// CreatE shifts in Z
-	for (int i = 0; i < n_zSteps + 1; i++ ) 
-	{
-		z_shifts[i] = (i*deltaZ)+zInit;
-	}
-	// Create shifts in Y
-	for (int i = 0; i < n_ySteps + 1; i++ ) 
-	{
-		y_shifts[i] = (i*deltaY)+yInit;
-	}
-
-	//currents
-	n_tSteps = (int) std::floor(max_time / dt);
-
-	i_elec.resize((size_t) n_tSteps);
-	i_hole.resize ((size_t) n_tSteps);
-	i_total.resize((size_t) n_tSteps);
-
-	i_elec = 0;
-	i_hole = 0;
-	i_total = 0;
-	
-
-	parameters["allow_extrapolation"] = true;
-
-	detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
-	//SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
-	//detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
-	//detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType):
-	//pDetector = &detector;
-	carrierCollection = new CarrierCollection(detector);
-	QString carrierFileName = QString::fromUtf8(carrierFile.c_str());
-	carrierCollection->add_carriers_from_file(carrierFileName);
-
-	vBias = vInit;
-	detector->set_voltages(vBias, vDepletion);
-	detector->solve_w_u();
-	detector->solve_d_u();
-	detector->solve_w_f_grad();
-	detector->solve_d_f_grad();
-	detector->get_mesh()->bounding_box_tree();
-
 	//WRITING TO FILES!
-
 	// Convert relevant simulation numbers to string for fileNaming	
 	dtime = std::to_string((int) std::floor(dt*1.e12));
 	neigh = std::to_string(nns);
@@ -93,8 +44,74 @@ TRACSInterface::TRACSInterface(std::string filename)
 	//std::string z_step  = std::to_string((int) std::floor(deltaZ));
 	voltage = std::to_string((int) std::floor(vInit));
 
-	//hnoconv = new TH1D("hnoconv","Ramo current",n_tSteps, 0.0, max_time);
-	//hconv   = new TH1D("hconv","Amplifier convoluted",n_tSteps, 0.0, max_time);
+	parameters["allow_extrapolation"] = true;
+
+	detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
+	//detector = new SMSDetector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType):
+	//pDetector = &detector;
+
+	n_tSteps = (int) std::floor(max_time / dt);
+
+	carrierCollection = new CarrierCollection(detector);
+	QString carrierFileName = QString::fromUtf8(carrierFile.c_str());
+	carrierCollection->add_carriers_from_file(carrierFileName);
+
+	//currents
+	i_elec.resize((size_t) n_tSteps);
+	i_hole.resize ((size_t) n_tSteps);
+	i_total.resize((size_t) n_tSteps);
+
+	i_elec = 0;
+	i_hole = 0;
+	i_total = 0;
+
+	z_shifts.resize((size_t) n_zSteps+1,0.);
+	z_shifts1.resize((size_t) n_zSteps1+1,0.);
+	z_shifts2.resize((size_t) n_zSteps2+1,0.);
+
+
+	y_shifts.resize ((size_t) n_ySteps+1,0.);
+	voltages.resize((size_t) n_vSteps+1,0.);
+
+	// Create voltages
+	for (int i = 0; i < n_vSteps + 1; i++ ) 
+	{
+		voltages[i] = (i*deltaV)+vInit;
+	}
+	// CreatE shifts in Z
+	for (int i = 0; i < n_zSteps + 1; i++ ) 
+	{
+		z_shifts[i] = (i*deltaZ)+zInit;
+	}
+	// CreatE shifts in Z1
+	for (int i = 0; i < n_zSteps1 + 1; i++ ) 
+	{
+		z_shifts1[i] = (i*deltaZ)+zInit;
+	}
+	// CreatE shifts in Z2
+	for (int i = 0; i < n_zSteps2 + 1; i++ ) 
+	{
+		z_shifts2[i] = z_shifts1[n_zSteps1] + (i*deltaZ)+zInit;
+	}
+
+	// Create shifts in Y
+	for (int i = 0; i < n_ySteps + 1; i++ ) 
+	{
+		y_shifts[i] = (i*deltaY)+yInit;
+	}
+
+	vBias = vInit;
+	/*detector->set_voltages(vBias, vDepletion);
+	detector->solve_w_u();
+	detector->solve_d_u();
+	detector->solve_w_f_grad();
+	detector->solve_d_f_grad();
+	detector->get_mesh()->bounding_box_tree();
+	*/
+	//i_ramo  = new TH1D("ramo","Ramo current",n_tSteps, 0.0, max_time);
+	//i_conv   = new TH1D("conv","Amplifier convoluted",n_tSteps, 0.0, max_time);
 
 	// Convert Z to milimeters
 	std::vector<double> z_chifs(n_zSteps+1);
@@ -221,6 +238,11 @@ void TRACSInterface::simulate_ramo_current()
 
 	carrierCollection->simulate_drift( dt, max_time, yPos, zPos, i_elec, i_hole);
 
+	//for (int tPos = 0; tPos < n_tSteps; tPos++) 
+	//				{
+	//					i_total[tPos] = i_elec[tPos] + i_hole[tPos];
+	//				}
+	//strange behaviour!?
 	i_total = i_elec + i_hole;
 }
 
@@ -495,9 +517,9 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 								std::cout << "Height " << z_shifts[params[0]] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[params[1]] << " of " << y_shifts.back() << " || Voltage " << voltages[params[2]] << " of " << voltages.back() << std::endl;								
 								set_zPos(z_shifts[params[0]]);
 								simulate_ramo_current();
-								GetItRamo();
-								GetItRc();
-								GetItConv();
+								i_ramo = GetItRamo();
+								//GetItRc();
+								i_conv = GetItConv();
 								//write to file
 								utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
 								utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
@@ -509,7 +531,7 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 						// Open a ROOT file to save result
 						TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );
 						i_ramo->Write();
-						i_rc->Write();
+						//i_rc->Write();
 						tfile->Close();
 	 		 		}
 	 		 	}
@@ -520,6 +542,92 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
  			std::cout<<"Error in loop_on(str1, str2, str3), invalid input arguments! Use (\"z\", \"y\", \"v\")!" << std::endl;
  		}
 	 	
+ 	n_par0 = 0;
+ 	n_par1 = 0;
+ 	n_par2 = 0;
+
+ }
+
+
+ /*
+ * MULTITHREADING TEST!!! 
+ *A loop through all three parameters
+ *	"v": voltage, "z": z-axis, "y": y-axis
+ *	example: TRACSsim->loop_on("x","v","y");
+ * 
+ */
+  void TRACSInterface::loop_on(int tid)
+ {
+ 	params[0] = 0; //zPos 
+ 	params[1] = 0; //yPos;
+ 	params[2] = 0; //vPos;
+ 	char error = 1;
+ 	//int n_par0, n_par1, n_par2;
+ 	std::vector<double> z_shifts_loc;
+ 	switch(tid)
+ 	{
+ 		case 1: n_par0 = n_zSteps1;
+ 		z_shifts_loc.resize((size_t) n_zSteps1+1,0.);
+ 		z_shifts_loc = z_shifts1;
+ 		std::cout <<  "z_shifts_1" << std::endl;
+ 		break;								
+
+ 		case 2: n_par0 = n_zSteps2;
+ 		z_shifts_loc.resize((size_t) n_zSteps2+1,0.);
+ 		z_shifts_loc = z_shifts2;
+ 		std::cout <<  "z_shifts_2" << std::endl;								
+		break;
+
+ 		default: n_par0 = n_zSteps;
+ 		z_shifts_loc.resize((size_t) n_zSteps+1,0.);
+ 		z_shifts_loc = z_shifts;
+ 		std::cout <<  "z_shifts" << std::endl;								
+ 		break;
+
+
+ 	}
+ 	
+		 	 		n_par1 = n_ySteps;
+			 		n_par2 = n_vSteps;
+			 		error = 0;
+	 		 		//loop
+		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
+		 			{
+		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
+						calculate_fields();
+
+						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
+						{
+							set_yPos(y_shifts[params[1]]);
+							for (params[0] = 0; params[0] < n_par0 + 1; params[0]++)
+							{
+								std::cout << "Height " << z_shifts_loc[params[0]] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[params[1]] << " of " << y_shifts.back() << " || Voltage " << voltages[params[2]] << " of " << voltages.back() << std::endl;								
+								set_zPos(z_shifts_loc[params[0]]);
+								simulate_ramo_current();
+								i_ramo = GetItRamo();
+								//GetItRc();
+								i_conv = GetItConv();
+								//write to file
+								//utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
+								//utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
+							}
+						}
+						//std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
+						 // std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
+
+						// Open a ROOT file to save result
+						//TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );
+						//i_ramo->Write();
+						//i_rc->Write();
+						//tfile->Close();
+	 		 		}
+ 	
+	 		 	
+ 	/*if(error)
+ 		{
+ 			std::cout<<"Error in loop_on(str1, str2, str3), invalid input arguments! Use (\"z\", \"y\", \"v\")!" << std::endl;
+ 		}
+	 */	
  	n_par0 = 0;
  	n_par1 = 0;
  	n_par2 = 0;
