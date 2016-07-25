@@ -12,6 +12,9 @@
 #include <limits>  // std::numeric_limits
 #include <cmath>
 #include <functional>
+#include <vector>
+
+using std::vector;
 
 extern TH1D *H1DConvolution( TH1D *htct, Double_t Cend=0. ) ; 
 
@@ -51,13 +54,15 @@ class TRACSInterface
 		int n_tSteps;
 		int waveLength; //added v
 		int n_vSteps;
-		int n_zSteps, n_zSteps1, n_zSteps2;
+		int n_zSteps, n_zSteps1, n_zSteps2, n_zSteps_array;
 		int n_ySteps;
 
 		int n_par0;
 		int n_par1;
 		int n_par2;
 		std::vector<int> params = {0, 0, 0};
+		int tcount;
+
 
 		char bulk_type; 
 		char implant_type;
@@ -68,9 +73,12 @@ class TRACSInterface
 		std::valarray<double> i_hole;
 
 		std::vector<double>  z_shifts;
+		vector<vector <double> >  z_shifts_array;
+		//double z_shifts_array[10][10];
 		std::vector<double>  z_shifts1, z_shifts2;
 		std::vector<double>  y_shifts; // laser shift in X axis to center laser focus over read-out strip
 		std::vector<double>  voltages;
+
 
 		std::string carrierFile;
 		std::string neffType;
@@ -133,10 +141,11 @@ class TRACSInterface
 		void set_zPos(double newZPos);
 		void set_yPos(double newYPos);
 		void set_vBias(double newVBias);
+		void set_tcount(int tid);
+		void write_header(int tid);
 		void set_neffType(std::string newParametrization);
 		void set_carrierFile(std::string newCarrFile);
 
-		
 		
 };
 

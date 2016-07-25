@@ -1,34 +1,52 @@
 #include "TRACSInterface.h"
 //#include <iostream>
  #include <thread>
+#include <mutex>          // std::mutex
+
 
 //using namespace std;
-static const int num_threads = 2;
-  
+//num_threads = 2;
+static const int num_threads = 8;
+std::mutex mtx;           // mutex for critical section
+std::string fnm="Config.TRACS";
+TRACSInterface *TRACSsim[num_threads];// = new TRACSInterface( fnm ); //CORRECT
+
+
+
       //This function will be called from a thread
   
       void call_from_thread(int tid) {
           //std::cout << "Launched by thread " << tid << std::endl;
       	 //std::string fnm="Config.TRACS";
-
+      	std::cout << "Thread" << tid << std::endl;
+      	mtx.lock();
+      	TRACSsim[tid] = new TRACSInterface(fnm);
+      	//TRACSsim[tid]->set_tcount(tid);
+       	//TRACSsim[tid]->write_header(tid);
+	    std::cout << "Made it t" << tid << std::endl;
+	    mtx.unlock();
+	    TRACSsim[tid]->loop_on(tid);
+	    /*
 	      	 if(tid==0){
 	      	 		std::string fnm1="Config.TRACS";
 	      	 	std::cout << "Thread1!" << std::endl;
+	      	 	 mtx.lock();
 	      	 	TRACSInterface *TRACSsim = new TRACSInterface(fnm1);
 	      	 	std::cout << "Made it t1!" << std::endl;
-
+	      	 	 mtx.unlock();
 	         	TRACSsim->loop_on(1);
 	      	 }
 	      	 if(tid==1){
 	      	 	std::string fnm2="Config.TRACS";
 	      	 	std::cout << "Thread2!" << std::endl;
-	      	 	for(int i=0; i<100000000; i++);
+	      	 	//for(int i=0; i<100000000; i++);
+	      	 	mtx.lock();
 	      	 	TRACSInterface *TRACSsim2 = new TRACSInterface(fnm2);
 	      	 	std::cout << "Made it t2!" << std::endl;
-
+				mtx.unlock();
 	      	 	TRACSsim2->loop_on(2);
-
 	      	 }
+	    */  	 
       	 }
 
       	
