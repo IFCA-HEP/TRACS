@@ -6,7 +6,7 @@
 
 //using namespace std;
 //num_threads = 2;
-static const int num_threads = 8;
+static const int num_threads = 16;
 std::mutex mtx;           // mutex for critical section
 std::string fnm="Config.TRACS";
 TRACSInterface *TRACSsim[num_threads];// = new TRACSInterface( fnm ); //CORRECT
@@ -21,8 +21,8 @@ TRACSInterface *TRACSsim[num_threads];// = new TRACSInterface( fnm ); //CORRECT
       	std::cout << "Thread" << tid << std::endl;
       	mtx.lock();
       	TRACSsim[tid] = new TRACSInterface(fnm);
-      	//TRACSsim[tid]->set_tcount(tid);
-       	//TRACSsim[tid]->write_header(tid);
+      	TRACSsim[tid]->set_tcount(tid);
+       	TRACSsim[tid]->write_header(tid);
 	    std::cout << "Made it t" << tid << std::endl;
 	    mtx.unlock();
 	    TRACSsim[tid]->loop_on(tid);

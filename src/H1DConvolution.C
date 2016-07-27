@@ -17,6 +17,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <mutex>          // std::mutex
+
 
 #include "TFile.h"
 #include "TKey.h"
@@ -30,6 +32,8 @@
 #include "TString.h"
 #include "TMath.h"
 #include "THStack.h"
+#include "TF1.h"
+
 
 #define EXE 1      //1 for shared lib inside root. Note that still a ".o" can be produced in this mode
                    //by compiling the source, as needed for plotvd.C
@@ -41,9 +45,11 @@
 #define CTRLPLOT 0      //1 if intermediate control plots wanted
 
 //See "Visual explanations of convolution" in http://en.wikipedia.org/wiki/Convolution
-TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend=0. ) ; 
-TH1D *H1DConvolution( TH1D *htct  , Double_t Cend=0. ) ; 
+TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend=0. , int tid=0) ; 
+TH1D *H1DConvolution( TH1D *htct  , Double_t Cend=0. , int tid=0) ; 
 TH1D *LPFilter( TH1D *htf , Double_t Cend ) ; 
+
+std::mutex mtx_conv;           // mutex for critical section
 
 TH1D *LPFilter( TH1D *hin , Double_t Cend  ) {
 
@@ -65,7 +71,7 @@ TH1D *LPFilter( TH1D *hin , Double_t Cend  ) {
     
 }
 
-TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend ) { 
+TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend , int tid) { 
       
    //------------>Both input histograms should have the same bin width<-----------------
    
@@ -75,7 +81,12 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend ) {
    //Convolute (commutative)
    //C(t) = Int[ tct(x) transferfunction(t-x) dx ]
    Double_t bw = htct->GetBinCenter(2) - htct->GetBinCenter(1) ;
-   TH1D *hConv = new TH1D("hConv","conv",2*htct->GetNbinsX(),-htct->GetNbinsX()*bw,htct->GetNbinsX()*bw);
+   TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
+      float r = f1->GetRandom();
+    TString tftit, tfname;
+    tftit.Form("hConv %f", r);
+    tfname.Form("conv %f", r);
+   TH1D *hConv = new TH1D(tftit,tfname,2*htct->GetNbinsX(),-htct->GetNbinsX()*bw,htct->GetNbinsX()*bw);
    
    
    //The convoluted response to the TCT signal is going to be another histogram sized similar to htct
@@ -84,6 +95,7 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend ) {
    //Create the reverse histogram of the transfer function
    TH1D *hinv = (TH1D *) htf->Clone(); hinv->Reset();
    for (Int_t j=1; j<= Ntf ; j++) hinv->SetBinContent( j , htf->GetBinContent(Ntf-j+1) );  
+  // std::basic_string<char> t= std::to_string(tid);
    TH1D *hg = (TH1D *) htct->Clone(); 
    
    hinv->Draw();
@@ -132,7 +144,7 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend ) {
 
    gStyle->SetOptStat(0);
    gStyle->SetHistLineWidth(2);
-   hConv->SetLineColor(kRed) ;htct->SetLineColor(kBlack) ;htf->SetLineColor(kBlue) ;
+   //hConv->SetLineColor(kRed) ;htct->SetLineColor(kBlack) ;htf->SetLineColor(kBlue) ;
    
    THStack *hs = new THStack();
    //hs->Add(htf);
@@ -150,13 +162,14 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend ) {
    c1->Update();
    //   NOPDF for the moment
 //   c1->Print( "convolution.pdf" );
-   
-   TFile *f=new TFile("hconv.root","UPDATE");
+    tftit.Form("conv_%d.root", tid);
+   TFile *f=new TFile(tftit,"UPDATE");
    hConv->Write();
    f->Close();
 
    #if EXE==1
-      TFile *fout=new TFile("convolution.root","UPDATE");
+      tftit.Form("convolution_%d.root", tid);
+      TFile *fout=new TFile(tftit,"UPDATE");
       htct->Write();
       hConv->Write();
       fout->Close();
@@ -166,11 +179,13 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend ) {
 
 }
 
-TH1D *H1DConvolution( TH1D *htct , Double_t Cend ) { 
+TH1D *H1DConvolution( TH1D *htct , Double_t Cend, int tid ) { 
    
+   //mtx_conv.lock();
    TFile  *ftf = new TFile( "Centered_100ps_TransferFunction_Cividec_06052014.root");
    TH1D   *htf = (TH1D *) ftf->Get("shtf");
-   TH1D *hConv = H1DConvolution(htf,htct,Cend) ;
+   TH1D *hConv = H1DConvolution(htf,htct,Cend,tid);
+   //mtx_conv.unlock();
    return hConv;
    
 }
@@ -232,7 +247,7 @@ int main (int argc , char *argv[] ) {
    htct->Write();
    htctLP->Write();
 
-   TH1D *hconv = H1DConvolution( shtf, htctLP );
+   TH1D *hconv = H1DConvolution( shtf, htctLP , 0);
    
    hconv->Write();
    fout->Close();
@@ -251,7 +266,7 @@ int main (int argc , char *argv[] ) {
      TH1D *hg = new TH1D("hg","Transf. function"   , 100 , -6 , 6);   
      for (Int_t i=1;i<=100;i++) hg->SetBinContent( i , TMath::Gaus(-6+(i-1)*12./100.,0.,.5,kTRUE) );
 
-     H1DConvolution( hg, hb );
+     H1DConvolution( hg, hb ,0);
    #endif
    
    
