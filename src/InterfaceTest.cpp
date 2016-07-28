@@ -12,7 +12,7 @@ int main()
 	std::string fnm="Config.TRACS";
 	//TRACSInterface TRACSsim(fnm);
 	TRACSInterface *TRACSsim = new TRACSInterface( fnm );
-	TRACSsim->set_zPos(30);
+/*	TRACSsim->set_zPos(30);
 	TRACSsim->set_yPos(30);
 	TRACSsim->set_vBias(400);
 	TRACSsim->calculate_fields();
@@ -26,6 +26,14 @@ int main()
 	TRACSsim->GetItRamo();
 	TRACSsim->GetItRc();
 	TRACSsim->GetItConv();
+	*/
+	//TRACSsim->loop_on("v");
+	//TRACSsim->loop_on("y");
+	//TRACSsim->loop_on("y","v","z");
+	TRACSsim->loop_on("v","y","z");
+	//TRACSsim->loop_on("v","e");
+	//TRACSsim->loop_on("v","y");
+	//TRACSsim->loop_on("c");
 
 	
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;
