@@ -50,6 +50,7 @@ TH1D *H1DConvolution( TH1D *htct  , Double_t Cend=0. , int tid=0) ;
 TH1D *LPFilter( TH1D *htf , Double_t Cend ) ; 
 
 std::mutex mtx_conv;           // mutex for critical section
+int count;
 
 TH1D *LPFilter( TH1D *hin , Double_t Cend  ) {
 
@@ -80,12 +81,13 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend , int tid) {
 
    //Convolute (commutative)
    //C(t) = Int[ tct(x) transferfunction(t-x) dx ]
-   Double_t bw = htct->GetBinCenter(2) - htct->GetBinCenter(1) ;
-   TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-      float r = f1->GetRandom();
+   Double_t bw = htct->GetBinCenter(2) - htct->GetBinCenter(1);
+   //Double_t bw = htct->GetXaxis()->GetBinCenter(2) - htct->GetXaxis()->GetBinCenter(1);
+   //TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
+   //   float r = f1->GetRandom();
     TString tftit, tfname;
-    tftit.Form("hConv %f", r);
-    tfname.Form("conv %f", r);
+    tftit.Form("hConv_%d_%d", tid, count);
+    tfname.Form("conv_%d_%d", tid, count);
    TH1D *hConv = new TH1D(tftit,tfname,2*htct->GetNbinsX(),-htct->GetNbinsX()*bw,htct->GetNbinsX()*bw);
    
    
@@ -162,24 +164,28 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend , int tid) {
    c1->Update();
    //   NOPDF for the moment
 //   c1->Print( "convolution.pdf" );
-    tftit.Form("conv_%d.root", tid);
+    tftit.Form("conv_%d_%d.root", tid, count);
    TFile *f=new TFile(tftit,"UPDATE");
    hConv->Write();
-   f->Close();
+   //f->Close();
+   delete f;
 
    #if EXE==1
-      tftit.Form("convolution_%d.root", tid);
+      tftit.Form("convolution_%d_%d.root", tid, count);
       TFile *fout=new TFile(tftit,"UPDATE");
       htct->Write();
       hConv->Write();
-      fout->Close();
+      //fout->Close();
+      delete fout;
    #endif
-     
-   return hConv ;  
+  count++; //for naming purposes
+
+
+   return hConv;  
 
 }
 
-TH1D *H1DConvolution( TH1D *htct , Double_t Cend, int tid ) { 
+TH1D *H1DConvolution( TH1D *htct , Double_t Cend, int tid) { 
    
    //mtx_conv.lock();
    TFile  *ftf = new TFile( "Centered_100ps_TransferFunction_Cividec_06052014.root");

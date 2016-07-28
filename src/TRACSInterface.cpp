@@ -1,6 +1,5 @@
 #include "TRACSInterface.h"
 #include <mutex>          // std::mutex
-
 /*
  * Constructor of class TRACSInterface
  * it takes the configuration file path as the only input and gets the 
@@ -13,7 +12,7 @@
  *
  */
  std::mutex mtx2;           // mutex for critical section
-static const int num_threads = 16;
+//extern const int num_threads;
 TRACSInterface::TRACSInterface(std::string filename)
 {
 	neff_param = std::vector<double>(8,0);
@@ -33,8 +32,15 @@ TRACSInterface::TRACSInterface(std::string filename)
 
 	n_zSteps = (int) std::floor((zMax-zInit)/deltaZ); // Simulation Steps
 	n_zSteps1 = n_zSteps / 2;
-	n_zSteps2 = n_zSteps - n_zSteps1;
-	n_zSteps_array = n_zSteps / num_threads;
+	n_zSteps2 = (int) std::floor (n_zSteps - n_zSteps1);
+	// if more threads than points
+	if(num_threads>n_zSteps+1)
+		{
+			std::cout << "No. of threads > No. of z points! Program will terminate." << std::endl;	
+			exit(EXIT_FAILURE);
+		}
+	n_zSteps_array = (int) std::floor ((n_zSteps+1) / num_threads);
+
 	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
 	n_ySteps = (int) std::floor((yMax-yInit)/deltaY);
 	//WRITING TO FILES!
@@ -77,10 +83,10 @@ TRACSInterface::TRACSInterface(std::string filename)
 	z_shifts_array.resize(num_threads);
   	for (int i = 0; i < num_threads; i++)
     {	
-    	//if(i<(num_threads-1))
-    		z_shifts_array[i].resize(n_zSteps_array+1, 0.);
-		//else
-		//	z_shifts_array[i].resize((int)(n_zSteps+1-(n_zSteps_array+1)*(num_threads-1)), 0.);
+    	if(i<(num_threads-1))
+    		z_shifts_array[i].resize(n_zSteps_array, 0.);
+		else
+			z_shifts_array[i].resize((int)(n_zSteps+1-(n_zSteps_array)*(num_threads-1)), 0.);
 
 	}
 	
@@ -118,15 +124,17 @@ TRACSInterface::TRACSInterface(std::string filename)
 
 	//"sampling" z array
 	int l = 0;
-	for (int i = 0; i < n_zSteps_array + 1; i++ ) 
-	{
-		for (int j = 0; j < num_threads; j++)
+	
+		for (int i = 0; i < num_threads; i++)
 		{
-			z_shifts_array[j][i] = z_shifts[l];
-			l++; 
+			for (int j = 0; j < z_shifts_array[i].size(); j++ ) 
+			{
+				z_shifts_array[i][j] = z_shifts[l];
+				l++;
+			}
 		}
 		
-	}
+	
 
 	// Create shifts in Y
 	for (int i = 0; i < n_ySteps + 1; i++ ) 
@@ -188,11 +196,11 @@ TH1D * TRACSInterface::GetItRamo()
 	}
 	else
 	{
-		TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-   		float r = f1->GetRandom();
+		//TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
+   		//float r = f1->GetRandom();
 		TString htit, hname;
-		htit.Form("ramo %f", r);
-		hname.Form("Ramo current %f", r);
+		htit.Form("ramo_%d_%d", tcount, count1);
+		hname.Form("Ramo_current_%d_%d", tcount, count1);
 		i_ramo  = new TH1D(htit,hname,n_tSteps, 0.0, max_time);
 		//std::cout << htit << std::endl;
 
@@ -201,6 +209,8 @@ TH1D * TRACSInterface::GetItRamo()
 		{
 			i_ramo->SetBinContent(j+1, i_total[j] );
 		}
+		count1++;
+
 	}
 		return i_ramo;
 }
@@ -216,11 +226,11 @@ TH1D * TRACSInterface::GetItRc()
 	}
 	else
 	{	
-		TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-   		float r = f1->GetRandom();
+		//TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
+   		//float r = f1->GetRandom();
 		TString htit, hname;
-		htit.Form("ramo %f", r);
-		hname.Form("Ramo current RC %f", r);
+		htit.Form("ramo_rc%d%d", tcount, count2);
+		hname.Form("Ramo_current_%d_%d", tcount, count2);
 		i_rc    = new TH1D(htit,hname,n_tSteps, 0.0, max_time);
 		std::valarray<double> i_shaped ((size_t) n_tSteps);	
 		double RC = 50.*C; // Ohms*Farad
@@ -231,6 +241,7 @@ TH1D * TRACSInterface::GetItRc()
 			i_shaped[j]=i_shaped[j-1]+alfa*(i_total[j]-i_shaped[j-1]);
 			i_rc->SetBinContent(j+1, i_shaped[j]);
 		}
+		count2++;
 
 	}
 		return i_rc;
@@ -246,16 +257,17 @@ TH1D * TRACSInterface::GetItConv()
 	}
 	else
 	{
-		TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-   		float r = f1->GetRandom();
+		//TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
+   		//float r = f1->GetRandom();
 		TString htit, hname;
-		htit.Form("ramo %f", r);
-		hname.Form("Ramo current conv %f", r);
+		htit.Form("ramo_conv_%d_%d", tcount, count3);
+		hname.Form("Ramo current_%d_%d", tcount, count3);
 		i_conv  = new TH1D(htit,hname,n_tSteps, 0.0, max_time);
 		i_ramo = GetItRamo();
-		mtx2.lock();
+		//mtx2.lock();
 		i_conv = H1DConvolution( i_ramo , C*1.e12, tcount );
-		mtx2.unlock();
+		//mtx2.unlock();
+		count3++;
 	}
 		return i_conv;
 }
@@ -634,8 +646,8 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 
 
  	}
- 	*/				//n_par0 = (int) z_shifts_array[tid].size();
-		 	 		n_par0 = n_zSteps_array;
+ 	*/				n_par0 = (int) z_shifts_array[tid].size()-1;
+		 	 		//n_par0 = n_zSteps_array;
 		 	 		n_par1 = n_ySteps;
 			 		n_par2 = n_vSteps;
 			 		error = 0;
@@ -654,11 +666,14 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 								set_zPos(z_shifts_array[tid][params[0]]);
 								simulate_ramo_current();
 								i_ramo = GetItRamo();
-								//i_rc = GetItRc();
-								//i_conv = GetItConv();
+								i_ramo = NULL;
+								i_rc = GetItRc();
+								mtx2.lock();
+								i_conv = GetItConv();
+								mtx2.unlock();
 								//write to file
 								//mtx2.lock();
-								//utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
+								utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
 								utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
 								//mtx2.unlock();
 							}

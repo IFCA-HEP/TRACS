@@ -2,13 +2,15 @@
 //#include <iostream>
  #include <thread>
 #include <mutex>          // std::mutex
-
+#include "global.h"
 
 //using namespace std;
 //num_threads = 2;
-static const int num_threads = 16;
+//extern const int num_threads = 2;
 std::mutex mtx;           // mutex for critical section
 std::string fnm="Config.TRACS";
+const int num_threads = 8;
+//num_threads = utilities::get_nthreads("Config.TRACS", num_threads);
 TRACSInterface *TRACSsim[num_threads];// = new TRACSInterface( fnm ); //CORRECT
 
 

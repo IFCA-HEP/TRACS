@@ -13,6 +13,9 @@
 #include <cmath>
 #include <functional>
 #include <vector>
+#include "global.h"
+#include <stdlib.h>     /* exit, EXIT_FAILURE */
+
 
 using std::vector;
 
@@ -56,13 +59,15 @@ class TRACSInterface
 		int n_vSteps;
 		int n_zSteps, n_zSteps1, n_zSteps2, n_zSteps_array;
 		int n_ySteps;
+		//int num_threads;
+
 
 		int n_par0;
 		int n_par1;
 		int n_par2;
 		std::vector<int> params = {0, 0, 0};
 		int tcount;
-
+		int count1, count2, count3;
 
 		char bulk_type; 
 		char implant_type;
@@ -133,7 +138,7 @@ class TRACSInterface
 		void loop_on(std::string par);
 		void loop_on(std::string par1, std::string par2);
 		void loop_on(std::string par1, std::string par2, std::string par3);
-		void loop_on(int tid); //MULTITHREADING
+		void loop_on(int tid = 0); //MULTITHREADING
 
 		// Setters
 		void set_NeffParam(std::vector<double> newParam);
@@ -141,8 +146,8 @@ class TRACSInterface
 		void set_zPos(double newZPos);
 		void set_yPos(double newYPos);
 		void set_vBias(double newVBias);
-		void set_tcount(int tid);
-		void write_header(int tid);
+		void set_tcount(int tid = 0);
+		void write_header(int tid = 0);
 		void set_neffType(std::string newParametrization);
 		void set_carrierFile(std::string newCarrFile);
 
