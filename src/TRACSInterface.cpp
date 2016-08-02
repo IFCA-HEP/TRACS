@@ -40,7 +40,8 @@ TRACSInterface::TRACSInterface(std::string filename)
 			exit(EXIT_FAILURE);
 		}
 	n_zSteps_array = (int) std::floor ((n_zSteps+1) / num_threads);
-
+	n_zSteps_iter = (int) std::round ((n_zSteps+1) / (num_threads)*1.0);
+	//n_balance = (int)(((n_zSteps+1) / (num_threads+1.0)-n_zSteps_array)*n_zSteps_array*10;
 	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
 	n_ySteps = (int) std::floor((yMax-yInit)/deltaY);
 	//WRITING TO FILES!
@@ -81,7 +82,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 	z_shifts1.resize((size_t) n_zSteps1+1,0.);
 	z_shifts2.resize((size_t) n_zSteps2+1,0.);
 	z_shifts_array.resize(num_threads);
-  	for (int i = 0; i < num_threads; i++)
+	/*for (int i = 0; i < num_threads; i++)
     {	
     	if(i<(num_threads-1))
     		z_shifts_array[i].resize(n_zSteps_array, 0.);
@@ -89,7 +90,39 @@ TRACSInterface::TRACSInterface(std::string filename)
 			z_shifts_array[i].resize((int)(n_zSteps+1-(n_zSteps_array)*(num_threads-1)), 0.);
 
 	}
-	
+	*/
+	//distribute z coordinates evenly between threads
+	int t_sum = 0;
+	for (int i = 0; i < num_threads; i++)
+	{
+		n_zSteps_iter = (int) std::round ((n_zSteps+1-t_sum) / (num_threads-i)*1.0);
+		z_shifts_array[i].resize(n_zSteps_iter, 0.);
+		t_sum += n_zSteps_iter;
+	}
+/*	int zsize, size_count;
+  	for (int i = 0; i < num_threads; i++)
+    {	
+    	if(i<(num_threads-1))
+    	{	
+    		if(!(((n_zSteps_array*10)+1)%((i*n_balance+1))))
+    		{	zsize = n_zSteps_array+1;
+
+    		}
+    		else
+    		{
+    			zsize = n_zSteps_array;
+
+    		}	
+    		z_shifts_array[i].resize(zsize, 0.);
+
+    	}
+		else
+			z_shifts_array[i].resize((int)(n_zSteps+1-size_count), 0.);
+			//z_shifts_array[i].resize((int)(n_zSteps+1-(n_zSteps_array)*(num_threads-1)), 0.);
+
+		size_count += zsize;
+	}
+	*/
 	y_shifts.resize ((size_t) n_ySteps+1,0.);
 	voltages.resize((size_t) n_vSteps+1,0.);
 

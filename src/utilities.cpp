@@ -880,6 +880,57 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 		std::cout << "Error opening the file. Does the file " << fileName << " exist?" << std::endl;
 	}
 }
+// extract just the number of threads from config file
+/*int utilities::get_nthreads(std::string fileName, int &nThreads)
+{
+	// Creat map to hold all values as strings 
+	std::map< std::string, std::string> valuesMap;
+	std::string id, eq, val;
+	std::stringstream converter;
+	std::string tempString;
+
+	std::ifstream configFile(fileName, std::ios_base::in);
+
+	if (configFile.is_open())
+	{
+
+		std::string line;
+		char comment = '#';
+		char empty = '\0';
+		char tab = '\t';
+		while(std::getline(configFile, line))
+		{
+			char start = line[0];
+			if (start == comment || start == empty || start == tab) continue;  // skip comments
+			std::istringstream isstream(line);
+			isstream >> id >> eq >> val;
+			if (eq != "=") 
+			{
+			std::cout << "Error ecountered while reading '" << id << std::endl;
+			break;
+			}
+			else
+			{
+			// Store value on map as map[variabel] = value
+			valuesMap[id] = val;
+			}
+		}
+	tempString = std::string("NumberOfThreads");
+	nThreads << valuesMap[tempString];
+	return nThreads;
+	//converter >> nThreads;
+	//converter.clear();
+	//converter.str("");
+	//tempString = std::string("");
+	}
+	
+	else
+	{
+		std::cout << "Error opening the file. Does the file " << fileName << " exist?" << std::endl;
+	}
+}
+*/
+
 
 void utilities::valarray2Hist(TH1D *hist, std::valarray<double> &valar)
 {

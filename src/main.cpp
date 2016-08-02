@@ -255,7 +255,7 @@ int main()
 					hnoconv->SetBinContent( j+1 , i_total[j] );
 				}
 				int t=0;
-				hconv = H1DConvolution( hnoconv , C*1.e12, t);
+				hconv = H1DConvolution( hnoconv , C*1.e12);
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{
 					i_rc->SetBinContent(j, i+1 , hconv->GetBinContent(j) );

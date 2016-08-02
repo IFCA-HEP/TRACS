@@ -57,7 +57,7 @@ class TRACSInterface
 		int n_tSteps;
 		int waveLength; //added v
 		int n_vSteps;
-		int n_zSteps, n_zSteps1, n_zSteps2, n_zSteps_array;
+		int n_zSteps, n_zSteps1, n_zSteps2, n_zSteps_array, n_zSteps_iter, n_balance;
 		int n_ySteps;
 		//int num_threads;
 

@@ -9,7 +9,7 @@
 //extern const int num_threads = 2;
 std::mutex mtx;           // mutex for critical section
 std::string fnm="Config.TRACS";
-const int num_threads = 8;
+const int num_threads = 24;
 //num_threads = utilities::get_nthreads("Config.TRACS", num_threads);
 TRACSInterface *TRACSsim[num_threads];// = new TRACSInterface( fnm ); //CORRECT
 
