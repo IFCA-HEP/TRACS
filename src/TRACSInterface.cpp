@@ -82,48 +82,17 @@ TRACSInterface::TRACSInterface(std::string filename)
 	z_shifts.resize((size_t) n_zSteps+1,0.);
 	z_shifts1.resize((size_t) n_zSteps1+1,0.);
 	z_shifts2.resize((size_t) n_zSteps2+1,0.);
-	z_shifts_array.resize(num_threads);
-	/*for (int i = 0; i < num_threads; i++)
-    {	
-    	if(i<(num_threads-1))
-    		z_shifts_array[i].resize(n_zSteps_array, 0.);
-		else
-			z_shifts_array[i].resize((int)(n_zSteps+1-(n_zSteps_array)*(num_threads-1)), 0.);
 
-	}
-	*/
 	//distribute z coordinates evenly between threads
+	z_shifts_array.resize(num_threads);
 	int t_sum = 0;
 	for (int i = 0; i < num_threads; i++)
 	{
-		n_zSteps_iter = (int) std::round ((n_zSteps+1-t_sum) / (num_threads-i)*1.0);
+		n_zSteps_iter = (int) (std::ceil (((float)(n_zSteps+1-t_sum) / (num_threads-i))));
 		z_shifts_array[i].resize(n_zSteps_iter, 0.);
 		t_sum += n_zSteps_iter;
 	}
-/*	int zsize, size_count;
-  	for (int i = 0; i < num_threads; i++)
-    {	
-    	if(i<(num_threads-1))
-    	{	
-    		if(!(((n_zSteps_array*10)+1)%((i*n_balance+1))))
-    		{	zsize = n_zSteps_array+1;
 
-    		}
-    		else
-    		{
-    			zsize = n_zSteps_array;
-
-    		}	
-    		z_shifts_array[i].resize(zsize, 0.);
-
-    	}
-		else
-			z_shifts_array[i].resize((int)(n_zSteps+1-size_count), 0.);
-			//z_shifts_array[i].resize((int)(n_zSteps+1-(n_zSteps_array)*(num_threads-1)), 0.);
-
-		size_count += zsize;
-	}
-	*/
 	y_shifts.resize ((size_t) n_ySteps+1,0.);
 	voltages.resize((size_t) n_vSteps+1,0.);
 
@@ -137,34 +106,17 @@ TRACSInterface::TRACSInterface(std::string filename)
 	{
 		z_shifts[i] = (i*deltaZ)+zInit;	
 	}
-	/*
-	int j = 0, k = 0;
-	for (int i = 0; i < n_zSteps + 1; i++ ) 
-	{
-		z_shifts[i] = (i*deltaZ)+zInit;		
-    	z_shifts_array[j][k] = z_shifts[i];
-    	if(k<n_zSteps_array)
-    	{
-    		k++;
-    	}
-    	else
-    	{
-    		k = 0;
-    		j++;
-    	}
-
-	}
-	*/
+	
 
 	//"sampling" z array
 	int l = 0;
 	
 		for (int i = 0; i < num_threads; i++)
-		{
+		{	l = i;
 			for (int j = 0; j < z_shifts_array[i].size(); j++ ) 
-			{
+			{	
 				z_shifts_array[i][j] = z_shifts[l];
-				l++;
+				l+=num_threads;
 			}
 		}
 		
@@ -207,7 +159,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 */
-		
+	
 	i_ramo  = NULL;
 	i_rc    = NULL;
 	i_conv  = NULL;
@@ -700,6 +652,7 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 								set_zPos(z_shifts_array[tid][params[0]]);
 								simulate_ramo_current();
 								i_ramo = GetItRamo();
+								i_ramo_array[tid][params[0]] = i_ramo;
 								i_ramo = NULL;
 								i_rc = GetItRc();
 								mtx2.lock();
@@ -762,3 +715,60 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 
   }
+/*
+ *Resizing for storing data in memory 
+ *and using it later/writing to a single output file.
+ *
+*/
+    void TRACSInterface::resize_array()
+    {
+    	i_ramo_array.resize(num_threads);
+    	for (int i = 0; i < num_threads; i++)
+    		{
+    			i_ramo_array[i].resize(z_shifts_array[i].size());
+    			std::cout << "i_ramo_array[xlen][ylen]   " << i_ramo_array.size()<<"  " <<i_ramo_array[i].size() <<std::endl;
+    		}	
+
+    }
+
+
+    void TRACSInterface::write_to_file(int tid)
+    {
+    	write_header(tid);
+    	std::cout << "Writing to file..." <<std::endl;
+
+    		//n_par0 = (int) z_shifts_array[tid].size()-1;
+    				params[0] = 0; //thread 
+ 					params[1] = 0; //yPos;
+ 					params[2] = 0; //vPos;
+		 	 		n_par1 = n_ySteps;
+			 		n_par2 = n_vSteps;
+	 		 		//loop
+		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
+		 			{
+						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
+						{
+							for (int i = 0; i < num_threads; i++)
+							{
+								/* code */
+							
+								for (params[0] = 0; params[0] < i_ramo_array[i].size(); params[0]++)
+								{
+									
+									//utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
+									utilities::write_to_file_row(hetct_noconv_filename, i_ramo_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
+									//mtx2.unlock();
+								}
+							}
+						}
+						//std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
+						 // std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
+
+						// Open a ROOT file to save result
+						//TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );
+						//i_ramo->Write();
+						//i_rc->Write();
+						//tfile->Close();
+	 		 		}
+
+    }

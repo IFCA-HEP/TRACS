@@ -9,7 +9,7 @@
 //extern const int num_threads = 2;
 std::mutex mtx;           // mutex for critical section
 std::string fnm="Config.TRACS";
-int num_threads = 8;//std::thread::hardware_concurrency();
+//num_threads = 8;//std::thread::hardware_concurrency();
 int dummy_num_threads = 8;
 void call_from_thread(int tid);
 std::vector<TRACSInterface*> TRACSsim(num_threads);
@@ -44,6 +44,7 @@ int main()
 	std::cout << "It compiled, yaay!" << std::endl;
 	std::cout << "Number of cores = " << std::thread::hardware_concurrency() <<std::endl;
 	num_threads = std::thread::hardware_concurrency();
+	num_threads = 7;
 	TRACSsim.resize(num_threads);
 	//TRACSInterface *tp = NULL; // pointer
 	//load up a vector
@@ -99,7 +100,8 @@ int main()
          for (int i = 0; i < num_threads; ++i) {
              t[i].join();
          }
-
+    //write output to single file!
+    TRACSsim[0]->write_to_file(0);
 
     
                 // again
@@ -143,6 +145,12 @@ int main()
       	mtx.lock();
       	TRACSsim[tid] = new TRACSInterface(fnm);
       	TRACSsim[tid]->set_tcount(tid);
+      	if(tid==0)
+      	{
+      		i_ramo_array.clear();
+			//i_conv_array.clear();
+      		TRACSsim[tid]->resize_array();
+      	}
        	TRACSsim[tid]->write_header(tid);
 	    std::cout << "Made it t" << tid << std::endl;
 	    mtx.unlock();

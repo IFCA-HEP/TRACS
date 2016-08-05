@@ -260,7 +260,8 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector * detect
 	int nZ = z_shifts.size();
 	int nY = y_shifts.size();
 	int nV = voltages.size();
-	int nScans = (nX + nY + nZ)*nV;
+	//int nScans = (nX + nY + nZ)*nV;
+	int nScans = nZ * nY * nV;
 	double deltaZ = 0;
 	double deltaV = 0;	
 	double deltaY = 0;	

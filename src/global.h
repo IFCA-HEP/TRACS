@@ -1,11 +1,12 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
-//#include "TRACSInterface.h" 
-//#include <vector>
-//using std::vector;
+#include "TRACSInterface.h" 
+#include <TH1D.h> // 1 Dimesional ROOT histogram 
+#include <vector>
+using std::vector;
 
 
-// std::vector<vector <TH1D*>>  i_ramo_arr, i_conv_arr;
+extern vector<vector <TH1D*> >  i_ramo_array, i_conv_array;
 extern int num_threads;
 
 #endif // GLOBAL_H

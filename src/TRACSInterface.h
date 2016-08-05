@@ -149,6 +149,8 @@ class TRACSInterface
 		void set_vBias(double newVBias);
 		void set_tcount(int tid = 0);
 		void write_header(int tid = 0);
+		void resize_array();
+		void write_to_file(int tid = 0);
 		void set_neffType(std::string newParametrization);
 		void set_carrierFile(std::string newCarrFile);
 
