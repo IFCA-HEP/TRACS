@@ -27,6 +27,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 		start = "NOirrad";
 	} else 
 	{
+		trap = std::to_string((int) std::floor(1.e9*trapping));
 		start = "irrad";
 	}
 
@@ -206,7 +207,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 */
-	
+		
 	i_ramo  = NULL;
 	i_rc    = NULL;
 	i_conv  = NULL;

@@ -79,6 +79,7 @@ class TRACSInterface
 
 		std::vector<double>  z_shifts;
 		vector<vector <double> >  z_shifts_array;
+
 		//double z_shifts_array[10][10];
 		std::vector<double>  z_shifts1, z_shifts2;
 		std::vector<double>  y_shifts; // laser shift in X axis to center laser focus over read-out strip
