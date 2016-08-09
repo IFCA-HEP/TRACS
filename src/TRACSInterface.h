@@ -105,6 +105,7 @@ class TRACSInterface
 		// filename for data analysis
 		std::string hetct_conv_filename;
 		std::string hetct_noconv_filename;
+		std::string hetct_rc_filename;
 
 		//TH1D i_ramo;
 		TH1D *i_ramo; 

@@ -273,12 +273,6 @@ void TRACSInterface::simulate_ramo_current()
 	i_total = 0;
 
 	carrierCollection->simulate_drift( dt, max_time, yPos, zPos, i_elec, i_hole);
-
-	//for (int tPos = 0; tPos < n_tSteps; tPos++) 
-	//				{
-	//					i_total[tPos] = i_elec[tPos] + i_hole[tPos];
-	//				}
-	//strange behaviour!?
 	i_total = i_elec + i_hole;
 }
 
@@ -652,11 +646,13 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 								set_zPos(z_shifts_array[tid][params[0]]);
 								simulate_ramo_current();
 								i_ramo = GetItRamo();
-								i_ramo_array[tid][params[0]] = i_ramo;
+								i_ramo_array[tid][params[0]] = i_ramo; // for output
 								i_ramo = NULL;
 								i_rc = GetItRc();
+								i_rc_array[tid][params[0]] = i_rc; // for output								
 								mtx2.lock();
 								i_conv = GetItConv();
+								i_conv_array[tid][params[0]] = i_conv; // for output
 								mtx2.unlock();
 								//write to file
 								//mtx2.lock();
@@ -708,11 +704,13 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
   	// filename for data analysis
 	hetct_conv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_"+std::to_string(tcount)+"_conv.hetct";
 	hetct_noconv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_"+std::to_string(tcount)+"_noconv.hetct";
-	
+	hetct_rc_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_"+std::to_string(tcount)+"_rc.hetct";
+
    
 	// write header for data analysis
 	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
+	utilities::write_to_hetct_header(hetct_rc_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 
   }
 /*
@@ -723,15 +721,24 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
     void TRACSInterface::resize_array()
     {
     	i_ramo_array.resize(num_threads);
+    	i_rc_array.resize(num_threads);
+    	i_conv_array.resize(num_threads);
+
     	for (int i = 0; i < num_threads; i++)
     		{
     			i_ramo_array[i].resize(z_shifts_array[i].size());
+    			i_rc_array[i].resize(z_shifts_array[i].size());
+    			i_conv_array[i].resize(z_shifts_array[i].size());
     			std::cout << "i_ramo_array[xlen][ylen]   " << i_ramo_array.size()<<"  " <<i_ramo_array[i].size() <<std::endl;
     		}	
 
     }
 
-
+/*
+ * Writing to a single file
+ *
+ *
+ */
     void TRACSInterface::write_to_file(int tid)
     {
     	write_header(tid);
@@ -749,16 +756,16 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
 						{
 							for (int i = 0; i < num_threads; i++)
-							{
-								/* code */
-							
+							{							
 								for (params[0] = 0; params[0] < i_ramo_array[i].size(); params[0]++)
 								{
-									
-									//utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
 									utilities::write_to_file_row(hetct_noconv_filename, i_ramo_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
-									//mtx2.unlock();
+									utilities::write_to_file_row(hetct_conv_filename, i_conv_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
+									utilities::write_to_file_row(hetct_rc_filename, i_rc_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
+
 								}
+								
+
 							}
 						}
 						//std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";

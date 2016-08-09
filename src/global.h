@@ -6,7 +6,7 @@
 using std::vector;
 
 
-extern vector<vector <TH1D*> >  i_ramo_array, i_conv_array;
+extern vector<vector <TH1D*> >  i_ramo_array, i_conv_array, i_rc_array;
 extern int num_threads;
 
 #endif // GLOBAL_H

@@ -57,7 +57,7 @@ void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) /
 
 		// get #carriers, #carriers/N_thr, initialize carrier_collection
 		int nCarriers = allCarriers.size();
-		carrierPerThread = (int) std::ceil(nCarriers/nThreads);
+		int carrierPerThread = (int) std::ceil(nCarriers/nThreads);
 		Carrier emptyCarrier('e', 0.0, -10.0, -10.0, _detector, 0);
 		int count = 0;
 		std::vector<Carrier> defaultVector (carrierPerThread, emptyCarrier);
