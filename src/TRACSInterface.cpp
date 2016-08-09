@@ -296,6 +296,19 @@ void TRACSInterface::set_NeffParam(std::vector<double> newParam)
 }
 
 /*
+ *
+ * Returns Neff parametrization
+ *
+ */
+
+std::vector<double>TRACSInterface::get_NeffParam()
+{
+	return neff_param;
+} 
+
+
+
+/*
  * Sets the trapping time in the detector to the input value. 
  * Remember that the trapping time must be a positive number.
  * The smaller the trapping time the bigger the signal loss.
@@ -400,197 +413,14 @@ void TRACSInterface::set_carrierFile(std::string newCarrFile)
 
 
 /*
- * A loop through one parameter (depends on argument)
- *	"v": voltage, "z": z-axis, "y": y-axis
- *	example: TRACSsim->loop_on("v");
- * OVERLOADED!
+ * Returns the pointer
+ * to the TRACS simulated tree 
+ *
  */
- void TRACSInterface::loop_on(std::string par)
- {
- 	params[0] = 0; //zPos 
- 	params[1] = 0; //yPos;
- 	params[2] = 0; //vPos;
- 	int p;
- 	if (!par.compare("z"))
- 	{
- 		n_par0 = n_zSteps;
- 		p = 0;
- 	}
-	 	else if (!par.compare("y"))
-	 		{
-	 		n_par0 = n_ySteps;
-	 		p = 1;
-	 		}
-		 		else if (!par.compare("v"))
-		 		{
-		 			n_par0 = n_vSteps;
-		 			p = 2;
-		 		}
-		 			else 
-		 			{
-		 				std::cout<<"Error in loop_on(string), invalid input argument! Use \"z\", \"y\", or \"v\"!" << std::endl;
-		 				return;
-		 			}
-	//loop through the values and calculate
-	for (params[p] = 0; params[p] < n_par0; params[p]++)
-	{
-		set_zPos(z_shifts[params[0]]);
-		set_yPos(z_shifts[params[1]]);
-		detector->set_voltages(voltages[params[2]], vDepletion);
-		calculate_fields();
-		simulate_ramo_current();
-		GetItRamo();
-		GetItRc();
-		GetItConv();
-
-	}
- 	n_par0 = 0;
- }
-/*
- * A loop through one parameter (depends on argument)
- *	"v": voltage, "z": z-axis, "y": y-axis
- *	example: TRACSsim->loop_on("v", "Z");
- */
-void TRACSInterface::loop_on(std::string par1, std::string par2)
- {
- 	params[0] = 0; //zPos 
- 	params[1] = 0; //yPos;
- 	params[2] = 0; //vPos;
- 	char e1 = 0, e2 = 0, e3 = 0;
- 	//v
- 	if ((!par1.compare("v"))||((!par2.compare("v"))))
- 	{
- 		n_par2 = n_vSteps;
- 		e1 = 1;
- 	}
- 	else
- 		n_par2 = 1;
- 	//y
- 	if ((!par1.compare("y"))||((!par2.compare("y"))))
- 	{
- 		n_par1 = n_ySteps;
- 		e2 = 1;
-  	}
- 	else
- 		n_par1 = 1;
- 	//z
- 	if ((!par1.compare("z"))||((!par2.compare("z"))))
- 	{
-		n_par0 = n_zSteps;
-  		e3 = 1;
- 	}
- 	else
- 		n_par0 = 1;
- 		 		
-	if ((e1&e2)||(e1&e3)||(e2&e3))
-		 	 	{
-		 	 			//loop
-		 		 	for (params[2] = 0; params[2] < n_par2; params[2]++)
-		 			{
-		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
-						calculate_fields();
-
-						for (params[1] = 0; params[1] < n_par1; params[1]++)
-						{
-							set_yPos(y_shifts[params[1]]);
-
-							for (params[0] = 0; params[0] < n_par0; params[0]++)
-							{
-								set_zPos(z_shifts[params[0]]);
-								simulate_ramo_current();
-								GetItRamo();
-								GetItRc();
-								GetItConv();
-								std::cout<<"Success!" << std::endl;
-
-							}
-						}
-	 		 		}
-		 	 	}	
-	else
-		{
- 			std::cout<<"Error in loop_on(str1, str2), invalid input arguments! Use \"z\", \"y\" and \"v\"!" << std::endl;
- 		} 	 		
-	 		 		
-	 	
- 		
-	 	
- 	n_par0 = 0;
- 	n_par1 = 0;
- 	n_par2 = 0;
-
- }
-
-/*
- * A loop through all three parameters
- *	"v": voltage, "z": z-axis, "y": y-axis
- *	example: TRACSsim->loop_on("x","v","y");
- * 
- */
-  void TRACSInterface::loop_on(std::string par1, std::string par2, std::string par3)
- {
- 	params[0] = 0; //zPos 
- 	params[1] = 0; //yPos;
- 	params[2] = 0; //vPos;
- 	char error = 1;
- 	if ((!par1.compare("v"))||((!par2.compare("v")))||((!par3.compare("v"))))
- 	{
- 		 	if ((!par1.compare("y"))||((!par2.compare("y")))||((!par3.compare("y"))))
- 		 	{
- 		 		if ((!par1.compare("z"))||((!par2.compare("z")))||((!par3.compare("z"))))
-		 		{
-		 	 		n_par0 = n_zSteps;
-		 	 		n_par1 = n_ySteps;
-			 		n_par2 = n_vSteps;
-			 		error = 0;
-	 		 		//loop
-		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
-		 			{
-		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
-						calculate_fields();
-
-						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
-						{
-							set_yPos(y_shifts[params[1]]);
-							for (params[0] = 0; params[0] < n_par0 + 1; params[0]++)
-							{
-								std::cout << "Height " << z_shifts[params[0]] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[params[1]] << " of " << y_shifts.back() << " || Voltage " << voltages[params[2]] << " of " << voltages.back() << std::endl;								
-								set_zPos(z_shifts[params[0]]);
-								simulate_ramo_current();
-								i_ramo = GetItRamo();
-								//GetItRc();
-								i_conv = GetItConv();
-								//write to file
-								//utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
-								//utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts[params[0]], voltages[params[2]]);
-							}
-						}
-						std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
-						 // std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
-
-						// Open a ROOT file to save result
-						//TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );
-						//i_ramo->Write();
-						//i_rc->Write();
-						//tfile->Close();
-	 		 		}
-	 		 	}
-		 	}
- 	}
- 	if(error)
- 		{
- 			std::cout<<"Error in loop_on(str1, str2, str3), invalid input arguments! Use (\"z\", \"y\", \"v\")!" << std::endl;
- 		}
-	 	
- 	n_par0 = 0;
- 	n_par1 = 0;
- 	n_par2 = 0;
-
- }
-
-
+//TTree * GetTree(){}
+ 
  /*
- * MULTITHREADING TEST!!! 
+ * MULTITHREADING 
  *A loop through all three parameters
  *	"v": voltage, "z": z-axis, "y": y-axis
  *	example: TRACSsim->loop_on("x","v","y");
@@ -601,36 +431,11 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
  	params[0] = 0; //zPos 
  	params[1] = 0; //yPos;
  	params[2] = 0; //vPos;
- 	char error = 1;
- 	//int n_par0, n_par1, n_par2;
- /*	std::vector<double> z_shifts_loc;
- 	switch(tid)
- 	{
- 		case 0: n_par0 = n_zSteps1;
- 		z_shifts_loc.resize((size_t) n_zSteps1+1,0.);
- 		z_shifts_loc = z_shifts1;
- 		std::cout <<  "z_shifts_1" << std::endl;
- 		break;								
-
- 		case 1: n_par0 = n_zSteps2;
- 		z_shifts_loc.resize((size_t) n_zSteps2+1,0.);
- 		z_shifts_loc = z_shifts2;
- 		std::cout <<  "z_shifts_2" << std::endl;								
-		break;
-
- 		default: n_par0 = n_zSteps;
- 		z_shifts_loc.resize((size_t) n_zSteps+1,0.);
- 		z_shifts_loc = z_shifts;
- 		std::cout <<  "z_shifts" << std::endl;								
- 		break;
-
-
- 	}
- 	*/				n_par0 = (int) z_shifts_array[tid].size()-1;
+ 	
+ 			n_par0 = (int) z_shifts_array[tid].size()-1;
 		 	 		//n_par0 = n_zSteps_array;
 		 	 		n_par1 = n_ySteps;
 			 		n_par2 = n_vSteps;
-			 		error = 0;
 	 		 		//loop
 		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
 		 			{
@@ -656,8 +461,8 @@ void TRACSInterface::loop_on(std::string par1, std::string par2)
 								mtx2.unlock();
 								//write to file
 								//mtx2.lock();
-								utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
-								utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
+								//utilities::write_to_file_row(hetct_conv_filename, i_conv, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
+								//utilities::write_to_file_row(hetct_noconv_filename, i_ramo, detector->get_temperature(), y_shifts[params[1]], z_shifts_array[tid][params[0]], voltages[params[2]]);
 								//mtx2.unlock();
 							}
 						}

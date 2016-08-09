@@ -131,15 +131,13 @@ class TRACSInterface
 		TH1D *GetItRamo();
 		TH1D *GetItRc();
 		TH1D *GetItConv();
-
+		std::vector<double> get_NeffParam(); //Returns Neff parametrization
+		TTree * GetTree(); //Returns the pointer to the TRACS simulated tree
 		// Simulations
 		void simulate_ramo_current();
 		void calculate_fields();
 
 		//Loops
-		void loop_on(std::string par);
-		void loop_on(std::string par1, std::string par2);
-		void loop_on(std::string par1, std::string par2, std::string par3);
 		void loop_on(int tid = 0); //MULTITHREADING
 
 		// Setters

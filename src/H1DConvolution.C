@@ -164,6 +164,8 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend , int tid) {
    c1->Update();
    //   NOPDF for the moment
 //   c1->Print( "convolution.pdf" );
+ //too many files...
+/*
     tftit.Form("conv_%d_%d.root", tid, count);
    TFile *f=new TFile(tftit,"UPDATE");
    hConv->Write();
@@ -179,7 +181,7 @@ TH1D *H1DConvolution( TH1D *htf , TH1D *htct , Double_t Cend , int tid) {
       delete fout;
    #endif
   count++; //for naming purposes
-
+*/
 
    return hConv;  
 

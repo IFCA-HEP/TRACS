@@ -41,7 +41,7 @@ void resize_TI(size_t newSize)
 int main()
 {
 	std::cout << "Number of cores = " << std::thread::hardware_concurrency() <<std::endl;
-	num_threads = std::thread::hardware_concurrency();
+	num_threads = std::thread::hardware_concurrency(); // No. of threads = No. of cores
 	//num_threads = 1;
 	TRACSsim.resize(num_threads);
 	//TRACSInterface *tp = NULL; // pointer
@@ -130,8 +130,7 @@ int main()
 //This function will be called from a thread
   
       void call_from_thread(int tid) {
-          //std::cout << "Launched by thread " << tid << std::endl;
-      	 //std::string fnm="Config.TRACS";
+        // every thread instantiates a new TRACSInterface object
       	std::cout << "Thread" << tid << std::endl;
       	mtx.lock();
       	TRACSsim[tid] = new TRACSInterface(fnm);
@@ -141,8 +140,9 @@ int main()
       		i_ramo_array.clear();
 			//i_conv_array.clear();
       		TRACSsim[tid]->resize_array();
+      		TRACSsim[tid]->write_header(tid);
       	}
-       	TRACSsim[tid]->write_header(tid);
+       	//TRACSsim[tid]->write_header(tid);
 	    std::cout << "Made it t" << tid << std::endl;
 	    mtx.unlock();
 	    TRACSsim[tid]->loop_on(tid);
