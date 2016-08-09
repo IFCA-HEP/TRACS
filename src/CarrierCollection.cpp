@@ -46,30 +46,31 @@ void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) /
 			double q, x_init, y_init, gen_time;
 			if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) 
 			{
-				std::cout << "Error while reading file" << std::endl; 
 				break;
 			}
 
 			// read all carriers
 			Carrier carrier(carrier_type, q, x_init, y_init , _detector, gen_time);
 			allCarriers.push_back(carrier);
+			//_carrier_list_sngl.push_back(carrier); //TEST
 		}
 
 		// get #carriers, #carriers/N_thr, initialize carrier_collection
 		int nCarriers = allCarriers.size();
-		int carrierPerThread = (int) std::ceil(nCarriers/nThreads);
+		carrierPerThread = (int) std::ceil(nCarriers/nThreads);
 		Carrier emptyCarrier('e', 0.0, -10.0, -10.0, _detector, 0);
 		int count = 0;
 		std::vector<Carrier> defaultVector (carrierPerThread, emptyCarrier);
+		_carrier_list.resize(nThreads); //TEST
 		// 2 for-loops (N_thr(#carriers/N_thr)) to fill each dimension 
 		for (int i = 0; i < nThreads; i++)
 		{
-			_carrier_list.push_back(defaultVector);
+			//_carrier_list.push_back(defaultVector);
 			for (int j = 0; j < carrierPerThread; j++) 
-			{
+			{   			
 				if (count < nCarriers) 
 				{
-					_carrier_list[i][j] = allCarriers[count];
+					_carrier_list[i].push_back(allCarriers[count]);
 					count++;
 				}
 			}
@@ -125,18 +126,23 @@ void CarrierCollection::simulate_drift( double dt, double max_time, double shift
 	{
 		char carrier_type = carrier.get_carrier_type();
 
-		// get and shift carrier position
-		std::array< double,2> x = carrier.get_x();
-		double x_init = x[0]+shift_x;
-		double y_init = x[1]+shift_y;
+		
 
 		// simulate drift and add to proper valarray
 		if (carrier_type == 'e')
 		{
+			// get and shift carrier position
+			std::array< double,2> x = carrier.get_x();
+			double x_init = x[0]+shift_x;
+			double y_init = x[1]+shift_y;
 			curr_elec += carrier.simulate_drift( dt , max_time, x_init, y_init);
 		}
 		else if (carrier_type =='h')
 		{
+			// get and shift carrier position
+			std::array< double,2> x = carrier.get_x();
+			double x_init = x[0]+shift_x;
+			double y_init = x[1]+shift_y;
 			curr_hole += carrier.simulate_drift( dt , max_time, x_init, y_init);
 		}
 	}
@@ -193,9 +199,12 @@ void CarrierCollection::add_carriers_from_file(QString filename)
 		std::istringstream iss(line);
 		char carrier_type;
 		double q, x_init, y_init, gen_time;
-		if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) { break;}  //TODO show error?
+		if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) { 
+			std::cout << "Error while reading file" << std::endl; 
+			break;
+		} 
 
-		Carrier carrier(carrier_type, q, x_init, y_init , _detector, 1e-9);
+		Carrier carrier(carrier_type, q, x_init, y_init , _detector, gen_time);
 		_carrier_list_sngl.push_back(carrier);
 	}
 }

@@ -76,7 +76,7 @@ int main()
 	std::string neffType = "defaultString";
 	std::vector<double> neff_param(8,0.);
 
-	std::string file_carriers = "etct.carriers";
+	std::string file_carriers = "etct0.carriers";
 	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
 	
 	// Create vector of (n-1) threads as the nth thread is the main thread
@@ -114,7 +114,7 @@ int main()
 
 	parameters["allow_extrapolation"] = true;
 
-	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param);
+	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
 
 	detector.set_voltages(vInit, v_depletion);
 

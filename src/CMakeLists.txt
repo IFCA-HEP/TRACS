@@ -29,7 +29,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(SRC SMSDSubDomains.cpp SMSDetector.cpp
     Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp
     CarrierCollection.cpp utilities.cpp
-	qcustomplot.cpp qcustomplot.h H1DConvolution.C TRACSInterface.cpp global.c)
+	qcustomplot.cpp qcustomplot.h H1DConvolution.C TRACSInterface.cpp global.cpp)
 	
 set(HEADERS qcustomplot.h)
 

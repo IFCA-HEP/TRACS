@@ -40,11 +40,9 @@ void resize_TI(size_t newSize)
 
 int main()
 {
-	//test
-	std::cout << "It compiled, yaay!" << std::endl;
 	std::cout << "Number of cores = " << std::thread::hardware_concurrency() <<std::endl;
 	num_threads = std::thread::hardware_concurrency();
-	num_threads = 7;
+	//num_threads = 1;
 	TRACSsim.resize(num_threads);
 	//TRACSInterface *tp = NULL; // pointer
 	//load up a vector
@@ -123,13 +121,6 @@ int main()
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;
 	//TracsSim.set_carrierFile("etct.carriers");
 	//TRACSInterface* TracsSim = new TRACSInterface("Config.TRACS");
-
-
-	//test
-	std::cout << "A bit slow!" << std::endl;
-
-	
-	//while(true);
 	
 	return 0;
 	
