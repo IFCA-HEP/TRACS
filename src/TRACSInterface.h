@@ -8,6 +8,7 @@
 #include <TFile.h>
 #include "TF1.h"
 #include <TH1D.h> // 1 Dimesional ROOT histogram 
+#include <TTree.h>
 #include <iterator>
 #include <limits>  // std::numeric_limits
 #include <cmath>

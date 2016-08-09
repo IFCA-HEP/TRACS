@@ -42,6 +42,10 @@ int main()
 {
 	std::cout << "Number of cores = " << std::thread::hardware_concurrency() <<std::endl;
 	num_threads = std::thread::hardware_concurrency(); // No. of threads = No. of cores
+	if(num_threads == 0){
+		std::cout << "Error reading number of cores! Setting num_threads = 4"  <<std::endl;
+		num_threads = 4;
+	}
 	//num_threads = 1;
 	TRACSsim.resize(num_threads);
 	//TRACSInterface *tp = NULL; // pointer
@@ -100,6 +104,15 @@ int main()
          }
     //write output to single file!
     TRACSsim[0]->write_to_file(0);
+
+    //getter test
+    std::vector<double> neff_test = TRACSsim[0]->get_NeffParam();
+    std::cout << "Neff param.: " << std::endl;
+    for (int i = 0; i < 8; i++)
+    {
+    	    std::cout << neff_test[i] << std::endl;
+
+    }
 
     
                 // again
