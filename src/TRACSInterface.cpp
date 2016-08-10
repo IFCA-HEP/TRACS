@@ -37,8 +37,9 @@ TRACSInterface::TRACSInterface(std::string filename)
 	// if more threads than points
 	if(num_threads>n_zSteps+1)
 		{
-			std::cout << "No. of threads > No. of z points! Program will terminate." << std::endl;	
-			exit(EXIT_FAILURE);
+			num_threads = n_zSteps+1;
+			std::cout << "No. of threads > No. of z points! reducing No. of threads to."<< num_threads << std::endl;	
+			//exit(EXIT_FAILURE);
 		}
 	n_zSteps_array = (int) std::floor ((n_zSteps+1) / num_threads);
 	n_zSteps_iter = (int) std::round ((n_zSteps+1) / (num_threads)*1.0);
@@ -418,7 +419,7 @@ void TRACSInterface::set_carrierFile(std::string newCarrFile)
  *
  */
 //TTree * GetTree(){}
- 
+
  /*
  * MULTITHREADING 
  *A loop through all three parameters

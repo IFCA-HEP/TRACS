@@ -7,12 +7,13 @@
 //using namespace std;
 //num_threads = 2;
 //extern const int num_threads = 2;
-std::mutex mtx;           // mutex for critical section
+std::mutex mtx, mtx_nt;           // mutex for critical sections
 std::string fnm="Config.TRACS";
 //num_threads = 8;//std::thread::hardware_concurrency();
-int dummy_num_threads = 8;
+int init_num_threads; // initial number of threads, which might change dynamically
 void call_from_thread(int tid);
 std::vector<TRACSInterface*> TRACSsim(num_threads);
+std::vector<std::thread> t(num_threads);
 //std::vector<TRACSInterface*> TRACSsim;
 //std::vector<std::unique_ptr<TRACSInterface>> TRACSsim;
 //num_threads = utilities::get_nthreads("Config.TRACS", num_threads);
@@ -38,15 +39,23 @@ void resize_TI(size_t newSize)
  */     	
      
 
-int main()
+//int main(int nthreads = std::thread::hardware_concurrency())
+int main(int argc, char* argv[])
 {
 	std::cout << "Number of cores = " << std::thread::hardware_concurrency() <<std::endl;
-	num_threads = std::thread::hardware_concurrency(); // No. of threads = No. of cores
+	if(argc<2)
+	{
+		num_threads = std::thread::hardware_concurrency(); // No. of threads = No. of cores
+	}
+	else
+		num_threads = atoi(argv[1]);
+	//num_threads = 100;
+	//num_threads = nthreads;
 	if(num_threads == 0){
 		std::cout << "Error reading number of cores! Setting num_threads = 4"  <<std::endl;
 		num_threads = 4;
 	}
-	//num_threads = 1;
+	init_num_threads = num_threads;
 	TRACSsim.resize(num_threads);
 	//TRACSInterface *tp = NULL; // pointer
 	//load up a vector
@@ -89,10 +98,14 @@ int main()
 	//TRACSsim->loop_on("y","v","z");
 	//TRACSsim->loop_on("v","y","z");
 	//resize_TI(num_threads);
-	std::thread t[num_threads];
- 
+	//std::thread t[num_threads];
+ 	t.resize(num_threads);
          //Launch a group of threads
          for (int i = 0; i < num_threads; ++i) {
+         	if(i==0)
+         		mtx_nt.lock();
+         	if(i==1)
+         		t.resize(num_threads);
              t[i] = std::thread(call_from_thread, i);
          }
  
@@ -144,41 +157,52 @@ int main()
   
       void call_from_thread(int tid) {
         // every thread instantiates a new TRACSInterface object
-      	std::cout << "Thread" << tid << std::endl;
-      	mtx.lock();
-      	TRACSsim[tid] = new TRACSInterface(fnm);
-      	TRACSsim[tid]->set_tcount(tid);
-      	if(tid==0)
-      	{
-      		i_ramo_array.clear();
-			//i_conv_array.clear();
-      		TRACSsim[tid]->resize_array();
-      		TRACSsim[tid]->write_header(tid);
-      	}
-       	//TRACSsim[tid]->write_header(tid);
-	    std::cout << "Made it t" << tid << std::endl;
-	    mtx.unlock();
-	    TRACSsim[tid]->loop_on(tid);
-	    /*
-	      	 if(tid==0){
-	      	 		std::string fnm1="Config.TRACS";
-	      	 	std::cout << "Thread1!" << std::endl;
-	      	 	 mtx.lock();
-	      	 	TRACSInterface *TRACSsim = new TRACSInterface(fnm1);
-	      	 	std::cout << "Made it t1!" << std::endl;
-	      	 	 mtx.unlock();
-	         	TRACSsim->loop_on(1);
-	      	 }
-	      	 if(tid==1){
-	      	 	std::string fnm2="Config.TRACS";
-	      	 	std::cout << "Thread2!" << std::endl;
-	      	 	//for(int i=0; i<100000000; i++);
-	      	 	mtx.lock();
-	      	 	TRACSInterface *TRACSsim2 = new TRACSInterface(fnm2);
-	      	 	std::cout << "Made it t2!" << std::endl;
-				mtx.unlock();
-	      	 	TRACSsim2->loop_on(2);
-	      	 }
-	    */  	 
+       	 mtx.lock();
+        if(tid < num_threads) // In case we reduced the number of threads!
+        {	
+	      	std::cout << "Thread" << tid << std::endl;
+	      	TRACSsim[tid] = new TRACSInterface(fnm);
+	      	TRACSsim[tid]->set_tcount(tid);
+	      	if(tid==0)
+	      	{
+	      		i_ramo_array.clear();
+				//i_conv_array.clear();
+	      		TRACSsim[tid]->resize_array();
+	      		TRACSsim[tid]->write_header(tid);
+	      		TRACSsim.resize(num_threads);
+	      		//t.resize(num_threads);
+	      		mtx_nt.unlock();
+	      	}
+	       	//TRACSsim[tid]->write_header(tid);
+		    std::cout << "Made it t" << tid << std::endl;
+		    mtx.unlock();
+		    TRACSsim[tid]->loop_on(tid);
+		    /*
+		      	 if(tid==0){
+		      	 		std::string fnm1="Config.TRACS";
+		      	 	std::cout << "Thread1!" << std::endl;
+		      	 	 mtx.lock();
+		      	 	TRACSInterface *TRACSsim = new TRACSInterface(fnm1);
+		      	 	std::cout << "Made it t1!" << std::endl;
+		      	 	 mtx.unlock();
+		         	TRACSsim->loop_on(1);
+		      	 }
+		      	 if(tid==1){
+		      	 	std::string fnm2="Config.TRACS";
+		      	 	std::cout << "Thread2!" << std::endl;
+		      	 	//for(int i=0; i<100000000; i++);
+		      	 	mtx.lock();
+		      	 	TRACSInterface *TRACSsim2 = new TRACSInterface(fnm2);
+		      	 	std::cout << "Made it t2!" << std::endl;
+					mtx.unlock();
+		      	 	TRACSsim2->loop_on(2);
+		      	 }
+		    */  
+	    	}	 
+	    else
+	    {
+	    	t[tid].detach();
+	    	mtx.unlock();
+	    }
       	 }
 
