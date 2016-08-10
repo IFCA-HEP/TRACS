@@ -21,7 +21,7 @@
 #include <fstream>
 #include <iterator>
 
-extern TH1D *H1DConvolution( TH1D *htct, Double_t Cend=0. ) ; 
+extern TH1D *H1DConvolution( TH1D *htct, Double_t Cend=0. , int tid=0) ; 
 using namespace dolfin;
 
 namespace Ui {

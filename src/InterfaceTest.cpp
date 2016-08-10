@@ -1,17 +1,83 @@
 #include "TRACSInterface.h"
 //#include <iostream>
- 
+ #include <thread>
+#include <mutex>          // std::mutex
+#include "global.h"
+
 //using namespace std;
+//num_threads = 2;
+//extern const int num_threads = 2;
+std::mutex mtx, mtx_nt;           // mutex for critical sections
+std::string fnm="Config.TRACS";
+//num_threads = 8;//std::thread::hardware_concurrency();
+int init_num_threads; // initial number of threads, which might change dynamically
+void call_from_thread(int tid);
+std::vector<TRACSInterface*> TRACSsim(num_threads);
+std::vector<std::thread> t(num_threads);
+//std::vector<TRACSInterface*> TRACSsim;
+//std::vector<std::unique_ptr<TRACSInterface>> TRACSsim;
+//num_threads = utilities::get_nthreads("Config.TRACS", num_threads);
+//TRACSInterface *TRACSsim;
+//TRACSInterface *TRACSsim[num_threads];// = new TRACSInterface( fnm ); //CORRECT
+//TRACSInterface* TRACSsim = new TRACSInterface[num_threads];// = new TRACSInterface( fnm ); //CORRECT
 
 
-int main()
+
+      
+/*
+void resize_TI(size_t newSize)
 {
-	//test
-	std::cout << "It compiled, yaay!" << std::endl;
+    //TRACSInterface * TRACSsim = (TRACSInterface *) realloc(TRACSsim, newSize);
+    //int* newArr = new int[newSize];
+    TRACSInterface * TRACSsim_new[newSize];
+    memcpy( TRACSsim_new, TRACSsim, num_threads * sizeof(TRACSInterface) );
+
+    num_threads = newSize;
+    delete [] TRACSsim;
+    TRACSsim = TRACSsim_new;
+}
+ */     	
+     
+
+//int main(int nthreads = std::thread::hardware_concurrency())
+int main(int argc, char* argv[])
+{
+	std::cout << "Number of cores = " << std::thread::hardware_concurrency() <<std::endl;
+	if(argc<2)
+	{
+		num_threads = std::thread::hardware_concurrency(); // No. of threads = No. of cores
+	}
+	else
+		num_threads = atoi(argv[1]);
+	//num_threads = 100;
+	//num_threads = nthreads;
+	if(num_threads == 0){
+		std::cout << "Error reading number of cores! Setting num_threads = 4"  <<std::endl;
+		num_threads = 4;
+	}
+	init_num_threads = num_threads;
+	TRACSsim.resize(num_threads);
+	//TRACSInterface *tp = NULL; // pointer
+	//load up a vector
+	//for (auto i = 0; i < num_threads; i++) {
+    //TRACSsim.push_back(std::make_unique<TRACSInterface>(fnm));
+	//}
+
+	/*
+	TRACSsim = new (malloc(sizeof(TRACSInterface))) TRACSInterface(fnm);
+	TRACSInterface *MyDummy;
+	num_threads = std::thread::hardware_concurrency();
+	for(int i=1; i < num_threads; ++i)
+	{
+  		MyDummy = new(&TRACSsim[i]) TRACSInterface(fnm);
+  	}
+  	*/
+
+	//num_threads = std::thread::hardware_concurrency();
 	//Interface to TRACS
-	std::string fnm="Config.TRACS";
+	//std::string fnm="Config.TRACS";
 	//TRACSInterface TRACSsim(fnm);
-	TRACSInterface *TRACSsim = new TRACSInterface( fnm );
+	//TRACSInterface *TRACSsim = new TRACSInterface( fnm ); //CORRECT
 /*	TRACSsim->set_zPos(30);
 	TRACSsim->set_yPos(30);
 	TRACSsim->set_vBias(400);
@@ -30,7 +96,49 @@ int main()
 	//TRACSsim->loop_on("v");
 	//TRACSsim->loop_on("y");
 	//TRACSsim->loop_on("y","v","z");
-	TRACSsim->loop_on("v","y","z");
+	//TRACSsim->loop_on("v","y","z");
+	//resize_TI(num_threads);
+	//std::thread t[num_threads];
+ 	t.resize(num_threads);
+         //Launch a group of threads
+         for (int i = 0; i < num_threads; ++i) {
+         	if(i==0)
+         		mtx_nt.lock();
+         	if(i==1)
+         		t.resize(num_threads);
+             t[i] = std::thread(call_from_thread, i);
+         }
+ 
+         std::cout << "Launched from the main\n";
+ 
+         //Join the threads with the main thread
+         for (int i = 0; i < num_threads; ++i) {
+             t[i].join();
+         }
+    //write output to single file!
+    TRACSsim[0]->write_to_file(0);
+
+    //getter test
+    std::vector<double> neff_test = TRACSsim[0]->get_NeffParam();
+    std::cout << "Neff param.: " << std::endl;
+    for (int i = 0; i < 8; i++)
+    {
+    	    std::cout << neff_test[i] << std::endl;
+
+    }
+
+    
+                // again
+    // delete my class
+	/*
+	for(int i=0;i<dummy_num_threads;++i)
+	{
+   // Explicitly call the destructor for the placed object
+  TRACSsim[i].~TRACSInterface();
+	}
+	free((void*)TRACSsim);
+	TRACSsim = 0;
+	*/
 	//TRACSsim->loop_on("v","e");
 	//TRACSsim->loop_on("v","y");
 	//TRACSsim->loop_on("c");
@@ -39,14 +147,62 @@ int main()
 	//std::cout<<"i_ramo:"<<TracsSim.GetItRamo()<<std::endl;
 	//TracsSim.set_carrierFile("etct.carriers");
 	//TRACSInterface* TracsSim = new TRACSInterface("Config.TRACS");
-
-
-	//test
-	std::cout << "A bit slow!" << std::endl;
-
-	
-	//while(true);
 	
 	return 0;
 	
 }
+
+
+//This function will be called from a thread
+  
+      void call_from_thread(int tid) {
+        // every thread instantiates a new TRACSInterface object
+       	 mtx.lock();
+        if(tid < num_threads) // In case we reduced the number of threads!
+        {	
+	      	std::cout << "Thread" << tid << std::endl;
+	      	TRACSsim[tid] = new TRACSInterface(fnm);
+	      	TRACSsim[tid]->set_tcount(tid);
+	      	if(tid==0)
+	      	{
+	      		i_ramo_array.clear();
+				//i_conv_array.clear();
+	      		TRACSsim[tid]->resize_array();
+	      		TRACSsim[tid]->write_header(tid);
+	      		TRACSsim.resize(num_threads);
+	      		//t.resize(num_threads);
+	      		mtx_nt.unlock();
+	      	}
+	       	//TRACSsim[tid]->write_header(tid);
+		    std::cout << "Made it t" << tid << std::endl;
+		    mtx.unlock();
+		    TRACSsim[tid]->loop_on(tid);
+		    /*
+		      	 if(tid==0){
+		      	 		std::string fnm1="Config.TRACS";
+		      	 	std::cout << "Thread1!" << std::endl;
+		      	 	 mtx.lock();
+		      	 	TRACSInterface *TRACSsim = new TRACSInterface(fnm1);
+		      	 	std::cout << "Made it t1!" << std::endl;
+		      	 	 mtx.unlock();
+		         	TRACSsim->loop_on(1);
+		      	 }
+		      	 if(tid==1){
+		      	 	std::string fnm2="Config.TRACS";
+		      	 	std::cout << "Thread2!" << std::endl;
+		      	 	//for(int i=0; i<100000000; i++);
+		      	 	mtx.lock();
+		      	 	TRACSInterface *TRACSsim2 = new TRACSInterface(fnm2);
+		      	 	std::cout << "Made it t2!" << std::endl;
+					mtx.unlock();
+		      	 	TRACSsim2->loop_on(2);
+		      	 }
+		    */  
+	    	}	 
+	    else
+	    {
+	    	t[tid].detach();
+	    	mtx.unlock();
+	    }
+      	 }
+

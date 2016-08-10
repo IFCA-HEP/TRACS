@@ -16,7 +16,7 @@
 #include <functional>
 
 // Declaring external convolution function and threaded function
-extern TH1D *H1DConvolution( TH1D *htct , Double_t Cend=0. ) ; 
+extern TH1D *H1DConvolution( TH1D *htct , Double_t Cend=0. , int tid=0) ; 
 void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts, std::vector<double> curr_elec, std::vector<double> curr_hole, int thr_id);
 
 //------------
@@ -76,7 +76,7 @@ int main()
 	std::string neffType = "defaultString";
 	std::vector<double> neff_param(8,0.);
 
-	std::string file_carriers = "etct.carriers";
+	std::string file_carriers = "etct0.carriers";
 	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
 	
 	// Create vector of (n-1) threads as the nth thread is the main thread
@@ -114,7 +114,7 @@ int main()
 
 	parameters["allow_extrapolation"] = true;
 
-	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param);
+	SMSDetector detector(pitch, width, depth, nns, bulk_type, implant_type, n_cells_x, n_cells_y, temp, trapping, fluence, neff_param, neffType);
 
 	detector.set_voltages(vInit, v_depletion);
 
@@ -254,7 +254,8 @@ int main()
 					i_ramo.SetBinContent(j+1,i+1, i_total[j] );
 					hnoconv->SetBinContent( j+1 , i_total[j] );
 				}
-				hconv = H1DConvolution( hnoconv , C*1.e12 );
+				int t=0;
+				hconv = H1DConvolution( hnoconv , C*1.e12);
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{
 					i_rc->SetBinContent(j, i+1 , hconv->GetBinContent(j) );
