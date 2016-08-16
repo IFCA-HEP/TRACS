@@ -26,7 +26,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
 1) Get the source
 
-    git clone https://github.com/UrbSen/TRACS
+    git clone https://github.com/IFCA-HEP/TRACS
     
 2)[OPTIONAL-Recommended] Recompile fenics files
 
