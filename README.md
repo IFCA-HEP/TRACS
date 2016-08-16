@@ -58,6 +58,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
     cd bin/
     ./TRACS # for Command line version
     ./TRACS-GUI # for Grafical User Interface version
+    ./interface_test # for the TRACS interface demo (CLI)
 
 # Brief Introduction on How TRACS Works
 
