@@ -13,7 +13,7 @@ Simulator of transient currents and charge collection in semiconductor detectors
   - [CMake](http://www.cmake.org/download/)
   
   - [Fenics Libraries](http://fenicsproject.org/download/) ||
-    Compatibility appears to be broken for 1.6.x and up
+    Compatibility has been fixed (only tested up to 1.6.x)
   
   - [Qt4](http://download.qt.io/archive/qt/) ||
     Qt5 is not compatible 
@@ -28,20 +28,20 @@ Simulator of transient currents and charge collection in semiconductor detectors
 
     git clone https://github.com/IFCA-HEP/TRACS
     
-2)[OPTIONAL-Recommended] Recompile fenics files
+2)[OPTIONAL - Recommended] Recompile fenics files
 
     cd TRACS/src
     ffc -l dolfin Poisson.ufl
     ffc -l dolfin Gradient.ufl
     cd ../
     
-3) Creat folder to store executables
+3) Create folder to store executables
 
     cd TRACS
     mkdir build
     cd build
     
-4) Configure CMake and creat Makefile
+4) Configure CMake and create Makefile
 
     cmake ..
     
