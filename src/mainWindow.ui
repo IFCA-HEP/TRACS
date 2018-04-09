@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="usesScrollButtons">
        <bool>true</bool>
@@ -259,7 +259,7 @@
                          <item>
                           <widget class="QDoubleSpinBox" name="depletion_voltage_double_box">
                            <property name="maximum">
-                            <double>99999999999999.0000000000</double>
+                            <double>99999999999999.000000000000000</double>
                            </property>
                            <property name="value">
                             <double>250.000000000000000</double>
@@ -932,8 +932,6 @@
          </widget>
         </item>
        </layout>
-       <zorder>splitter_7</zorder>
-       <zorder>potentials_miniTab</zorder>
       </widget>
       <widget class="QWidget" name="fields_tab">
        <property name="enabled">
@@ -1654,7 +1652,7 @@
                 <rect>
                  <x>10</x>
                  <y>30</y>
-                 <width>361</width>
+                 <width>366</width>
                  <height>310</height>
                 </rect>
                </property>

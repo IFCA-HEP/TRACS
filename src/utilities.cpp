@@ -23,7 +23,7 @@ TH2D utilities::export_to_histogram(Function &func, TString hist_name, TString h
     for (int j=1; j<=n_bins_y; j++) {
     double x_value = (i - 0.5)*step_x;
     double y_value = (j - 0.5)*step_y;
-    hist.Fill(x_max-x_value,y_max-y_value, func(x_value, y_value));
+    hist.Fill(x_max-x_value,y_max-y_value, (func)(x_value, y_value));
     }
   }
   return hist;

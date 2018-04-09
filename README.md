@@ -1,4 +1,4 @@
-TRACS: Transient Current Simulator
+TRACS: TRAnsient Current Simulator
 ===================================
 
 Simulator of transient currents and charge collection in semiconductor detectors based on Shockley–Ramo theorem
@@ -23,6 +23,8 @@ Simulator of transient currents and charge collection in semiconductor detectors
     Recommended version 6.x
 
 # Installation
+
+Once you have installed all the software listed under "Requisites" you can now begin the installation process:
 
 1) Get the source
 
