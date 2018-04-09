@@ -1,3 +1,16 @@
+/*
+ * @ Copyright 2014-2017 CERN and Instituto de Fisica de Cantabria - Universidad de Cantabria. All rigths not expressly granted are reserved [tracs.ssd@cern.ch]
+ * This file is part of TRACS.
+ *
+ * TRACS is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation,
+ * either version 3 of the Licence.
+ *
+ * TRACS is distributed in the hope that it will be useful , but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with TRACS. If not, see <http://www.gnu.org/licenses/>
+ */
+
 #include "CarrierCollection.h"
 // _carrier_list should be a N_thr-dimensional vector
 
@@ -46,13 +59,13 @@ void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) /
 			double q, x_init, y_init, gen_time;
 			if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) 
 			{
-				std::cout << "Error while reading file" << std::endl; 
 				break;
 			}
 
 			// read all carriers
 			Carrier carrier(carrier_type, q, x_init, y_init , _detector, gen_time);
 			allCarriers.push_back(carrier);
+			//_carrier_list_sngl.push_back(carrier); //TEST
 		}
 
 		// get #carriers, #carriers/N_thr, initialize carrier_collection
@@ -61,15 +74,16 @@ void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) /
 		Carrier emptyCarrier('e', 0.0, -10.0, -10.0, _detector, 0);
 		int count = 0;
 		std::vector<Carrier> defaultVector (carrierPerThread, emptyCarrier);
+		_carrier_list.resize(nThreads); //TEST
 		// 2 for-loops (N_thr(#carriers/N_thr)) to fill each dimension 
 		for (int i = 0; i < nThreads; i++)
 		{
-			_carrier_list.push_back(defaultVector);
+			//_carrier_list.push_back(defaultVector);
 			for (int j = 0; j < carrierPerThread; j++) 
-			{
+			{   			
 				if (count < nCarriers) 
 				{
-					_carrier_list[i][j] = allCarriers[count];
+					_carrier_list[i].push_back(allCarriers[count]);
 					count++;
 				}
 			}
@@ -125,18 +139,23 @@ void CarrierCollection::simulate_drift( double dt, double max_time, double shift
 	{
 		char carrier_type = carrier.get_carrier_type();
 
-		// get and shift carrier position
-		std::array< double,2> x = carrier.get_x();
-		double x_init = x[0]+shift_x;
-		double y_init = x[1]+shift_y;
+		
 
 		// simulate drift and add to proper valarray
 		if (carrier_type == 'e')
 		{
+			// get and shift carrier position
+			std::array< double,2> x = carrier.get_x();
+			double x_init = x[0]+shift_x;
+			double y_init = x[1]+shift_y;
 			curr_elec += carrier.simulate_drift( dt , max_time, x_init, y_init);
 		}
 		else if (carrier_type =='h')
 		{
+			// get and shift carrier position
+			std::array< double,2> x = carrier.get_x();
+			double x_init = x[0]+shift_x;
+			double y_init = x[1]+shift_y;
 			curr_hole += carrier.simulate_drift( dt , max_time, x_init, y_init);
 		}
 	}
@@ -150,30 +169,6 @@ void CarrierCollection::simulate_drift( double dt, double max_time, double shift
 	}
 }
 
-//TH2D CarrierCollection::get_e_dist_histogram(int n_bins_x, int n_bins_y,  TString hist_name, TString hist_title, int thrId)
-//{
-//  // get detector limits
-//  double x_min = _detector->get_x_min();
-//  double x_max = _detector->get_x_max();
-//  double y_min = _detector->get_y_min();
-//  double y_max = _detector->get_y_max();
-//
-//  // create histogram object
-//  TH2D e_dist = TH2D(hist_name, hist_title, n_bins_x , x_min, x_max, n_bins_y, y_min, y_max);
-//
-//   // range for through the carriers and fill the histogram
-//  for (auto carrier : _carrier_list[thrId])
-//  {
-//    char carrier_type = carrier.get_carrier_type();
-//    if (carrier_type == 'e')
-//    {
-//      std::array< double,2> x = carrier.get_x();
-//      double q = carrier.get_q();
-//      e_dist.Fill(x[0], x[1], q);
-//    }
-//  }
-//  return e_dist;
-//}
 
 /*
  ********************** OVERLOADED FUNCTIONS FOR GUI COMPATIBILITY **************************
@@ -193,9 +188,12 @@ void CarrierCollection::add_carriers_from_file(QString filename)
 		std::istringstream iss(line);
 		char carrier_type;
 		double q, x_init, y_init, gen_time;
-		if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) { break;}  //TODO show error?
+		if (!(iss >> carrier_type >> q >> x_init >> y_init >> gen_time)) { 
+			std::cout << "Error while reading file" << std::endl; 
+			break;
+		} 
 
-		Carrier carrier(carrier_type, q, x_init, y_init , _detector, 1e-9);
+		Carrier carrier(carrier_type, q, x_init, y_init , _detector, gen_time);
 		_carrier_list_sngl.push_back(carrier);
 	}
 }
@@ -226,7 +224,8 @@ void CarrierCollection::simulate_drift( double dt, double max_time, std::valarra
 	}
 }
 
-void CarrierCollection::simulate_drift( double dt, double max_time, double shift_x, double shift_y, std::valarray<double> &curr_elec, std::valarray<double> &curr_hole)
+void CarrierCollection::simulate_drift( double dt, double max_time, double shift_x, double shift_y,
+										std::valarray<double>&curr_elec, std::valarray<double> &curr_hole)
 {
 	// range for through the carriers
 	for (auto carrier : _carrier_list_sngl)

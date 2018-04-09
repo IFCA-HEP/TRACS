@@ -1,3 +1,16 @@
+/*
+ * @ Copyright 2014-2017 CERN and Instituto de Fisica de Cantabria - Universidad de Cantabria. All rigths not expressly granted are reserved [tracs.ssd@cern.ch]
+ * This file is part of TRACS.
+ *
+ * TRACS is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation,
+ * either version 3 of the Licence.
+ *
+ * TRACS is distributed in the hope that it will be useful , but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with TRACS. If not, see <http://www.gnu.org/licenses/>
+ */
+
 #include "utilities.h" 
 
 // function to export to a root histogram from a dolfin 1d function
@@ -156,13 +169,13 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	int nZ = z_shifts.size();
 	int nY = y_shifts.size();
 	int nV = voltages.size();
-	int nScans = (nX + nY + nZ)*nV;
+	int nScans = (nX + nY + nZ)*nV; // 0 = nX
 	double deltaZ = 0;
 	double deltaV = 0;	
 	double deltaY = 0;	
 	if (nZ > 1)	deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
-	if (nV > 1) deltaV = std::abs((voltages.back()-voltages.back())/(nV-1)); 	
-	if (nY > 1) deltaY = std::abs((voltages.back()-voltages.back())/(nY-1)); 	
+	if (nV > 1) deltaV = std::abs((voltages.back()-voltages.front())/(nV-1));
+	if (nY > 1) deltaY = std::abs((y_shifts.back()-y_shifts.front())/(nY-1));
 	double temp = detector.get_temperature() - 273;
 	
 	// Convert relevant quantities to string for outputting
@@ -247,6 +260,110 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	}
 }
 
+//SLIGHTLY MODIFIED TO WORK WITH SMSDetector *detector
+// function to write results to file (in rows)
+// overloaded (now from TH1D)
+void utilities::write_to_hetct_header(std::string filename, SMSDetector * detector, double C, double dt,std::vector<double> y_shifts, std::vector<double> z_shifts, double landa, std::string type, std::string carriers_file, std::vector<double> voltages)
+{
+	// Initialize stream for outputting to file
+	std::ofstream header;  
+
+	// Derived quantities
+	//int nX = 0;
+	int nZ = z_shifts.size();
+	int nY = y_shifts.size();
+	int nV = voltages.size();
+	//int nScans = (nX + nY + nZ)*nV;
+	int nScans = nZ * nY * nV;
+	double deltaZ = 0;
+	double deltaV = 0;	
+	double deltaY = 0;	
+	if (nZ > 1)	deltaZ = std::abs((z_shifts.back()-z_shifts.front())/(nZ-1));
+	if (nV > 1) deltaV = std::abs((voltages.back()-voltages.front())/(nV-1));
+	if (nY > 1) deltaY = std::abs((y_shifts.back()-y_shifts.front())/(nY-1));
+	double temp = detector->get_temperature() - 273;
+	
+	// Convert relevant quantities to string for outputting
+	std::string s_date = "2015-06-15_19-25";
+	std::string s_zVector = utilities::vector_to_string(z_shifts);
+	std::string s_vVector = utilities::vector_to_string(voltages);
+	std::string s_yVector = utilities::vector_to_string(y_shifts);
+	
+	// Open file
+	header.open (filename);  
+
+	// Check the file was open
+	if (header.is_open())
+	{ 
+		// Store header string 
+		header << "================\n";
+		header << "SSD simulation file\n";
+		header << "version: 1.0\n";
+		header << "================\n";
+		header << "scanType: " << "TRACS\n";
+		header << "startTime: " << s_date << "\n" ;
+		header << "landaLaser: " << landa << "\n";
+		header << "illumDirect: " << type << "\n";
+		header << "ampGain: 0\n";
+		header << "fluence: " << detector->get_fluence() << "\n";
+		header << "annealing: 0\n";
+		header << "numOfScans: " << nScans << "\n";
+		header << "temperatureMin: " << temp  << "\n";
+		header << "temperatureMax: " << temp  << "\n";
+		header << "deltaTemperature: " << 0. << "\n";
+		header << "nTemperature: 1\n";
+		header << "temperatureVector: " << temp  << "\n";
+		header << "voltageMin: " << voltages.front() << "\n";
+		header << "voltageMax: " << voltages.back() << "\n";
+		header << "deltaVoltage: " << deltaV << "\n";
+		header << "nVoltage: " << nV << "\n";
+		header << "voltageVector: " << s_vVector << "\n";
+		header << "pulsePowerIntensityMin: 60.000\n";
+		header << "pulsePowerIntensityMax: 60.000\n";
+		header << "deltaPulsePowerIntensity: 0\n";
+		header << "nPulsePowerIntensity: 1\n";
+		header << "pulsePowerIntensityVector: 60.000 \n";
+		header << "pulseWidthMin: 0.000\n";
+		header << "pulseWidthMax: 0.000\n";
+		header << "deltaPulseWidth: 0\n";
+		header << "nPulseWidth: 1\n";
+		header << "pulseWidthVector: 0.000 \n";
+		header << "xMin: 0.000\n";
+		header << "xMax: 0.000\n";
+		header << "deltaX: 0\n";
+		header << "nX: 1\n";
+		// X o Y tengo que aclararme porque no lo entiendo!!!
+		header << "yMin: " << y_shifts.front() << "\n";
+		header << "yMax: " << y_shifts.back() << "\n";
+		header << "deltaY: " << deltaY << "\n";
+		header << "nY: " << nY << "\n";
+		header << "yVector: " << s_yVector << "\n";
+		header << "zMin: " << z_shifts.front() << "\n";
+		header << "zMax: " << z_shifts.back() << "\n";
+		header << "deltaZ: " << deltaZ << "\n";
+		header << "nZ: " << nZ << "\n";
+		header << "zVector: " << s_zVector << "\n";
+		header << "At: " << std::fixed << std::setprecision(15) << dt << "\n";
+		header << "Capacitance[F]: " <<  std::fixed << std::setprecision(15) << C << "\n";
+		header << "Bulk: " << detector->get_bulk_type() << "\n";
+		header << "Implant: " << detector->get_implant_type() << "\n";
+		header << "NStrips: " << detector->get_nns() << "\n";
+		header << "Pitch: " << std::setprecision(0) << detector->get_pitch() << "\n";
+		header << "Width: " << std::setprecision(0) << detector->get_width() << "\n";
+		header << "Depth: " << std::setprecision(0) << detector->get_depth() << "\n";
+		header << "Vdep: " << detector->get_vdep() << "\n";
+		header << "Carriers File: " << carriers_file << "\n";
+		header << "================\n";
+		header <<	 "Nt T[C] Vset[V] x[mm] y[mm] z[mm] I(t)[A]\n";
+		header <<	 "================\n";
+
+		header.close();
+	}
+	else // Error output
+	{
+	std::cout << "File could not be created"<<std::endl;
+	}
+}
 
 // Utility to convert large arrays/vecto into strings
 std::string utilities::vector_to_string(std::vector<double> input_list)
@@ -606,6 +723,7 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 	tempString = std::string("Pitch");
 	converter << valuesMap[tempString];
 	converter >> pitch;
+	converter.clear();
 	converter.str("");
 	tempString = std::string("");
 
@@ -776,10 +894,62 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 		std::cout << "Error opening the file. Does the file " << fileName << " exist?" << std::endl;
 	}
 }
+// extract just the number of threads from config file
+/*int utilities::get_nthreads(std::string fileName, int &nThreads)
+{
+	// Creat map to hold all values as strings 
+	std::map< std::string, std::string> valuesMap;
+	std::string id, eq, val;
+	std::stringstream converter;
+	std::string tempString;
+
+	std::ifstream configFile(fileName, std::ios_base::in);
+
+	if (configFile.is_open())
+	{
+
+		std::string line;
+		char comment = '#';
+		char empty = '\0';
+		char tab = '\t';
+		while(std::getline(configFile, line))
+		{
+			char start = line[0];
+			if (start == comment || start == empty || start == tab) continue;  // skip comments
+			std::istringstream isstream(line);
+			isstream >> id >> eq >> val;
+			if (eq != "=") 
+			{
+			std::cout << "Error ecountered while reading '" << id << std::endl;
+			break;
+			}
+			else
+			{
+			// Store value on map as map[variabel] = value
+			valuesMap[id] = val;
+			}
+		}
+	tempString = std::string("NumberOfThreads");
+	nThreads << valuesMap[tempString];
+	return nThreads;
+	//converter >> nThreads;
+	//converter.clear();
+	//converter.str("");
+	//tempString = std::string("");
+	}
+	
+	else
+	{
+		std::cout << "Error opening the file. Does the file " << fileName << " exist?" << std::endl;
+	}
+}
+*/
+
 
 void utilities::valarray2Hist(TH1D *hist, std::valarray<double> &valar)
 {
-	if (valar.size() == hist->GetSize()-2) {
+	unsigned int histSize = hist->GetSize()-2;
+	if (valar.size() == histSize) { //hist->GetSize()-2) {
 		int steps = valar.size();
 		for (int i = 0; i < steps ; i++) 
 		{

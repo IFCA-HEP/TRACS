@@ -29,8 +29,8 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(SRC SMSDSubDomains.cpp SMSDetector.cpp
     Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp
     CarrierCollection.cpp utilities.cpp
-	qcustomplot.cpp qcustomplot.h H1DConvolution.C TRACSInterface.cpp)
-
+	qcustomplot.cpp qcustomplot.h H1DConvolution.C TRACSInterface.cpp global.cpp)
+	
 set(HEADERS qcustomplot.h)
 
 # Run MOC from Qt over headers
@@ -69,10 +69,13 @@ qt4_wrap_cpp(NONGUI_MOC ${HEADERS} OPTIONS   -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDE
 
 # Executable
 add_executable(TRACS main.cpp ${SRC} ${HEADERS} ${NONGUI_MOC})
+#ADDED FOR INTERFACE TEST!!!
+add_executable(interface_test InterfaceTest.cpp ${SRC} ${HEADERS} ${NONGUI_MOC})
 
 # Target libraries
 target_link_libraries(TRACS ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES})
-
+#ADDED FOR INTERFACE TEST!!!
+target_link_libraries(interface_test ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES})
 
 set(GUI_HEADERS mainWindow.h qcustomplot.h)
 set(GUI_SRC mainWindow.cpp SMSDSubDomains.cpp SMSDetector.cpp Carrier.cpp CarrierMobility.cpp CarrierTransport.cpp CarrierCollection.cpp utilities.cpp qcustomplot.cpp H1DConvolution.C)
@@ -118,7 +121,6 @@ qt4_wrap_ui(GUI_UIS_HEADERS ${GUI_UIS})
 # Executable
 add_executable(TRACS-GUI main_gui.cpp ${GUI_SRC} ${GUI_MOC} ${GUI_UIS_HEADERS} )
 target_link_libraries(TRACS-GUI ${DOLFIN_LIBRARIES} ${DOLFIN_3RD_PARTY_LIBRARIES} ${LIBRARIES} ${QT_LIBRARIES} )
-
 
 
 # vim:ft=cmake

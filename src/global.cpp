@@ -11,18 +11,9 @@
  * You should have received a copy of the GNU Lesser General Public License along with TRACS. If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QApplication>
-#include "mainWindow.h"
+#include "global.h"
 
-
-int main(int argc, char* argv[])
-{
-  parameters["allow_extrapolation"] = true;
-
-  QApplication app(argc, argv);
-  MainWindow mainWindow;
-
-  mainWindow.show();
-
-  return app.exec();
-}
+vector<vector <TH1D*> >  i_ramo_array, i_conv_array, i_rc_array;
+//i_ramo_array.clear();
+//i_conv_array.clear();
+int num_threads;

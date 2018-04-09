@@ -11,18 +11,15 @@
  * You should have received a copy of the GNU Lesser General Public License along with TRACS. If not, see <http://www.gnu.org/licenses/>
  */
 
-#include <QApplication>
-#include "mainWindow.h"
+#ifndef GLOBAL_H
+#define GLOBAL_H
+#include "TRACSInterface.h" 
+#include <TH1D.h> // 1 Dimesional ROOT histogram 
+#include <vector>
+using std::vector;
 
 
-int main(int argc, char* argv[])
-{
-  parameters["allow_extrapolation"] = true;
+extern vector<vector <TH1D*> >  i_ramo_array, i_conv_array, i_rc_array;
+extern int num_threads;
 
-  QApplication app(argc, argv);
-  MainWindow mainWindow;
-
-  mainWindow.show();
-
-  return app.exec();
-}
+#endif // GLOBAL_H
