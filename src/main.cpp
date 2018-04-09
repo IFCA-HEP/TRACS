@@ -1,3 +1,16 @@
+/*
+ * @ Copyright 2014-2017 CERN and Instituto de Fisica de Cantabria - Universidad de Cantabria. All rigths not expressly granted are reserved [tracs.ssd@cern.ch]
+ * This file is part of TRACS.
+ *
+ * TRACS is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation,
+ * either version 3 of the Licence.
+ *
+ * TRACS is distributed in the hope that it will be useful , but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with TRACS. If not, see <http://www.gnu.org/licenses/>
+ */
+
 #include "SMSDetector.h"
 #include "Source.h"
 #include "utilities.h"
@@ -17,12 +30,14 @@
 
 // Declaring external convolution function and threaded function
 extern TH1D *H1DConvolution( TH1D *htct , Double_t Cend=0. , int tid=0) ; 
-void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts, std::vector<double> curr_elec, std::vector<double> curr_hole, int thr_id);
+void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts,
+		std::vector<double> curr_elec, std::vector<double> curr_hole, int thr_id);
 
 //------------
 
 // Threaded function to call carrier_collection
-void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts, std::vector<double> curr_elec, std::vector<double> curr_hole, int id)
+void call_from_thread(CarrierCollection & cCollection, double dt, double max_time, double shift_x, double y_shifts,
+		std::vector<double> curr_elec, std::vector<double> curr_hole, int id)
 {
 	int nTimeSteps = curr_elec.size();
 	std::valarray<double> i_elec((size_t) nTimeSteps);	
@@ -34,43 +49,42 @@ void call_from_thread(CarrierCollection & cCollection, double dt, double max_tim
 /*
  ************** MAIN FUNCTION OF TRACS ***************
  *****************************************************
- ********** AKA: where the magic happens *************
  */
 
 int main()
 {
 	// Declare variables with default values
 	double pitch = 0,
-		   width = 0,
-		   depth = 0,
-		   temp = 0,
-		   trapping = 0,
-		   fluence = 0,
-		   C = 0,
-		   dt = 0,
-		   max_time = 0,
-		   vInit = 0,
-		   deltaV = 0,
-		   vMax = 0,
-		   v_depletion = 0,
-		   deltaZ = 0,
-		   zInit = 0.,
-		   zMax = depth,
-		   yInit = 0.,
-		   yMax = 0, //((2*nns)+1)*pitch,
-		   deltaY = 5.;
+			width = 0,
+			depth = 0,
+			temp = 0,
+			trapping = 0,
+			fluence = 0,
+			C = 0,
+			dt = 0,
+			max_time = 0,
+			vInit = 0,
+			deltaV = 0,
+			vMax = 0,
+			v_depletion = 0,
+			deltaZ = 0,
+			zInit = 0.,
+			zMax = depth,
+			yInit = 0.,
+			yMax = 0, //((2*nns)+1)*pitch,
+			deltaY = 5.;
 
 	int nThreads = 0,
-		nns = 0,
-		n_cells_y = 0,
-		n_cells_x = 0,
-		waveLength = 0,
-		n_vSteps = 0,
-		n_zSteps = 0,
-		n_ySteps = 0;
+			nns = 0,
+			n_cells_y = 0,
+			n_cells_x = 0,
+			waveLength = 0,
+			n_vSteps = 0,
+			n_zSteps = 0,
+			n_ySteps = 0;
 
 	char bulk_type = '\0', 
-		 implant_type = '\0';
+			implant_type = '\0';
 
 	std::string scanType = "defaultString";
 	std::string neffType = "defaultString";
@@ -78,7 +92,7 @@ int main()
 
 	std::string file_carriers = "etct.carriers";
 	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
-	
+
 	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];
 
@@ -125,7 +139,7 @@ int main()
 	// get number of steps from time
 	int n_tSteps = (int) std::floor(max_time / dt);
 
-//	QString filename = "etct.carriers";
+	//	QString filename = "etct.carriers";
 	QString filename = QString::fromUtf8(file_carriers.c_str());
 	CarrierCollection * carrier_collection = new CarrierCollection(dec_pointer);
 
@@ -137,7 +151,7 @@ int main()
 	std::valarray<double> i_total((size_t) n_tSteps);
 	std::vector< std::vector<double> > vva_elec(nThreads, std::vector<double>(n_tSteps)); // vector of size N-threads where every element is a vector
 	std::vector< std::vector<double> > vva_hole(nThreads, std::vector<double>(n_tSteps)); // same as above for holes current
-	
+
 	// Shifting  of Charge Carriers
 	// the laser gets shifted in x and/or z direction depending on the arrays 
 	// fed to the simulate_drift method inside the main for loop
@@ -160,8 +174,8 @@ int main()
 	{
 		y_shifts[i] = (i*deltaY)+yInit;
 	}
-//	TString hist_name = "i_ramo";
-//	TString hist_title = "i_ramo";
+	//	TString hist_name = "i_ramo";
+	//	TString hist_title = "i_ramo";
 	TH2D i_ramo = TH2D("i_ramo", "i_ramo", n_tSteps, 0.0, max_time, n_zSteps + 1, zInit, zMax);
 
 	hnoconv = new TH1D("hnoconv","Ramo current",n_tSteps, 0.0, max_time);
@@ -171,7 +185,7 @@ int main()
 	std::vector<double> z_chifs(n_zSteps+1);
 	z_chifs = z_shifts;
 	std::transform(z_chifs.begin(), z_chifs.end(), z_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
-	
+
 	// Convert Z to milimeters
 	std::vector<double> y_chifs(n_ySteps+1);
 	y_chifs = y_shifts;
@@ -180,13 +194,13 @@ int main()
 	// filename for data analysis
 	std::string hetct_conv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_conv.hetct";
 	std::string hetct_noconv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_noconv.hetct";
-	
+
 	// write header for data analysis
 	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, file_carriers, voltages);
 	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, file_carriers, voltages);
 
 	//Loop on voltages
-	
+
 	for (int k = 0; k < n_vSteps + 1; k++) 
 	{
 		detector.solve_w_u();
@@ -197,10 +211,10 @@ int main()
 		detector.get_mesh()->bounding_box_tree();
 
 		Function * d_f_grad = detector.get_d_f_grad();
-		  // Plot solution
+		// Plot solution
 		//plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
-//		interactive();
-		
+		//		interactive();
+
 		// Loop on Y-axis
 		for (int l = 0; l < n_ySteps + 1; l++) 
 		{
@@ -264,8 +278,8 @@ int main()
 				utilities::write_to_file_row(hetct_conv_filename, hconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
 				utilities::write_to_file_row(hetct_noconv_filename, hnoconv, detector.get_temperature(), y_shifts[l], z_shifts[i], voltages[k]);
 			} // End of Z Loop
-			 std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
-			 // std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
+			std::string root_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_"+voltage+"V_"+neigh+"nns_"+scanType+".root";
+			// std::string hetct_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+".hetct";
 
 			// Open a ROOT file to save result
 			TFile *tfile = new TFile(root_filename.c_str(), "RECREATE" );

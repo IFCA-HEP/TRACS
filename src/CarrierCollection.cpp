@@ -1,3 +1,16 @@
+/*
+ * @ Copyright 2014-2017 CERN and Instituto de Fisica de Cantabria - Universidad de Cantabria. All rigths not expressly granted are reserved [tracs.ssd@cern.ch]
+ * This file is part of TRACS.
+ *
+ * TRACS is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation,
+ * either version 3 of the Licence.
+ *
+ * TRACS is distributed in the hope that it will be useful , but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with TRACS. If not, see <http://www.gnu.org/licenses/>
+ */
+
 #include "CarrierCollection.h"
 // _carrier_list should be a N_thr-dimensional vector
 
@@ -25,6 +38,7 @@ CarrierCollection::CarrierCollection(SMSDetector * detector) :
  */
 void CarrierCollection::add_carriers_from_file(QString filename, int nThreads) // should get N_thr=1 as input
 {
+
 	// get char representation and make ifstream
 	char * char_fn = filename.toLocal8Bit().data();
 	std::ifstream infile(char_fn);
@@ -155,6 +169,7 @@ void CarrierCollection::simulate_drift( double dt, double max_time, double shift
 	}
 }
 
+
 /*
  ********************** OVERLOADED FUNCTIONS FOR GUI COMPATIBILITY **************************
  */
@@ -209,7 +224,8 @@ void CarrierCollection::simulate_drift( double dt, double max_time, std::valarra
 	}
 }
 
-void CarrierCollection::simulate_drift( double dt, double max_time, double shift_x, double shift_y, std::valarray<double> &curr_elec, std::valarray<double> &curr_hole)
+void CarrierCollection::simulate_drift( double dt, double max_time, double shift_x, double shift_y,
+										std::valarray<double>&curr_elec, std::valarray<double> &curr_hole)
 {
 	// range for through the carriers
 	for (auto carrier : _carrier_list_sngl)
