@@ -70,11 +70,11 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time)
     {
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
       _detector->get_w_f_grad()->eval(wrap_w_field, wrap_x);
-			//_weightingField->eval(wrap_w_field, wrap_x);
-			//_electricField->eval(wrap_w_field, wrap_x); 
       _e_field_mod = sqrt(_e_field[0]*_e_field[0] + _e_field[1]*_e_field[1]);
-      i_n[i] = _q *_sign*_mu.obtain_mobility(_e_field_mod) * (_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
-      // Trapping effects due to radiation-induced defects (traps) implemented in CarrierColleciton.cpp
+      i_n[i] = _q *_sign*_mu.obtain_mobility(_e_field_mod) * 
+							(_e_field[0]*_w_field[0] + _e_field[1]*_w_field[1]);
+			
+      // Trapping effects  in CarrierColleciton.cpp
       stepper.do_step(_drift, _x, t, dt);
     }
     t+=dt;
@@ -123,7 +123,6 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
     }
     else
     {
-//std::lock_guard<std::mutex> lock(safeRead);
 			safeRead.lock();
 			//_detector->get_mesh()->bounding_box_tree();
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);
