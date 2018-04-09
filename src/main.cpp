@@ -210,9 +210,9 @@ int main()
 		detector.solve_d_f_grad();
 		detector.get_mesh()->bounding_box_tree();
 
-		Function * d_f_grad = detector.get_d_f_grad();
+		// Function * d_f_grad = detector.get_d_f_grad();
 		// Plot solution
-		//plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+		// plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
 		//		interactive();
 
 		// Loop on Y-axis
@@ -268,7 +268,7 @@ int main()
 					i_ramo.SetBinContent(j+1,i+1, i_total[j] );
 					hnoconv->SetBinContent( j+1 , i_total[j] );
 				}
-				int t=0;
+				 //int t=0;
 				hconv = H1DConvolution( hnoconv , C*1.e12);
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{

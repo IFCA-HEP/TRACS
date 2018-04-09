@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 		std::cout << neff_test[i] << std::endl;
 	}
 
-	for (int i = 0; i < TRACSsim.size(); i++)
+	for (unsigned int i = 0; i < TRACSsim.size(); i++)
 	{
 	    delete TRACSsim[i];
 	}
