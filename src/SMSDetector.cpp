@@ -36,9 +36,9 @@ SMSDetector::SMSDetector(double pitch, double width, double depth, int nns, char
     // Mesh properties
     _n_cells_x(n_cells_x),
     _n_cells_y(n_cells_y),
-#if DOLFIN_VERSION_MINOR>=6
+#if DOLFIN_VERSION_MAYOR>=2016 || DOLFIN_VERSION_MINOR>=6
     _mesh(Point(_x_min,_y_min),Point(_x_max,_y_max), _n_cells_x, _n_cells_y),
-#else
+#else 
     _mesh(_x_min,_y_min,_x_max,_y_max, _n_cells_x, _n_cells_y),
 #endif
     _periodic_boundary(_x_min, _x_max, _depth),
