@@ -97,6 +97,7 @@ int main()
 	std::string file_carriers = "etct.carriers";
 	utilities::parse_config_file("Config.TRACS", file_carriers, depth, width,  pitch, nns, temp, trapping, fluence, nThreads, n_cells_x, n_cells_y, bulk_type, implant_type, waveLength, scanType, C, dt, max_time, vInit, deltaV, vMax, v_depletion, zInit, zMax, deltaZ, yInit, yMax, deltaY, neff_param, neffType);
 
+	nThreads = 1 // Override to avoid problems THIS IS NOT A PARALLEL IMPLEMENTATION!!!
 	// Create vector of (n-1) threads as the nth thread is the main thread
 	std::thread t[nThreads-1];
 
