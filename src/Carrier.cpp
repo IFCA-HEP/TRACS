@@ -136,7 +136,6 @@ std::valarray<double> Carrier::simulate_drift(double dt, double max_time, double
     }
     else
     {
-//std::lock_guard<std::mutex> lock(safeRead);
 			safeRead.lock();
 			//_detector->get_mesh()->bounding_box_tree();
       _detector->get_d_f_grad()->eval(wrap_e_field, wrap_x);

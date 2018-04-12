@@ -68,6 +68,12 @@ class Carrier
 		~Carrier();
 
     char get_carrier_type();
+    std::array< double,2> get_x();
+    double get_q();
+
+    std::valarray<double> simulate_drift( double dt, double max_time);
+    std::valarray<double> simulate_drift(double dt, double max_time, double x_init, double y_init );
+
 //		double get_gen_time();
 //    std::array< double,2> get_e_field;
 //    std::array< double,2> get_w_field;
@@ -79,11 +85,6 @@ class Carrier
 //    JacoboniMobility get_mu;
 //    double get_trapping_time;
 //
-    std::array< double,2> get_x();
-    double get_q();
-
-    std::valarray<double> simulate_drift( double dt, double max_time);
-    std::valarray<double> simulate_drift(double dt, double max_time, double x_init, double y_init );
 };
 
 #endif // CARRIER_H
