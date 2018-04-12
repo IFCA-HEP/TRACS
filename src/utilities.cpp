@@ -23,7 +23,7 @@ TH2D utilities::export_to_histogram(Function &func, TString hist_name, TString h
     for (int j=1; j<=n_bins_y; j++) {
     double x_value = (i - 0.5)*step_x;
     double y_value = (j - 0.5)*step_y;
-    hist.Fill(x_max-x_value,y_max-y_value, func(x_value, y_value));
+    hist.Fill(x_max-x_value,y_max-y_value, (func)(x_value, y_value));
     }
   }
   return hist;
@@ -169,7 +169,7 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector detector
 	int nZ = z_shifts.size();
 	int nY = y_shifts.size();
 	int nV = voltages.size();
-	int nScans = (nX + nY + nZ)*nV;
+	int nScans = (nX + nY + nZ)*nV; // 0 = nX
 	double deltaZ = 0;
 	double deltaV = 0;	
 	double deltaY = 0;	
@@ -269,7 +269,7 @@ void utilities::write_to_hetct_header(std::string filename, SMSDetector * detect
 	std::ofstream header;  
 
 	// Derived quantities
-	int nX = 0;
+	//int nX = 0;
 	int nZ = z_shifts.size();
 	int nY = y_shifts.size();
 	int nV = voltages.size();
@@ -948,7 +948,8 @@ void utilities::parse_config_file(std::string fileName, std::string &carrierFile
 
 void utilities::valarray2Hist(TH1D *hist, std::valarray<double> &valar)
 {
-	if (valar.size() == hist->GetSize()-2) {
+	unsigned int histSize = hist->GetSize()-2;
+	if (valar.size() == histSize) { //hist->GetSize()-2) {
 		int steps = valar.size();
 		for (int i = 0; i < steps ; i++) 
 		{

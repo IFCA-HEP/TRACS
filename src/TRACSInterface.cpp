@@ -50,11 +50,11 @@ TRACSInterface::TRACSInterface(std::string filename)
 	n_zSteps2 = (int) std::floor (n_zSteps - n_zSteps1);
 	// if more threads than points
 	if(num_threads>n_zSteps+1)
-		{
-			num_threads = n_zSteps+1;
-			std::cout << "No. of threads > No. of z points! reducing No. of threads to."<< num_threads << std::endl;	
-			//exit(EXIT_FAILURE);
-		}
+	{
+		num_threads = n_zSteps+1;
+		std::cout << "No. of threads > No. of z points! reducing No. of threads to."<< num_threads << std::endl;	
+		//exit(EXIT_FAILURE);
+	}
 	n_zSteps_array = (int) std::floor ((n_zSteps+1) / num_threads);
 	n_zSteps_iter = (int) std::round ((n_zSteps+1) / (num_threads)*1.0);
 	n_vSteps = (int) std::floor((vMax-vInit)/deltaV);
@@ -116,20 +116,20 @@ TRACSInterface::TRACSInterface(std::string filename)
 	{
 		z_shifts[i] = (i*deltaZ)+zInit;	
 	}
-	
+
 
 	//"sampling" z array
 	int l = 0;
-	
-		for (int i = 0; i < num_threads; i++)
-		{	l = i;
-			for (int j = 0; j < z_shifts_array[i].size(); j++ ) 
-			{	
-				z_shifts_array[i][j] = z_shifts[l];
-				l+=num_threads;
-			}
+
+	for (int i = 0; i < num_threads; i++)
+	{	l = i;
+		for (unsigned int j = 0; j < z_shifts_array[i].size(); j++ ) 
+		{	
+			z_shifts_array[i][j] = z_shifts[l];
+			l+=num_threads;
 		}
-		
+	}
+
 	// Create shifts in Y
 	for (int i = 0; i < n_ySteps + 1; i++ ) 
 	{
@@ -138,7 +138,7 @@ TRACSInterface::TRACSInterface(std::string filename)
 
 	vBias = vInit;
 	set_tcount(0);
-	
+
 	i_ramo  = NULL;
 	i_rc    = NULL;
 	i_conv  = NULL;
@@ -148,11 +148,11 @@ TRACSInterface::TRACSInterface(std::string filename)
 // Destructor
 TRACSInterface::~TRACSInterface()
 {
- //delete[] i_ramo;
- //delete[] i_rc;
- //delete[] i_conv;
- //delete[] carrierCollection;
- //delete[] detector;
+	//delete[] i_ramo;
+	//delete[] i_rc;
+	//delete[] i_conv;
+	//delete[] carrierCollection;
+	//delete[] detector;
 }
 
 /*
@@ -166,7 +166,7 @@ TH1D * TRACSInterface::GetItRamo()
 	else
 	{
 		//TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-   		//float r = f1->GetRandom();
+		//float r = f1->GetRandom();
 		TString htit, hname;
 		htit.Form("ramo_%d_%d", tcount, count1);
 		hname.Form("Ramo_current_%d_%d", tcount, count1);
@@ -181,7 +181,7 @@ TH1D * TRACSInterface::GetItRamo()
 		count1++;
 
 	}
-		return i_ramo;
+	return i_ramo;
 }
 
 /*
@@ -196,7 +196,7 @@ TH1D * TRACSInterface::GetItRc()
 	else
 	{	
 		//TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-   		//float r = f1->GetRandom();
+		//float r = f1->GetRandom();
 		TString htit, hname;
 		htit.Form("ramo_rc%d%d", tcount, count2);
 		hname.Form("Ramo_current_%d_%d", tcount, count2);
@@ -213,7 +213,7 @@ TH1D * TRACSInterface::GetItRc()
 		count2++;
 
 	}
-		return i_rc;
+	return i_rc;
 }
 
 /*
@@ -227,7 +227,7 @@ TH1D * TRACSInterface::GetItConv()
 	else
 	{
 		//TF1 *f1 = new TF1("f1","abs(sin(x)/x)*sqrt(x)",0,10);
-   		//float r = f1->GetRandom();
+		//float r = f1->GetRandom();
 		TString htit, hname;
 		htit.Form("ramo_conv_%d_%d", tcount, count3);
 		hname.Form("Ramo current_%d_%d", tcount, count3);
@@ -238,7 +238,7 @@ TH1D * TRACSInterface::GetItConv()
 		//mtx2.unlock();
 		count3++;
 	}
-		return i_conv;
+	return i_conv;
 }
 
 /*
@@ -343,7 +343,7 @@ void TRACSInterface::set_vBias(double newVBias)
  * Used to index the different output files 
  *
  */
- void TRACSInterface::set_tcount(int tid)
+void TRACSInterface::set_tcount(int tid)
 {
 	tcount = tid;
 }
@@ -364,7 +364,7 @@ void TRACSInterface::calculate_fields()
 	detector->solve_w_f_grad();
 	detector->solve_d_f_grad();
 	detector->get_mesh()->bounding_box_tree();
-	
+
 }
 
 /*
@@ -396,145 +396,144 @@ void TRACSInterface::set_carrierFile(std::string newCarrFile)
  */
 //TTree * GetTree(){}
 
- /*
+/*
  * MULTITHREADING 
  *A loop through all three parameters
  *	"v": voltage, "z": z-axis, "y": y-axis
  *	example: TRACSsim->loop_on("x","v","y");
  * 
  */
-  void TRACSInterface::loop_on(int tid)
- {
+void TRACSInterface::loop_on(int tid)
+{
+	params[0] = 0; //zPos 
+	params[1] = 0; //yPos;
+	params[2] = 0; //vPos;
 
- 	params[0] = 0; //zPos 
- 	params[1] = 0; //yPos;
- 	params[2] = 0; //vPos;
- 	
- 			n_par0 = (int) z_shifts_array[tid].size()-1;
-		 	 		//n_par0 = n_zSteps_array;
-		 	 		n_par1 = n_ySteps;
-			 		n_par2 = n_vSteps;
-	 		 		//loop
-		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
-		 			{
-		 	 			detector->set_voltages(voltages[params[2]], vDepletion);
-						calculate_fields();
+	n_par0 = (int) z_shifts_array[tid].size()-1;
+	//n_par0 = n_zSteps_array;
+	n_par1 = n_ySteps;
+	n_par2 = n_vSteps;
+	//loop
+	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
+	{
+		detector->set_voltages(voltages[params[2]], vDepletion);
+		calculate_fields();
 
-						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
-						{
-							set_yPos(y_shifts[params[1]]);
-							for (params[0] = 0; params[0] < n_par0 + 1; params[0]++)
-							{
-								std::cout << "Height " << z_shifts_array[tid][params[0]] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[params[1]] << " of " << y_shifts.back() << " || Voltage " << voltages[params[2]] << " of " << voltages.back() << std::endl;								
-								set_zPos(z_shifts_array[tid][params[0]]);
-								simulate_ramo_current();
-								i_ramo = GetItRamo();
-								i_ramo_array[tid][params[0]] = i_ramo; // for output
-								i_ramo = NULL;
-								i_rc = GetItRc();
-								i_rc_array[tid][params[0]] = i_rc; // for output								
-								mtx2.lock();
-								i_conv = GetItConv();
-								i_conv_array[tid][params[0]] = i_conv; // for output
-								mtx2.unlock();
+		for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
+		{
+			set_yPos(y_shifts[params[1]]);
+			for (params[0] = 0; params[0] < n_par0 + 1; params[0]++)
+			{
+				std::cout << "Height " << z_shifts_array[tid][params[0]] << " of " << z_shifts.back()  <<  " || Y Position " << y_shifts[params[1]] << " of " << y_shifts.back() << " || Voltage " << voltages[params[2]] << " of " << voltages.back() << std::endl;								
+				set_zPos(z_shifts_array[tid][params[0]]);
+				simulate_ramo_current();
+				i_ramo = GetItRamo();
+				i_ramo_array[tid][params[0]] = i_ramo; // for output
+				i_ramo = NULL;
+				i_rc = GetItRc();
+				i_rc_array[tid][params[0]] = i_rc; // for output								
+				mtx2.lock();
+				i_conv = GetItConv();
+				i_conv_array[tid][params[0]] = i_conv; // for output
+				mtx2.unlock();
 
-							}
-						}
+			}
+		}
 
-	 		 		}
+	}
 
- 	n_par0 = 0;
- 	n_par1 = 0;
- 	n_par2 = 0;
+	n_par0 = 0;
+	n_par1 = 0;
+	n_par2 = 0;
 
- }
+}
 
- /*
-  *
-  * Write to file header. The input int is used to label files (multithreading)! 
-  *
-  *
-  *
-  */
-  void TRACSInterface::write_header(int tid)
-  {
-  	// Convert Z to milimeters
+/*
+ *
+ * Write to file header. The input int is used to label files (multithreading)! 
+ *
+ *
+ *
+ */
+void TRACSInterface::write_header(int tid)
+{
+	// Convert Z to milimeters
 	std::vector<double> z_chifs(n_zSteps+1);
 	z_chifs = z_shifts;
 	std::transform(z_chifs.begin(), z_chifs.end(), z_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
-	
+
 	// Convert Z to milimeters
 	std::vector<double> y_chifs(n_ySteps+1);
 	y_chifs = y_shifts;
 	std::transform(y_chifs.begin(), y_chifs.end(), y_chifs.begin(), std::bind1st(std::multiplies<double>(),(1./1000.)));
-  	// filename for data analysis
+	// filename for data analysis
 	hetct_conv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_"+std::to_string(tcount)+"_conv.hetct";
 	hetct_noconv_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_"+std::to_string(tcount)+"_noconv.hetct";
 	hetct_rc_filename = start+"_dt"+dtime+"ps_"+cap+"pF_t"+trap+"ns_dz"+stepZ+"um_dy"+stepY+"dV"+stepV+"V_"+neigh+"nns_"+scanType+"_"+std::to_string(tcount)+"_rc.hetct";
 
-   
+
 	// write header for data analysis
 	utilities::write_to_hetct_header(hetct_conv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 	utilities::write_to_hetct_header(hetct_noconv_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 	utilities::write_to_hetct_header(hetct_rc_filename, detector, C, dt, y_chifs, z_chifs, waveLength, scanType, carrierFile, voltages);
 
-  }
+}
 /*
  *Resizing for storing data in memory 
  *and using it later/writing to a single output file.
  *
-*/
-    void TRACSInterface::resize_array()
-    {
-    	i_ramo_array.resize(num_threads);
-    	i_rc_array.resize(num_threads);
-    	i_conv_array.resize(num_threads);
+ */
+void TRACSInterface::resize_array()
+{
+	i_ramo_array.resize(num_threads);
+	i_rc_array.resize(num_threads);
+	i_conv_array.resize(num_threads);
 
-    	for (int i = 0; i < num_threads; i++)
-    		{
-    			i_ramo_array[i].resize(z_shifts_array[i].size());
-    			i_rc_array[i].resize(z_shifts_array[i].size());
-    			i_conv_array[i].resize(z_shifts_array[i].size());
-    			std::cout << "i_ramo_array[xlen][ylen]   " << i_ramo_array.size()<<"  " <<i_ramo_array[i].size() <<std::endl;
-    		}	
+	for (int i = 0; i < num_threads; i++)
+	{
+		i_ramo_array[i].resize(z_shifts_array[i].size());
+		i_rc_array[i].resize(z_shifts_array[i].size());
+		i_conv_array[i].resize(z_shifts_array[i].size());
+		std::cout << "i_ramo_array[xlen][ylen]   " << i_ramo_array.size()<<"  " <<i_ramo_array[i].size() <<std::endl;
+	}	
 
-    }
+}
 
 /*
  * Writing to a single file
  *
  *
  */
-    void TRACSInterface::write_to_file(int tid)
-    {
-    	write_header(tid);
-    	std::cout << "Writing to file..." <<std::endl;
+void TRACSInterface::write_to_file(int tid)
+{
+	write_header(tid);
+	std::cout << "Writing to file..." <<std::endl;
 
-    		//n_par0 = (int) z_shifts_array[tid].size()-1;
-    				params[0] = 0; //thread 
- 					params[1] = 0; //yPos;
- 					params[2] = 0; //vPos;
-		 	 		n_par1 = n_ySteps;
-			 		n_par2 = n_vSteps;
-	 		 		//loop
-		 		 	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
-		 			{
-						for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
-						{
-							for (int i = 0; i < num_threads; i++)
-							{							
-								for (params[0] = 0; params[0] < i_ramo_array[i].size(); params[0]++)
-								{
-									utilities::write_to_file_row(hetct_noconv_filename, i_ramo_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
-									utilities::write_to_file_row(hetct_conv_filename, i_conv_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
-									utilities::write_to_file_row(hetct_rc_filename, i_rc_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
+	//n_par0 = (int) z_shifts_array[tid].size()-1;
+	params[0] = 0; //thread 
+	params[1] = 0; //yPos;
+	params[2] = 0; //vPos;
+	n_par1 = n_ySteps;
+	n_par2 = n_vSteps;
+	//loop
+	for (params[2] = 0; params[2] < n_par2 + 1; params[2]++)
+	{
+		for (params[1] = 0; params[1] < n_par1 + 1; params[1]++)
+		{
+			for (int i = 0; i < num_threads; i++)
+			{							
+				for (params[0] = 0; params[0] < i_ramo_array[i].size(); params[0]++)
+				{
+					utilities::write_to_file_row(hetct_noconv_filename, i_ramo_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
+					utilities::write_to_file_row(hetct_conv_filename, i_conv_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
+					utilities::write_to_file_row(hetct_rc_filename, i_rc_array[i][params[0]], detector->get_temperature(), y_shifts[params[1]], z_shifts_array[i][params[0]], voltages[params[2]]);
 
-								}
-								
+				}
 
-							}
-						}
 
-	 		 		}
+			}
+		}
 
-    }
+	}
+
+}

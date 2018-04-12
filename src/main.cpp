@@ -83,6 +83,10 @@ int main()
 			n_zSteps = 0,
 			n_ySteps = 0;
 
+	bool saveDU = false,
+			 saveDF = false,
+			 saveWF = false,
+			 saveWU = false;
 	char bulk_type = '\0', 
 			implant_type = '\0';
 
@@ -210,9 +214,48 @@ int main()
 		detector.solve_d_f_grad();
 		detector.get_mesh()->bounding_box_tree();
 
-		Function * d_f_grad = detector.get_d_f_grad();
-		// Plot solution
+		TFile *fileField = new TFile("fieldsPotentials.root", "RECREATE"); // file to store fields and potentials
+
+		// Check if Drifting field should be stored and act accordingly
+		if(saveDF)
+		{
+			Function * d_f_grad = detector.get_d_f_grad();
+			TH2D histDf = utilities::export_to_histogram(*d_f_grad, "DriftField", "Drift Field", n_cells_x, 0.0, ((2*nns)+1)*pitch, n_cells_y, 0.0, depth);
+			histDf.Write();
+		}
+
+		// Check if Drifting Potential should be stored and act accordingly
+		if(saveDU)
+		{
+			Function * d_u = detector.get_d_u();
+			TH2D histDu = utilities::export_to_histogram(*d_u, "DriftPot", "Drifting Potential", n_cells_x, 0.0, ((2*nns)+1)*pitch, n_cells_y, 0.0, depth);
+			histDu.Write();
+		}
+
+		// Check if Weighting Field should be stored and act accordingly
+		if(saveWF)
+		{
+			Function * w_f_grad = detector.get_w_f_grad();
+			TH2D histWf = utilities::export_to_histogram(*w_f_grad, "WeightField", "Weighting Field", n_cells_x, 0.0, ((2*nns)+1)*pitch, n_cells_y, 0.0, depth);
+			histWf.Write();
+		}
+
+		// Check if Weighting Potential should be stored and act accordingly
+		if(saveWU)
+		{
+			Function * w_u = detector.get_w_u();
+			TH2D histWu = utilities::export_to_histogram(*w_u, "WeightPot", "Weighting Potential", n_cells_x, 0.0, ((2*nns)+1)*pitch, n_cells_y, 0.0, depth);
+			histWu.Write();
+		}
+		fileField->Close();
+			
+		  // Plot solution
 		//plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
+//		interactive();
+		
+		// Function * d_f_grad = detector.get_d_f_grad();
+		// Plot solution
+		// plot((*d_f_grad)[1],"Drifting Field (Y)","auto");
 		//		interactive();
 
 		// Loop on Y-axis
@@ -268,7 +311,7 @@ int main()
 					i_ramo.SetBinContent(j+1,i+1, i_total[j] );
 					hnoconv->SetBinContent( j+1 , i_total[j] );
 				}
-				int t=0;
+				 //int t=0;
 				hconv = H1DConvolution( hnoconv , C*1.e12);
 				for (int j = 1; j <=hconv->GetNbinsX(); j++)
 				{
